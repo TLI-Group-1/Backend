@@ -1,7 +1,25 @@
 package tech.autodirect.api;
 
+/*
+Copyright (c) 2021 Ruofan Chen, Samm Du, Nada Eldin, Shalev Lifshitz
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,12 +28,12 @@ import java.net.http.HttpResponse;
 
 public class SensoApi{
 
-    public static void queryApi() throws IOException, InterruptedException {
+    public static Map<String, Object> queryApi(String budget) throws IOException, InterruptedException {
         // create a client
         String inputJson = "{\n" +
                 "   \"loanAmount\": 10000,\n" +
                 "   \"creditScore\": 780,\n" +
-                "   \"pytBudget\": 800,\n" +
+                "   \"pytBudget\": " + budget + ",\n" +
                 "   \"vehicleMake\": \"Honda\",\n" +
                 "   \"vehicleModel\": \"Civic\",\n" +
                 "   \"vehicleYear\": 2021,\n" +
@@ -35,32 +53,11 @@ public class SensoApi{
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // the response:
-        System.out.println(response.statusCode());
-        System.out.println(response.body());
+        Map<String, Object> return_data = new HashMap();
+        return_data.put("status", response.statusCode());
+        return_data.put("body", response.body());
 
-    }
+        return return_data;
 
-    public static void inputs() throws IOException {
-        System.out.print("Enter your name: ");
-        BufferedReader nameReader =
-                new BufferedReader(new InputStreamReader(System.in));
-        String name = nameReader.readLine();
-        System.out.println("Hello " + name + "! Pretty please help us by inputting the following information...");
-
-        System.out.print("Enter the loan amount: ");
-        BufferedReader loanReader =
-                new BufferedReader(new InputStreamReader(System.in));
-        String loanAmount = loanReader.readLine();
-
-        System.out.print("Enter your credit score: ");
-        BufferedReader creditReader =
-                new BufferedReader(new InputStreamReader(System.in));
-        String creditScore = creditReader.readLine();
-
-        System.out.print("Enter your monthly payment Budget: ");
-        BufferedReader pytReader =
-                new BufferedReader(new InputStreamReader(System.in));
-        String pytBudget = pytReader.readLine();
     }
 }
