@@ -18,6 +18,8 @@ limitations under the License.
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -26,12 +28,12 @@ import java.net.http.HttpResponse;
 
 public class SensoApi{
 
-    public static void queryApi() throws IOException, InterruptedException {
+    public static Map<String, Object> queryApi(String budget) throws IOException, InterruptedException {
         // create a client
         String inputJson = "{\n" +
                 "   \"loanAmount\": 10000,\n" +
                 "   \"creditScore\": 780,\n" +
-                "   \"pytBudget\": 800,\n" +
+                "   \"pytBudget\": " + budget + ",\n" +
                 "   \"vehicleMake\": \"Honda\",\n" +
                 "   \"vehicleModel\": \"Civic\",\n" +
                 "   \"vehicleYear\": 2021,\n" +
@@ -51,9 +53,11 @@ public class SensoApi{
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // the response:
-        System.out.println(response.statusCode());
-        System.out.println(response.body());
+        Map<String, Object> return_data = new HashMap();
+        return_data.put("status", response.statusCode());
+        return_data.put("body", response.body());
+
+        return return_data;
 
     }
 }

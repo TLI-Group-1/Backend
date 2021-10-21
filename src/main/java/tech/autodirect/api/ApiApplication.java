@@ -27,18 +27,20 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class ApiApplication {
-
+	// where the endpoints are stored
 	public static void main(String[] args) {
+		// use for reference
 		SpringApplication.run(ApiApplication.class, args);
-		try {
-			SensoApi.queryApi();
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
+	@GetMapping("/demo")
+	// how the code tells the server where to start processing your request
+	public Object hello(@RequestParam String budget) {
+		try {
+			return SensoApi.queryApi(budget);
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+			return new String("Server Error!");
+		}
 	}
 }
