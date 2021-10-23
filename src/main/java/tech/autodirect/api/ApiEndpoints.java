@@ -26,11 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class ApiApplication {
-	// where the endpoints are stored
+public class ApiEndpoints {
 	public static void main(String[] args) {
 		// use for reference
-		SpringApplication.run(ApiApplication.class, args);
+		SpringApplication.run(ApiEndpoints.class, args);
 	}
 
 	@GetMapping("/demo")
