@@ -29,7 +29,7 @@ import java.net.http.HttpResponse;
 public class SensoApi{
 
     public static Map<String, Object> queryApi(String budget) throws IOException, InterruptedException {
-        // create a client
+        // create request body
         String inputJson = "{\n" +
                 "   \"loanAmount\": 10000,\n" +
                 "   \"creditScore\": 780,\n" +
@@ -48,11 +48,12 @@ public class SensoApi{
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson))
                 .build();
 
-        // use the client to send the request
+        // create an HTTP client
         var client = HttpClient.newHttpClient();
-
+        // use the client to send the request
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        // construct the return data as a HashMap
         Map<String, Object> return_data = new HashMap();
         return_data.put("status", response.statusCode());
         return_data.put("body", response.body());
