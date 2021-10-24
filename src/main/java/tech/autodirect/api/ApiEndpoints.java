@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,19 +28,27 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class ApiEndpoints {
+
 	public static void main(String[] args) {
-		// use for reference
 		SpringApplication.run(ApiEndpoints.class, args);
 	}
 
+	// hosts allowed to access the AutoDirect API
+	@CrossOrigin(origins = {
+			"http://localhost",
+			"http://localhost:8080",
+			"https://autodirect.tech",
+			"https://api.autodirect.tech"
+	})
+	// demo API endpoint; use for reference
 	@GetMapping("/demo")
-	// how the code tells the server where to start processing your request
 	public Object hello(@RequestParam String budget) {
 		try {
 			return SensoApi.queryApi(budget);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
-			return new String("Server Error!");
+			return "Server Error!";
 		}
 	}
+	
 }
