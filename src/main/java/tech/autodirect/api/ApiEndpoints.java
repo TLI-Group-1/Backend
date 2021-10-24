@@ -50,5 +50,5 @@ public class ApiEndpoints {
 			return "Server Error!";
 		}
 	}
-	
+
 }
