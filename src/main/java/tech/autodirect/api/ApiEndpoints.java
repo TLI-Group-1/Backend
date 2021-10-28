@@ -25,21 +25,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+// Mark the class as a Spring.io REST application
 @SpringBootApplication
 @RestController
+// specify hosts allowed to access the AutoDirect API
+@CrossOrigin(origins = {
+		"http://localhost",
+		"http://localhost:8080",
+		"https://autodirect.tech",
+		"https://api.autodirect.tech"
+})
 public class ApiEndpoints {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiEndpoints.class, args);
 	}
 
-	// hosts allowed to access the AutoDirect API
-	@CrossOrigin(origins = {
-			"http://localhost",
-			"http://localhost:8080",
-			"https://autodirect.tech",
-			"https://api.autodirect.tech"
-	})
 	// demo API endpoint; use for reference
 	@GetMapping("/demo")
 	public Object hello(@RequestParam String budget) {
