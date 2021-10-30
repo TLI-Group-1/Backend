@@ -16,17 +16,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.io.BufferedReader;
+import org.yaml.snakeyaml.error.MissingEnvironmentVariableException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class SensoApi{
+
+    private static String senso_url;
+    private static String senso_key;
+
+    private static void getEnvVars() throws MissingEnvironmentVariableException {
+        // attempt to obtain the relevant environment variables
+        String url = System.getenv("SENSO_API_URL");
+        String key = System.getenv("SENSO_API_KEY");
+
+        // if a relevant environment variable is not set, throw an error
+        if (url == null) {
+            throw new MissingEnvironmentVariableException("\n\n\t> \"SENSO_API_URL\" not specified in environment variables. \n");
+        }
+        if (key == null) {
+            throw new MissingEnvironmentVariableException("\n\n\t> \"SENSO_API_KEY\" not specified in environment variables. \n");
+        }
+
+        // if the environment variables are set, set the corresponding private variables
+        senso_url = url;
+        senso_key = key;
+    }
 
     public static Map<String, Object> queryApi(String budget) throws IOException, InterruptedException {
         // create request body
@@ -40,11 +61,14 @@ public class SensoApi{
                 "   \"vehicleKms\": 1000\n" +
                 "}";
 
+        // get the Senso API URL and KEY from environment variables
+        getEnvVars();
+
         // create a request
         var request = HttpRequest.newBuilder()
-                .uri(URI.create("https://auto-loan-api.senso.ai/rate"))
+                .uri(URI.create(senso_url + "/rate"))
                 .header("Content-Type", "application/json")
-                .header("x-api-key", "AIzaSyCD_-qCdXqrvWGHN1tpe2PH6Rf8zpnTdXs")
+                .header("x-api-key", senso_key)
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson))
                 .build();
 
