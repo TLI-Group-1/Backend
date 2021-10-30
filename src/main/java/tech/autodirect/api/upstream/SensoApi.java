@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import com.google.gson.Gson;
 
 public class SensoApi{
 
@@ -49,17 +50,20 @@ public class SensoApi{
         senso_key = key;
     }
 
-    public static Map<String, Object> queryApi(String budget) throws IOException, InterruptedException {
+    public static Map<String, Object> queryApi(double loanAmount, int creditScore, double budget, String vehicleMake,
+                                               String vehicleModel, int vehicleYear, int vehicleKms)
+            throws IOException, InterruptedException {
         // create request body
-        String inputJson = "{\n" +
-                "   \"loanAmount\": 10000,\n" +
-                "   \"creditScore\": 780,\n" +
-                "   \"pytBudget\": " + budget + ",\n" +
-                "   \"vehicleMake\": \"Honda\",\n" +
-                "   \"vehicleModel\": \"Civic\",\n" +
-                "   \"vehicleYear\": 2021,\n" +
-                "   \"vehicleKms\": 1000\n" +
-                "}";
+        SensoRateQuery inputQuery = new SensoRateQuery(
+            loanAmount,
+            creditScore,
+            budget,
+            vehicleMake,
+            vehicleModel,
+            vehicleYear,
+            vehicleKms
+        );
+        String inputJson = new Gson().toJson(inputQuery);
 
         // get the Senso API URL and KEY from environment variables
         getEnvVars();
