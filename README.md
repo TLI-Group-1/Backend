@@ -4,7 +4,7 @@
 ```bash
 ./gradlew bootRun
 ```
-This command will start the Spring development server on https://localhost:8080
+This command will start the Spring development server on http://localhost:8080
 
 ## Environment Variables
 This application requires a number of parameters to be specified via environment 
