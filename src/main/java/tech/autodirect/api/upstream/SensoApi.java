@@ -44,7 +44,7 @@ public class SensoApi{
         var request = HttpRequest.newBuilder()
                 .uri(URI.create("https://auto-loan-api.senso.ai/rate"))
                 .header("Content-Type", "application/json")
-                .header("x-api-key", "AIzaSyCD_-qCdXqrvWGHN1tpe2PH6Rf8zpnTdXs")
+                .header("x-api-key", System.getenv("SENSO_API_KEY"))
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson))
                 .build();
 
