@@ -44,9 +44,19 @@ public class ApiEndpoints {
 
 	// demo API endpoint; use for reference
 	@GetMapping("/demo")
-	public Object hello(@RequestParam String budget) {
+	public Object hello(@RequestParam String loanAmount, @RequestParam String creditScore, @RequestParam String budget,
+						@RequestParam String vehicleMake, @RequestParam String vehicleModel,
+						@RequestParam String vehicleYear, @RequestParam String vehicleKms) {
 		try {
-			return SensoApi.queryApi(budget);
+			return SensoApi.queryApi(
+					Double.parseDouble(loanAmount),
+					Integer.parseInt(creditScore),
+					Double.parseDouble(budget),
+					vehicleMake,
+					vehicleModel,
+					Integer.parseInt(vehicleYear),
+					Integer.parseInt(vehicleKms)
+			);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			return "Server Error!";
