@@ -15,7 +15,8 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.google.code.gson:gson:2.8.8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'javax.json:javax.json-api:1.1.4'
 }
 
