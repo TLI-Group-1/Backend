@@ -9,7 +9,8 @@ This command will start the Spring development server on https://localhost:8080
 ## Environment Variables
 This application requires a number of parameters to be specified via environment 
 variables. They are listed below:
-* `SENSO_API_URL`: the root URL for the Senso API, excluding specific endpoints.
+* `SENSO_API_URL`: the root URL for the Senso API, excluding specific endpoints. 
+Do not include a trailing slash.
   * e.g. `https://senso-api.example.com`
 * `SENSO_API_KEY`: the access credential for the Senso API, to be supplied in the
 `x-api-key` HTTP header.
