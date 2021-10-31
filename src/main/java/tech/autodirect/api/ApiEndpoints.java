@@ -44,25 +44,29 @@ public class ApiEndpoints {
 
 	// demo API endpoint; use for reference
 	@GetMapping("/demo")
-	public Object hello(@RequestParam String loanAmount, @RequestParam String creditScore, @RequestParam String budget,
-						@RequestParam String vehicleYear, @RequestParam String vehicleKms) {
-		// TODO: Remove this hardcoding and add params once frontend can send vehicle info.
+	public Object hello(@RequestParam String loanAmount, @RequestParam String creditScore, @RequestParam String budget) {
+
+		// TODO: Remove this hardcoding and read params from other parts of the program.
 		String vehicleMake = "Honda";
 		String vehicleModel = "Civic";
+		String vehicleYear = "2018";
+		String vehicleKms = "1";
+
 		try {
 			return SensoApi.queryApi(
-					loanAmount,
-					creditScore,
-					budget,
-					vehicleMake,
-					vehicleModel,
-					vehicleYear,
-					vehicleKms
+				loanAmount,
+				creditScore,
+				budget,
+				vehicleMake,
+				vehicleModel,
+				vehicleYear,
+				vehicleKms
 			);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}
+
 	}
 
 }
