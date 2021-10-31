@@ -17,4 +17,8 @@ limitations under the License.
 */
 
 public class UnitConv {
+    public static float mileToKm(float mileage){
+        float km  = mileage / 0.62137;
+        return km
+    }
 }
