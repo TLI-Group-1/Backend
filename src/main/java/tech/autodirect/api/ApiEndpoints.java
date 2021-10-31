@@ -49,13 +49,13 @@ public class ApiEndpoints {
 						@RequestParam String vehicleYear, @RequestParam String vehicleKms) {
 		try {
 			return SensoApi.queryApi(
-					Double.parseDouble(loanAmount),
-					Integer.parseInt(creditScore),
-					Double.parseDouble(budget),
+					loanAmount,
+					creditScore,
+					budget,
 					vehicleMake,
 					vehicleModel,
-					Integer.parseInt(vehicleYear),
-					Integer.parseInt(vehicleKms)
+					vehicleYear,
+					vehicleKms
 			);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();

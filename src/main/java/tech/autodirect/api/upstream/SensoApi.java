@@ -50,20 +50,19 @@ public class SensoApi{
         senso_key = key;
     }
 
-    public static Map<String, Object> queryApi(double loanAmount, int creditScore, double budget, String vehicleMake,
-                                               String vehicleModel, int vehicleYear, int vehicleKms)
+    public static Map<String, Object> queryApi(String loanAmount, String creditScore, String budget, String vehicleMake,
+                                               String vehicleModel, String vehicleYear, String vehicleKms)
             throws IOException, InterruptedException {
         // create request body
-        SensoRateQuery inputQuery = new SensoRateQuery(
-            loanAmount,
-            creditScore,
-            budget,
-            vehicleMake,
-            vehicleModel,
-            vehicleYear,
-            vehicleKms
-        );
-        String inputJson = new Gson().toJson(inputQuery);
+        Map<String, String> queryMap = new HashMap<>() {{
+            put("loanAmount", loanAmount);
+            put("creditScore", creditScore);
+            put("budget", budget);
+            put("vehicleMake", vehicleMake);
+            put("vehicleModel", vehicleModel);
+            put("vehicleYear", vehicleYear);
+        }};
+        String inputJson = new Gson().toJson(queryMap);
 
         // get the Senso API URL and KEY from environment variables
         getEnvVars();
@@ -79,6 +78,7 @@ public class SensoApi{
         // create an HTTP client
         var client = HttpClient.newHttpClient();
         // use the client to send the request
+        // TODO: Add exception catching for actual SensoApi query
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         // construct the return data as a HashMap
