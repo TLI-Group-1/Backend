@@ -45,8 +45,10 @@ public class ApiEndpoints {
 	// demo API endpoint; use for reference
 	@GetMapping("/demo")
 	public Object hello(@RequestParam String loanAmount, @RequestParam String creditScore, @RequestParam String budget,
-						@RequestParam String vehicleMake, @RequestParam String vehicleModel,
 						@RequestParam String vehicleYear, @RequestParam String vehicleKms) {
+		// TODO: Remove this hardcoding and add params once frontend can send vehicle info.
+		String vehicleMake = "Honda";
+		String vehicleModel = "Civic";
 		try {
 			return SensoApi.queryApi(
 					loanAmount,
