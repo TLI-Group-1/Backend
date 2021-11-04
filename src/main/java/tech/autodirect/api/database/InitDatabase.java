@@ -69,11 +69,11 @@ public class InitDatabase {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
         "CREATE TABLE IF NOT EXISTS public.cars (" +
-            "brand character varying(50) NOT NULL," +
-            "model character varying(50) NOT NULL," +
-            "year integer NOT NULL," +
-            "price decimal(12) NOT NULL," +
-            "mileage real NULL," +
+            "brand character varying(50) NOT NULL, " +
+            "model character varying(50) NOT NULL, " +
+            "year integer NOT NULL, " +
+            "price decimal(12) NOT NULL, " +
+            "mileage real NULL, " +
             "id integer NOT NULL PRIMARY KEY" +
             ");"
         );
