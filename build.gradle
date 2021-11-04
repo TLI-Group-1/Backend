@@ -6,7 +6,7 @@ plugins {
 
 group = 'tech.autodirect'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = "11"
 
 repositories {
 	mavenCentral()
@@ -18,8 +18,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'javax.json:javax.json-api:1.1.4'
+	implementation 'com.opencsv:opencsv:5.5.2'
+	implementation 'org.postgresql:postgresql:42.3.1'
 }
 
 test {
 	useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_15
