@@ -36,7 +36,8 @@ public class SensoApi{
 
     public static HashMap<String, Object> queryApi(
         String loanAmount, String creditScore, String budget,
-        String vehicleMake, String vehicleModel, String vehicleYear, String vehicleKms
+        String vehicleMake, String vehicleModel, String vehicleYear,
+        String vehicleKms, String listPrice, String downpayment
     ) throws IOException, InterruptedException {
         // create request body
         Map<String, String> queryMap = new HashMap<>() {{
@@ -47,6 +48,8 @@ public class SensoApi{
             put("vehicleModel", vehicleModel);
             put("vehicleYear", vehicleYear);
             put("vehicleKms", vehicleKms);
+            put("listPrice", listPrice);
+            put("downpayment", downpayment);
         }};
         // convert request body to JSON string
         String query_body = gson.toJson(queryMap, Map.class);
