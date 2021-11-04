@@ -18,7 +18,6 @@ limitations under the License.
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,7 +37,7 @@ public class InitDatabase {
 
         // ingest the csv file given in the --csvpath parameter to the cars table
         // at the database given by db_conn
-        ingestCsv(db_conn, csv_path);
+        ingestCarsCsv(db_conn, csv_path);
     }
 
     private static String parseArgs(String[] args) {
@@ -48,7 +47,10 @@ public class InitDatabase {
         for(int i = 0; i != args.length - 1; i++) {
             // help message
             if (args[i].equals("-h") || args[i].equals("--help")) {
-                System.out.println("Help message. \n");
+                System.out.println(
+                    "\nSupply the \"--csvfile\" parameter to specify " +
+                    "the path to the cars CSV dataset.\n"
+                );
                 System.exit(0);
             }
             // accept a path to the input CSV file
@@ -69,50 +71,48 @@ public class InitDatabase {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
         "CREATE TABLE IF NOT EXISTS public.cars (" +
-            "brand character varying(50) NOT NULL, " +
-            "model character varying(50) NOT NULL, " +
-            "year integer NOT NULL, " +
-            "price decimal(12) NOT NULL, " +
-            "mileage real NULL, " +
-            "id integer NOT NULL PRIMARY KEY" +
+                "id         integer     NOT NULL PRIMARY KEY," +
+                "brand      varchar(50) NOT NULL, " +
+                "model      varchar(50) NOT NULL, " +
+                "year       integer     NOT NULL, " +
+                "price      decimal(12) NOT NULL, " +
+                "mileage    real        NULL" +
             ");"
         );
         stmt.close();
     }
 
-    private static void ingestCsv(Connection conn, String csv_path) throws IOException, CsvValidationException, SQLException {
+    private static void ingestCarsCsv(Connection conn, String csv_path) throws IOException, CsvValidationException, SQLException {
         // read the CSV file
         CSVReader reader = new CSVReader(new FileReader(csv_path));
 
         // iterate through the CSV file
         String [] line = reader.readNext(); // skip header
         while ((line = reader.readNext()) != null) {
-            if (line != null) {
-                System.out.println(
-                        line[0] + "\t" +  // id
-                                line[1] + "\t" +  // price
-                                line[2] + "\t" +  // brand
-                                line[3] + "\t" +  // model
-                                line[4] + "\t" +  // year
-                                line[6] + "\t"    // mileage
-                );
+            System.out.println(
+                line[0] + "\t" +  // id
+                line[1] + "\t" +  // price
+                line[2] + "\t" +  // brand
+                line[3] + "\t" +  // model
+                line[4] + "\t" +  // year
+                line[6] + "\t"    // mileage
+            );
 
-                PreparedStatement stmt = conn.prepareStatement(
-                "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
-                    "VALUES (?, ?, ?, ?, ?, ?)"
-                );
+            PreparedStatement stmt = conn.prepareStatement(
+            "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
+                "VALUES (?, ?, ?, ?, ?, ?)"
+            );
 
-                // populate values from the CSV into the prepared statement
-                stmt.setInt(1, Integer.parseInt(line[0]));
-                stmt.setString(2, line[2]);
-                stmt.setString(3, line[3]);
-                stmt.setInt(4, Integer.parseInt(line[4]));
-                stmt.setBigDecimal(5, BigDecimal.valueOf(Long.parseLong(line[1])));
-                stmt.setDouble(6, Double.parseDouble(line[6]));
-                stmt.executeUpdate();
+            // populate values from the CSV into the prepared statement
+            stmt.setInt(1, Integer.parseInt(line[0]));
+            stmt.setString(2, line[2]);
+            stmt.setString(3, line[3]);
+            stmt.setInt(4, Integer.parseInt(line[4]));
+            stmt.setBigDecimal(5, BigDecimal.valueOf(Long.parseLong(line[1])));
+            stmt.setDouble(6, Double.parseDouble(line[6]));
+            stmt.executeUpdate();
 
-                stmt.close();
-            }
+            stmt.close();
         }
     }
 }

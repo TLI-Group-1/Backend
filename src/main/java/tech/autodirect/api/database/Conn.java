@@ -31,9 +31,9 @@ public class Conn {
 
         // construct the DB URL according to "jdbc:postgresql://host:port/database"
         String db_url = "jdbc:postgresql://" +
-                db_params.get("AUTODIRECT_DB_HOST") + ":" +
-                db_params.get("AUTODIRECT_DB_PORT") + "/" +
-                db_name;
+            db_params.get("AUTODIRECT_DB_HOST") + ":" +
+            db_params.get("AUTODIRECT_DB_PORT") + "/" +
+            db_name;
 
         // supply the remaining DB parameters as properties
         Properties props = new Properties();
@@ -54,11 +54,11 @@ public class Conn {
     private static void getEnvVars() throws MissingEnvironmentVariableException {
         // attempt to obtain the relevant environment variables
         String [] variables = {
-                "AUTODIRECT_DB_HOST",
-                "AUTODIRECT_DB_PORT",
-                "AUTODIRECT_DB_SSL",
-                "AUTODIRECT_DB_USER",
-                "AUTODIRECT_DB_PASS"
+            "AUTODIRECT_DB_HOST",
+            "AUTODIRECT_DB_PORT",
+            "AUTODIRECT_DB_SSL",
+            "AUTODIRECT_DB_USER",
+            "AUTODIRECT_DB_PASS"
         };
 
         for (String var_name : variables) {
