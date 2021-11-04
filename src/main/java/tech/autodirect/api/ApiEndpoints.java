@@ -51,6 +51,8 @@ public class ApiEndpoints {
 		String vehicleModel = "Civic";
 		String vehicleYear = "2018";
 		String vehicleKms = "1";
+		String listPrice = "1000";
+		String downpayment = "1000";
 
 		try {
 			return SensoApi.queryApi(
@@ -60,7 +62,9 @@ public class ApiEndpoints {
 				vehicleMake,
 				vehicleModel,
 				vehicleYear,
-				vehicleKms
+				vehicleKms,
+				listPrice,
+				downpayment
 			);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
