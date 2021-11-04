@@ -16,7 +16,7 @@ Do not include a trailing slash.
 `x-api-key` HTTP header.
 * `AUTODIRECT_DB_HOST`: FQDN for the AutoDirect PostgreSQL database server
   * e.g. `db.autodirect.tech`
-* `AUTODIRECT_DB_POSR`: connection port for the PostgreSQL database server
+* `AUTODIRECT_DB_PORT`: connection port for the PostgreSQL database server
   * e.g. `5432`
 * `AUTODIRECT_DB_SSL`: either `true` or `false` specifying whether the connection
 to the database uses SSL encryption or not.
