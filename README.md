@@ -24,8 +24,12 @@ to the database uses SSL encryption or not.
 * `AUTODIRECT_DB_PASS`: password associated with the given user for the PostgreSQL database
 
 ## Initializing the PostgreSQL Database
-The `InitDatabase` class within the `database` package initializes a PostgreSQL database
-with the necessary schema and populates the `public.cars` table with a provided CSV dataset.
+The `InitDatabase` class within the `database` package contains a main method that allows it
+to be executed independently. During deployment, it can be executed on a one time basis, which
+initializes a PostgreSQL database with the necessary schema and populates the `public.cars` 
+table with a provided CSV dataset.
+
+Database configuration needs to be specified with environment variables as shown above.
 ```
 Usage: InitDatabase [options] <file> 
 	 -h --help	display this help message and exit
