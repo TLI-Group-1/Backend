@@ -25,8 +25,6 @@ import java.sql.*;
 
 public class InitDatabase {
 
-//    private static
-
     public static void main(String[] args) throws SQLException, IOException, CsvValidationException {
         // parse command-line arguments and obtain the CSV file path
         String csv_path = parseArgs(args);
@@ -74,7 +72,7 @@ public class InitDatabase {
 
     private static void exitWithHelp(int exit_code) {
         String help_text = "\nUsage: InitDatabase [options] <file> \n" +
-                "\t -h --help\tprint this help message and exit\n" +
+                "\t -h --help\tdisplay this help message and exit\n" +
                 "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
                 "\nExample — use 'cars.csv' in the current working directory:\n" +
                 "\t InitDatabase --csvfile ./cars.csv\n";
