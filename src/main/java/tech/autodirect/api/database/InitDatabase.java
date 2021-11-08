@@ -25,6 +25,8 @@ import java.sql.*;
 
 public class InitDatabase {
 
+//    private static
+
     public static void main(String[] args) throws SQLException, IOException, CsvValidationException {
         // parse command-line arguments and obtain the CSV file path
         String csv_path = parseArgs(args);
@@ -43,15 +45,17 @@ public class InitDatabase {
     private static String parseArgs(String[] args) {
         String csv_path = null;
 
+        // exit immediately if no arguments are provided
+        if (args.length == 0) {
+            System.out.println("\n[!] no arguments provided.");
+            exitWithHelp(1);
+        }
+
         // cycle through command line arguments and process them
         for(int i = 0; i != args.length - 1; i++) {
             // help message
             if (args[i].equals("-h") || args[i].equals("--help")) {
-                System.out.println(
-                    "\nSupply the \"--csvfile\" parameter to specify " +
-                    "the path to the cars CSV dataset.\n"
-                );
-                System.exit(0);
+                exitWithHelp(0);
             }
             // accept a path to the input CSV file
             else if (args[i].equals("--csvfile")) {
@@ -61,17 +65,28 @@ public class InitDatabase {
 
         // report an error if the `--csvfile` option is not provided
         if (csv_path == null) {
-            System.out.println("--csvfile option not provided.");
-            System.exit(1);
+            System.out.println("\n[!] --csvfile option not provided.");
+            exitWithHelp(1);
         }
+
         return csv_path;
+    }
+
+    private static void exitWithHelp(int exit_code) {
+        String help_text = "\nUsage: InitDatabase [options] <file> \n" +
+                "\t -h --help\tprint this help message and exit\n" +
+                "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
+                "\nExample — use 'cars.csv' in the current working directory:\n" +
+                "\t InitDatabase --csvfile ./cars.csv\n";
+        System.out.println(help_text);
+        System.exit(exit_code);
     }
 
     private static void createCarsTable(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
         "CREATE TABLE IF NOT EXISTS public.cars (" +
-                "id         integer     NOT NULL PRIMARY KEY," +
+                "id         integer     NOT NULL PRIMARY KEY, " +
                 "brand      varchar(50) NOT NULL, " +
                 "model      varchar(50) NOT NULL, " +
                 "year       integer     NOT NULL, " +
