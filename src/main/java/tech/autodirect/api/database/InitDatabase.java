@@ -35,6 +35,9 @@ public class InitDatabase {
         // create a cars table in the database given by db_conn
         createCarsTable(db_conn);
 
+        // create a users table in the database given by db_conn
+        createUsersTable(db_conn);
+
         // ingest the csv file given in the --csvpath parameter to the cars table
         // at the database given by db_conn
         ingestCarsCsv(db_conn, csv_path);
@@ -90,6 +93,19 @@ public class InitDatabase {
                 "year       integer     NOT NULL, " +
                 "price      decimal(12) NOT NULL, " +
                 "mileage    real        NULL" +
+            ");"
+        );
+        stmt.close();
+    }
+
+    private static void createUsersTable(Connection conn) throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate(
+        "CREATE TABLE IF NOT EXISTS public.users (" +
+                "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
+                "credit_score   integer     NULL, " +
+                "cars_subset    varchar(50) NULL, " +
+                "offers_claimed text[]      NULL, " +
             ");"
         );
         stmt.close();
