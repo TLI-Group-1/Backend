@@ -105,7 +105,7 @@ public class InitDatabase {
                 "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
                 "credit_score   integer     NULL, " +
                 "cars_subset    varchar(50) NULL, " +
-                "offers_claimed text[]      NULL, " +
+                "offers_claimed text[]      NULL " +
             ");"
         );
         stmt.close();
