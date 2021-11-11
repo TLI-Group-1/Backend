@@ -15,9 +15,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -90,7 +90,7 @@ public class InitDatabase {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
             "CREATE TABLE IF NOT EXISTS public.cars (" +
-                "id         integer     NOT NULL PRIMARY KEY, " +
+                "id         serial      NOT NULL PRIMARY KEY, " +
                 "brand      varchar(50) NOT NULL, " +
                 "model      varchar(50) NOT NULL, " +
                 "year       integer     NOT NULL, " +
@@ -109,7 +109,7 @@ public class InitDatabase {
                 "credit_score   integer     NULL, " +
                 "down_payment   decimal(12) NULL, " +
                 "budget_mo      decimal(12) NULL, " +
-                "offers         varchar(50) NULL" +
+                "offers_table   varchar(50) NULL" +
             ");"
         );
         stmt.close();

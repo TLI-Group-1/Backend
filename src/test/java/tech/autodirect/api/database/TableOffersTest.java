@@ -2,7 +2,6 @@ package tech.autodirect.api.database;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +25,7 @@ public class TableOffersTest {
             ResultSet rs = stmt.executeQuery(
                 "SELECT EXISTS (" +
                     "SELECT 1 " +
-                    "FROM   information_schema.tables\n" +
+                    "FROM   information_schema.tables " +
                     "WHERE  table_schema = 'offers'" +
                     "   and table_name=" + "'offer_" + username + "'" +
                 ");"
