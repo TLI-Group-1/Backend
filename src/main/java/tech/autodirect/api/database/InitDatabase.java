@@ -89,7 +89,7 @@ public class InitDatabase {
     private static void createCarsTable(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
-        "CREATE TABLE IF NOT EXISTS public.cars (" +
+            "CREATE TABLE IF NOT EXISTS public.cars (" +
                 "id         integer     NOT NULL PRIMARY KEY, " +
                 "brand      varchar(50) NOT NULL, " +
                 "model      varchar(50) NOT NULL, " +
@@ -104,7 +104,7 @@ public class InitDatabase {
     private static void createUsersTable(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
-        "CREATE TABLE IF NOT EXISTS public.users (" +
+            "CREATE TABLE IF NOT EXISTS public.users (" +
                 "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
                 "credit_score   integer     NULL, " +
                 "down_payment   decimal(12) NULL, " +
@@ -132,7 +132,7 @@ public class InitDatabase {
             );
 
             PreparedStatement stmt = conn.prepareStatement(
-            "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
+                "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
                 "VALUES (?, ?, ?, ?, ?, ?)"
             );
 
