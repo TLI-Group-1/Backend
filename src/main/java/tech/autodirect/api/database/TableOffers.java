@@ -233,7 +233,7 @@ public class TableOffers {
      * @return : ArrayList of HashMaps, each representing a retrieved offer
      */
     public ArrayList<HashMap<String, Object>> getAllOffers() throws SQLException {
-        // construct a prepared SQL statement selecting all offers
+        // construct a SQL statement selecting all offers
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
             "SELECT * FROM " + this.table_name + ";"
