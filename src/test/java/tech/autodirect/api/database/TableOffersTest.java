@@ -10,7 +10,7 @@ import java.sql.Statement;
 public class TableOffersTest {
     private static final String db_name = "testing";
 
-    /*
+    /**
      * Create a new offer_ table in the offers schema, then check if it exists.
      */
     @Test void newTable() {
@@ -43,7 +43,7 @@ public class TableOffersTest {
     }
 
 
-    /*
+    /**
      * Drop the entire "offers" schema from the testing database
      */
     @AfterAll public static void cleanupOffersTables() throws SQLException {
