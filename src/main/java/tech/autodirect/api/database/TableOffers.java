@@ -82,8 +82,7 @@ public class TableOffers {
     /**
      * Public getter for the "table_name" property.
      *
-     * @return : the name of the offers table, follows "offers.offers_<userid>"
-     *     format
+     * @return : the name of the offers table, follows "offers.offers_<userid>" format
      */
     public String getTableName() {
         return this.table_name;
@@ -185,7 +184,8 @@ public class TableOffers {
     }
 
     /**
-     * Helper method that extracts a HashMap object from a JDBC result containing an offer row.
+     * Helper method that extracts a HashMap object from a JDBC result containing an offer
+     * row.
      *
      * @param rs : ResultSet object already pointing to a result row, containing an offer
      * @return : HashMap representation of the current offer result
@@ -250,7 +250,8 @@ public class TableOffers {
     }
 
     /**
-     * Retrieve all offers in the current offers table whose "claimed" field is set to true.
+     * Retrieve all offers in the current offers table whose "claimed" field is set to
+     * true.
      *
      * @return : ArrayList of HashMaps, each representing a retrieved offer
      */

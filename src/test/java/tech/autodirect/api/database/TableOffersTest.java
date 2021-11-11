@@ -11,7 +11,7 @@ public class TableOffersTest {
     private static final String db_name = "testing";
 
     /**
-     * Create a new offer_ table in the offers schema, then check if it exists.
+     * Create a new offers.offers_ table in the offers schema, then check if it exists.
      */
     @Test void newTable() {
         try {

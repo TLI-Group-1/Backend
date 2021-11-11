@@ -33,7 +33,9 @@ public class Conn {
     // database parameters
     private static HashMap<String, String> db_params = new HashMap<>();
 
-    public static Connection getConn(String db_name) throws MissingEnvironmentVariableException, SQLException {
+    public static Connection getConn(String db_name)
+        throws MissingEnvironmentVariableException, SQLException
+    {
         // get the database configuration parameters from environment variables
         getEnvVars();
 

@@ -25,7 +25,9 @@ import java.sql.*;
 
 public class InitDatabase {
 
-    public static void main(String[] args) throws SQLException, IOException, CsvValidationException {
+    public static void main(String[] args)
+        throws SQLException, IOException, CsvValidationException
+    {
         // parse command-line arguments and obtain the CSV file path
         String csv_path = parseArgs(args);
 
@@ -115,7 +117,9 @@ public class InitDatabase {
         stmt.close();
     }
 
-    private static void ingestCarsCsv(Connection conn, String csv_path) throws IOException, CsvValidationException, SQLException {
+    private static void ingestCarsCsv(Connection conn, String csv_path)
+        throws IOException, CsvValidationException, SQLException
+    {
         // read the CSV file
         CSVReader reader = new CSVReader(new FileReader(csv_path));
 
