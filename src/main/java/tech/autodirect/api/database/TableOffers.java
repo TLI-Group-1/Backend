@@ -172,10 +172,25 @@ public class TableOffers {
         return offers_list;
     }
 
-//    public Array getClaimedOffers() {
-//
-//    }
-//
+    public ArrayList getClaimedOffers() throws SQLException {
+        // construct a prepared SQL statement selecting all offers
+        // where "claimed" is true
+        Statement stmt = this.db_conn.createStatement();
+        ResultSet rs = stmt.executeQuery(
+        "SELECT * FROM " + this.table_name +
+            " WHERE 'claimed' = true;"
+        );
+
+        // loop through all results and append their HashMap to an ArrayList
+        ArrayList<HashMap> offers_list = new ArrayList<>();
+        while (rs.next()) {
+            offers_list.add(offerResultToHashMap(rs));
+        }
+        stmt.close();
+
+        return offers_list;
+    }
+
 //    public void markOfferClaimed() {
 //
 //    }
