@@ -30,7 +30,7 @@ public class InitDatabase {
         String csv_path = parseArgs(args);
 
         // obtain a database connection
-        Connection db_conn = Conn.getConn();
+        Connection db_conn = Conn.getConn("autodirect");
 
         // create a cars table in the database given by db_conn
         createCarsTable(db_conn);
