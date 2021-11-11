@@ -44,7 +44,11 @@ public class ApiEndpoints {
 
 	// demo API endpoint; use for reference
 	@GetMapping("/demo")
-	public Object hello(@RequestParam String loanAmount, @RequestParam String creditScore, @RequestParam String budget) {
+	public Object hello(
+		@RequestParam String loanAmount,
+		@RequestParam String creditScore,
+		@RequestParam String budget
+	) {
 
 		// TODO: Remove this hardcoding and read params from other parts of the program.
 		String vehicleMake = "Honda";

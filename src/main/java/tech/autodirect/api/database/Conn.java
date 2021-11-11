@@ -22,10 +22,20 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class Conn {
+    // list of environment variables to fetch
+    private static String[] environment_variables = {
+        "AUTODIRECT_DB_HOST",
+        "AUTODIRECT_DB_PORT",
+        "AUTODIRECT_DB_SSL",
+        "AUTODIRECT_DB_USER",
+        "AUTODIRECT_DB_PASS"
+    };
+    // database parameters
     private static HashMap<String, String> db_params = new HashMap<>();
-    private static final String db_name = "autodirect";
 
-    public static Connection getConn() throws MissingEnvironmentVariableException, SQLException {
+    public static Connection getConn(String db_name)
+        throws MissingEnvironmentVariableException, SQLException
+    {
         // get the database configuration parameters from environment variables
         getEnvVars();
 
@@ -53,19 +63,12 @@ public class Conn {
 
     private static void getEnvVars() throws MissingEnvironmentVariableException {
         // attempt to obtain the relevant environment variables
-        String [] variables = {
-            "AUTODIRECT_DB_HOST",
-            "AUTODIRECT_DB_PORT",
-            "AUTODIRECT_DB_SSL",
-            "AUTODIRECT_DB_USER",
-            "AUTODIRECT_DB_PASS"
-        };
-
-        for (String var_name : variables) {
+        for (String var_name : environment_variables) {
             String var_value = System.getenv(var_name);
             if (var_value == null) {
                 throw new MissingEnvironmentVariableException(
-                        "\n\n\t> \"" + var_name + "\" not specified in environment variables. \n"
+                    "\n\n\t> \"" + var_name +
+                    "\" not specified in environment variables. \n"
                 );
             }
             else {

@@ -15,9 +15,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,12 +25,14 @@ import java.sql.*;
 
 public class InitDatabase {
 
-    public static void main(String[] args) throws SQLException, IOException, CsvValidationException {
+    public static void main(String[] args)
+        throws SQLException, IOException, CsvValidationException
+    {
         // parse command-line arguments and obtain the CSV file path
         String csv_path = parseArgs(args);
 
         // obtain a database connection
-        Connection db_conn = Conn.getConn();
+        Connection db_conn = Conn.getConn("autodirect");
 
         // create a cars table in the database given by db_conn
         createCarsTable(db_conn);
@@ -41,6 +43,9 @@ public class InitDatabase {
         // ingest the csv file given in the --csvpath parameter to the cars table
         // at the database given by db_conn
         ingestCarsCsv(db_conn, csv_path);
+
+        // close the database connection at the end
+        db_conn.close();
     }
 
     private static String parseArgs(String[] args) {
@@ -58,8 +63,8 @@ public class InitDatabase {
             if (args[i].equals("-h") || args[i].equals("--help")) {
                 exitWithHelp(0);
             }
-            // accept a path to the input CSV file
-            else if (args[i].equals("--csvfile")) {
+            // accept a path to the input CSV file, if a path is supplied
+            else if (args[i].equals("--csvfile") && (i+1 < args.length)) {
                 csv_path = args[i+1];
             }
         }
@@ -75,10 +80,10 @@ public class InitDatabase {
 
     private static void exitWithHelp(int exit_code) {
         String help_text = "\nUsage: InitDatabase [options] <file> \n" +
-                "\t -h --help\tdisplay this help message and exit\n" +
-                "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
-                "\nExample — use 'cars.csv' in the current working directory:\n" +
-                "\t InitDatabase --csvfile ./cars.csv\n";
+            "\t -h --help\tdisplay this help message and exit\n" +
+            "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
+            "\nExample — use 'cars.csv' in the current working directory:\n" +
+            "\t InitDatabase --csvfile ./cars.csv\n";
         System.out.println(help_text);
         System.exit(exit_code);
     }
@@ -86,8 +91,8 @@ public class InitDatabase {
     private static void createCarsTable(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
-        "CREATE TABLE IF NOT EXISTS public.cars (" +
-                "id         integer     NOT NULL PRIMARY KEY, " +
+            "CREATE TABLE IF NOT EXISTS public.cars (" +
+                "id         serial      NOT NULL PRIMARY KEY, " +
                 "brand      varchar(50) NOT NULL, " +
                 "model      varchar(50) NOT NULL, " +
                 "year       integer     NOT NULL, " +
@@ -101,17 +106,20 @@ public class InitDatabase {
     private static void createUsersTable(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate(
-        "CREATE TABLE IF NOT EXISTS public.users (" +
+            "CREATE TABLE IF NOT EXISTS public.users (" +
                 "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
                 "credit_score   integer     NULL, " +
-                "cars_subset    varchar(50) NULL, " +
-                "offers_claimed text[]      NULL " +
+                "down_payment   decimal(12) NULL, " +
+                "budget_mo      decimal(12) NULL, " +
+                "offers_table   varchar(50) NULL" +
             ");"
         );
         stmt.close();
     }
 
-    private static void ingestCarsCsv(Connection conn, String csv_path) throws IOException, CsvValidationException, SQLException {
+    private static void ingestCarsCsv(Connection conn, String csv_path)
+        throws IOException, CsvValidationException, SQLException
+    {
         // read the CSV file
         CSVReader reader = new CSVReader(new FileReader(csv_path));
 
@@ -128,7 +136,7 @@ public class InitDatabase {
             );
 
             PreparedStatement stmt = conn.prepareStatement(
-            "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
+                "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
                 "VALUES (?, ?, ?, ?, ?, ?)"
             );
 
