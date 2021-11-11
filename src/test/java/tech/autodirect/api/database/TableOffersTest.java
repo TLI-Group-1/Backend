@@ -48,9 +48,9 @@ public class TableOffersTest {
      * Drop the entire "offers" schema from the testing database
      */
     @AfterAll public static void cleanupOffersTables() throws SQLException {
-        Connection db_conn = Conn.getConn(db_name);
-        Statement stmt = db_conn.createStatement();
-        stmt.executeUpdate("DROP SCHEMA offers CASCADE;");
-        stmt.close();
+//        Connection db_conn = Conn.getConn(db_name);
+//        Statement stmt = db_conn.createStatement();
+//        stmt.executeUpdate("DROP SCHEMA offers CASCADE;");
+//        stmt.close();
     }
 }

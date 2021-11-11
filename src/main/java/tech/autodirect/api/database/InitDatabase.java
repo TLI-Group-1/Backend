@@ -41,6 +41,9 @@ public class InitDatabase {
         // ingest the csv file given in the --csvpath parameter to the cars table
         // at the database given by db_conn
         ingestCarsCsv(db_conn, csv_path);
+
+        // close the database connection at the end
+        db_conn.close();
     }
 
     private static String parseArgs(String[] args) {
