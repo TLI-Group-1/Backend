@@ -191,11 +191,29 @@ public class TableOffers {
         return offers_list;
     }
 
-//    public void markOfferClaimed() {
-//
-//    }
-//
-//    public void markOfferUnclaimed() {
-//
-//    }
+    public void markOfferClaimed(int offer_id) throws SQLException {
+        // construct a prepared SQL marking the specified offer claimed
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+        "UPDATE " + this.table_name +
+            " SET 'claimed' = true WHERE offer_id = ?;"
+        );
+        stmt.setInt(1, offer_id);
+
+        // execute and close the above SQL statement
+        stmt.executeUpdate();
+        stmt.close();
+    }
+
+    public void markOfferUnclaimed(int offer_id) throws SQLException {
+        // construct a prepared SQL marking the specified offer unclaimed
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+        "UPDATE " + this.table_name +
+            " SET 'claimed' = false WHERE offer_id = ?;"
+        );
+        stmt.setInt(1, offer_id);
+
+        // execute and close the above SQL statement
+        stmt.executeUpdate();
+        stmt.close();
+    }
 }
