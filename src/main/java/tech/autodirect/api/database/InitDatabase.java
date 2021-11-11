@@ -58,8 +58,8 @@ public class InitDatabase {
             if (args[i].equals("-h") || args[i].equals("--help")) {
                 exitWithHelp(0);
             }
-            // accept a path to the input CSV file
-            else if (args[i].equals("--csvfile")) {
+            // accept a path to the input CSV file, if a path is supplied
+            else if (args[i].equals("--csvfile") && (i+1 < args.length)) {
                 csv_path = args[i+1];
             }
         }
@@ -75,10 +75,10 @@ public class InitDatabase {
 
     private static void exitWithHelp(int exit_code) {
         String help_text = "\nUsage: InitDatabase [options] <file> \n" +
-                "\t -h --help\tdisplay this help message and exit\n" +
-                "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
-                "\nExample — use 'cars.csv' in the current working directory:\n" +
-                "\t InitDatabase --csvfile ./cars.csv\n";
+            "\t -h --help\tdisplay this help message and exit\n" +
+            "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
+            "\nExample — use 'cars.csv' in the current working directory:\n" +
+            "\t InitDatabase --csvfile ./cars.csv\n";
         System.out.println(help_text);
         System.exit(exit_code);
     }
@@ -104,8 +104,9 @@ public class InitDatabase {
         "CREATE TABLE IF NOT EXISTS public.users (" +
                 "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
                 "credit_score   integer     NULL, " +
-                "cars_subset    varchar(50) NULL, " +
-                "offers_claimed text[]      NULL " +
+                "down_payment   decimal(12) NULL, " +
+                "budget_mo      decimal(12) NULL, " +
+                "offers         varchar(50) NULL" +
             ");"
         );
         stmt.close();
