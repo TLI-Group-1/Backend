@@ -16,11 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class TableOffers {
     public Connection db_conn;
@@ -125,17 +124,8 @@ public class TableOffers {
         stmt.close();
     }
 
-    public Map getOfferByOfferId(int offer_id) throws SQLException {
-        // construct a prepared SQL statement selecting the specified offer
-        PreparedStatement stmt = this.db_conn.prepareStatement(
-        "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
-        );
-        stmt.setInt(1, offer_id);
-
-        // execute the above SQL statement and extract result into a HashMap
-        ResultSet rs = stmt.executeQuery();
-        rs.next();
-        Map<String, Object> offer_result = new HashMap<String, Object>() {{
+    private static HashMap offerResultToHashMap(ResultSet rs) throws SQLException {
+        return new HashMap<String, Object>() {{
             put("offer_id", rs.getInt("offer_id"));
             put("car_id", rs.getInt("car_id"));
             put("loan_amount", rs.getBigDecimal("loan_amount"));
@@ -147,15 +137,41 @@ public class TableOffers {
             put("installments", rs.getString("installments"));
             put("claimed", rs.getBoolean("claimed"));
         }};
+    }
+
+    public HashMap getOfferByOfferId(int offer_id) throws SQLException {
+        // construct a prepared SQL statement selecting the specified offer
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+        "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
+        );
+        stmt.setInt(1, offer_id);
+
+        // execute the above SQL statement and extract result into a HashMap
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        HashMap<String, Object> offer_result = offerResultToHashMap(rs);
         stmt.close();
 
         return offer_result;
     }
-//
-//    public Array getAllOffers() {
-//
-//    }
-//
+
+    public ArrayList getAllOffers() throws SQLException {
+        // construct a prepared SQL statement selecting all offers
+        Statement stmt = this.db_conn.createStatement();
+        ResultSet rs = stmt.executeQuery(
+            "SELECT * FROM " + this.table_name + ";"
+        );
+
+        // loop through all results and append their HashMap to an ArrayList
+        ArrayList<HashMap> offers_list = new ArrayList<>();
+        while (rs.next()) {
+            offers_list.add(offerResultToHashMap(rs));
+        }
+        stmt.close();
+
+        return offers_list;
+    }
+
 //    public Array getClaimedOffers() {
 //
 //    }
