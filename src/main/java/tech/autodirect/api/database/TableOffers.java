@@ -34,11 +34,11 @@ public class TableOffers {
         this.db_conn = Conn.getConn(db_name);
     }
 
-    public void newTable(String user_id) throws SQLException {
+    public String newTable(String user_id) throws SQLException {
         // create the "offers" schema if it does not exist yet
         Statement stmt_create_schema = this.db_conn.createStatement();
         stmt_create_schema.executeUpdate(
-        "CREATE SCHEMA IF NOT EXISTS offers;"
+            "CREATE SCHEMA IF NOT EXISTS offers;"
         );
         stmt_create_schema.close();
 
@@ -48,7 +48,7 @@ public class TableOffers {
         // create and execute the SQL statement that will create an offer table
         Statement stmt = this.db_conn.createStatement();
         stmt.executeUpdate(
-        "CREATE TABLE IF NOT EXISTS " + this.table_name + " (" +
+            "CREATE TABLE IF NOT EXISTS " + this.table_name + " (" +
                 "offer_id       serial      NOT NULL PRIMARY KEY, " +
                 "car_id         integer     NOT NULL, " +
                 "loan_amount    decimal(12) NOT NULL, " +
@@ -62,6 +62,12 @@ public class TableOffers {
             ");"
         );
         stmt.close();
+
+        return this.getTableName();
+    }
+
+    public String getTableName() {
+        return this.table_name;
     }
 
     public int addOffer(
@@ -77,7 +83,7 @@ public class TableOffers {
     ) throws SQLException {
         // construct a prepared SQL statement inserting the specified values
         PreparedStatement stmt = this.db_conn.prepareStatement(
-        "INSERT INTO " + this.table_name + " (" +
+            "INSERT INTO " + this.table_name + " (" +
                 String.join(", ", table_columns) +
             ")" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
@@ -96,7 +102,7 @@ public class TableOffers {
         stmt.executeUpdate();
         stmt.close();
 
-        // retrieve the offer ID
+        // retrieve the offer ID and save it to "offer_id"
         Statement stmt_lastval = this.db_conn.createStatement();
         ResultSet rs = stmt_lastval.executeQuery("SELECT LASTVAL();");
         rs.next();
@@ -109,7 +115,7 @@ public class TableOffers {
     public void removeOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement deleting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
-        "DELETE FROM " + this.table_name + " WHERE offer_id = ?;"
+            "DELETE FROM " + this.table_name + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
 
@@ -124,8 +130,8 @@ public class TableOffers {
         stmt.close();
     }
 
-    private static HashMap offerResultToHashMap(ResultSet rs) throws SQLException {
-        return new HashMap<String, Object>() {{
+    private static HashMap<String, Object> offerResultToHashMap(ResultSet rs) throws SQLException {
+        return new HashMap<>() {{
             put("offer_id", rs.getInt("offer_id"));
             put("car_id", rs.getInt("car_id"));
             put("loan_amount", rs.getBigDecimal("loan_amount"));
@@ -139,10 +145,10 @@ public class TableOffers {
         }};
     }
 
-    public HashMap getOfferByOfferId(int offer_id) throws SQLException {
+    public HashMap<String, Object> getOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
-        "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
+            "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
 
@@ -155,7 +161,7 @@ public class TableOffers {
         return offer_result;
     }
 
-    public ArrayList getAllOffers() throws SQLException {
+    public ArrayList<HashMap<String, Object>> getAllOffers() throws SQLException {
         // construct a prepared SQL statement selecting all offers
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
@@ -163,7 +169,7 @@ public class TableOffers {
         );
 
         // loop through all results and append their HashMap to an ArrayList
-        ArrayList<HashMap> offers_list = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> offers_list = new ArrayList<>();
         while (rs.next()) {
             offers_list.add(offerResultToHashMap(rs));
         }
@@ -172,17 +178,16 @@ public class TableOffers {
         return offers_list;
     }
 
-    public ArrayList getClaimedOffers() throws SQLException {
+    public ArrayList<HashMap<String, Object>> getClaimedOffers() throws SQLException {
         // construct a prepared SQL statement selecting all offers
         // where "claimed" is true
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
-        "SELECT * FROM " + this.table_name +
-            " WHERE 'claimed' = true;"
+            "SELECT * FROM " + this.table_name + " WHERE 'claimed' = true;"
         );
 
         // loop through all results and append their HashMap to an ArrayList
-        ArrayList<HashMap> offers_list = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> offers_list = new ArrayList<>();
         while (rs.next()) {
             offers_list.add(offerResultToHashMap(rs));
         }
@@ -194,7 +199,7 @@ public class TableOffers {
     public void markOfferClaimed(int offer_id) throws SQLException {
         // construct a prepared SQL marking the specified offer claimed
         PreparedStatement stmt = this.db_conn.prepareStatement(
-        "UPDATE " + this.table_name +
+            "UPDATE " + this.table_name +
             " SET 'claimed' = true WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
@@ -207,7 +212,7 @@ public class TableOffers {
     public void markOfferUnclaimed(int offer_id) throws SQLException {
         // construct a prepared SQL marking the specified offer unclaimed
         PreparedStatement stmt = this.db_conn.prepareStatement(
-        "UPDATE " + this.table_name +
+            "UPDATE " + this.table_name +
             " SET 'claimed' = false WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);

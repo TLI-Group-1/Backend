@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TableOffersTest {
-    private static String db_name = "testing";
+    private static final String db_name = "testing";
 
     /*
      * Create a new offer_ table in the offers schema, then check if it exists.
@@ -24,7 +24,7 @@ public class TableOffersTest {
             // check if the created table exists under the correct name
             Statement stmt = table.db_conn.createStatement();
             ResultSet rs = stmt.executeQuery(
-            "SELECT EXISTS (" +
+                "SELECT EXISTS (" +
                     "SELECT 1 " +
                     "FROM   information_schema.tables\n" +
                     "WHERE  table_schema = 'offers'" +
