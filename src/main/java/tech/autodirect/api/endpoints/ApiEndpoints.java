@@ -1,4 +1,4 @@
-package tech.autodirect.api;
+package tech.autodirect.api.endpoints;
 
 /*
 Copyright (c) 2021 Ruofan Chen, Samm Du, Nada Eldin, Shalev Lifshitz
