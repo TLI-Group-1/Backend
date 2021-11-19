@@ -1,4 +1,4 @@
-package tech.autodirect.api.utils;
+package tech.autodirect.api.services;
 
 /*
 Copyright (c) 2021 Ruofan Chen, Samm Du, Nada Eldin, Shalev Lifshitz
@@ -16,5 +16,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-public class ReadCsv {
+public class SvcGetClaimedOffers {
 }
