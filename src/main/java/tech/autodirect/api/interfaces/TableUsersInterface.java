@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -23,16 +24,22 @@ public interface TableUsersInterface {
     /**
      * Add a user entry to the users table in the database.
      */
-    public void addUser() throws SQLException;
+    public void addUser(
+            String userId,
+            int creditScore,
+            BigDecimal downPayment,
+            BigDecimal budgetMonthly,
+            String offersTableName
+    ) throws SQLException;
 
     /**
      * Get a specific user entry by the user ID.
      * @return A ResultSet containing the user entry.
      */
-    public ResultSet getUserByID() throws SQLException;
+    public ResultSet getUserByID(String userId) throws SQLException;
 
     /**
      * Remove a specific user entry by the user ID.
      */
-    public void removeUserByID() throws SQLException;
+    public void removeUserByID(String userId) throws SQLException;
 }
