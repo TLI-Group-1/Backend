@@ -17,8 +17,8 @@ limitations under the License.
 */
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class EntOffer {
     private int offerId;
@@ -33,21 +33,21 @@ public class EntOffer {
     private boolean claimed;
 
     /**
-     * Populates EntOffer from a JDBC result containing an offer.
+     * Populates EntOffer from a Map containing representing an offer entry in the database.
      *
-     * @param rs : ResultSet object already pointing to a result row, containing an offer
+     * @param entry : A Map containing representing an offer entry in the database.
      */
-    public void loadResultSet(ResultSet rs) throws SQLException {
-        offerId = rs.getInt("offer_id");
-        carId = rs.getInt("car_id");
-        loanAmount = rs.getBigDecimal("loan_amount");
-        capitalSum = rs.getBigDecimal("capital_sum");
-        interestSum = rs.getBigDecimal("interest_sum");
-        totalSum = rs.getBigDecimal("total_sum");
-        interestRate = rs.getDouble("interest_rate");
-        termMo = rs.getDouble("term_mo");
-        installments = rs.getString("installments");
-        claimed = rs.getBoolean("claimed");
+    public void loadFromList(Map<String, Object> entry) throws SQLException {
+        offerId = (int) entry.get("offer_id");
+        carId = (int) entry.get("car_id");
+        loanAmount = (BigDecimal) entry.get("loan_amount");
+        capitalSum = (BigDecimal) entry.get("capital_sum");
+        interestSum = (BigDecimal) entry.get("interest_sum");
+        totalSum = (BigDecimal) entry.get("total_sum");
+        interestRate = (double) entry.get("interest_rate");
+        termMo = (double) entry.get("term_mo");
+        installments = (String) entry.get("installments");
+        claimed = (boolean) entry.get("claimed");
     }
 
     public int getOfferId() {

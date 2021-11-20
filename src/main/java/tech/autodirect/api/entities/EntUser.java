@@ -16,5 +16,47 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.Map;
+
 public class EntUser {
+    private String userId;
+    private int creditScore;
+    private BigDecimal downPayment;
+    private BigDecimal budgetMo;
+    private String offersTable;
+
+    /**
+     * Populates EntUser from a Map containing representing a user entry in the database.
+     *
+     * @param entry : A Map containing representing a user entry in the database.
+     */
+    public void loadFromList(Map<String, Object> entry) throws SQLException {
+        userId = (String) entry.get("user_id");
+        creditScore = (int) entry.get("credit_score");
+        downPayment = (BigDecimal) entry.get("down_payment");
+        budgetMo = (BigDecimal) entry.get("budget_mo");
+        offersTable = (String) entry.get("offers_table");
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public int getCreditScore() {
+        return creditScore;
+    }
+
+    public BigDecimal getDownPayment() {
+        return downPayment;
+    }
+
+    public BigDecimal getBudgetMo() {
+        return budgetMo;
+    }
+
+    public String getOffersTable() {
+        return offersTable;
+    }
 }

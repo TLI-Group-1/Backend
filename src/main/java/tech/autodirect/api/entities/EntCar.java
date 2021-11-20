@@ -16,5 +16,55 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.utils.UnitConv;
+
+import java.sql.SQLException;
+import java.util.Map;
+
 public class EntCar {
+    private int id;
+    private String brand;
+    private String model;
+    private int year;
+    private double price;
+    private double kms;
+
+    /**
+     * Populates EntCar from a Map containing representing a car entry in the database.
+     *
+     * @param entry : A Map containing representing a car entry in the database.
+     */
+    public void loadFromList(Map<String, Object> entry) throws SQLException {
+        id = (int) entry.get("id");
+        brand = (String) entry.get("brand");
+        model = (String) entry.get("model");
+        year = (int) entry.get("year");
+        price = (double) entry.get("price");
+        kms = UnitConv.mileToKm((double) entry.get("mileage"));
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public double getKms() {
+        return kms;
+    }
+
 }
