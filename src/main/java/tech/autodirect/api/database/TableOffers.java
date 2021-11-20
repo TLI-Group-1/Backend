@@ -16,13 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.TableOffersInterface;
+
 import javax.management.InstanceAlreadyExistsException;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TableOffers {
+public class TableOffers implements TableOffersInterface {
     public Connection db_conn;
     private String table_name = null;
     private final String[] table_columns = {
@@ -39,14 +41,6 @@ public class TableOffers {
         this.db_conn = Conn.getConn(db_name);
     }
 
-    /**
-     * Create a new offers table for a given user inside the "offers" schema.
-     *
-     * @param user_id : the user string that uniquely identifies a user, same as
-     *     "user_id" in the public.users table
-     * @return : the name of the newly created offers table, follows
-     *     "offers.offers_<userid>" format
-     */
     public String newTable(String user_id) throws SQLException {
         // create the "offers" schema if it does not exist yet
         Statement stmt_create_schema = this.db_conn.createStatement();
@@ -79,24 +73,10 @@ public class TableOffers {
         return this.getTableName();
     }
 
-    /**
-     * Public getter for the "table_name" property.
-     *
-     * @return : the name of the offers table, follows "offers.offers_<userid>" format
-     */
     public String getTableName() {
         return this.table_name;
     }
 
-    /**
-     * Public setter for the "table_name" property.
-     * Use in place of newTable() when operating on an existing offers table.
-     *
-     * @param table_name : name of the table to connect to, follows
-     *     "offers.offers_<userid>" format
-     * @throws InstanceAlreadyExistsException : when trying to set "table_name" but the
-     *     object already carries a "table_name", refuse to proceed
-     */
     public void useExistingTable(String table_name) throws InstanceAlreadyExistsException {
         if (this.table_name == null) {
             this.table_name = table_name;
@@ -110,11 +90,6 @@ public class TableOffers {
         }
     }
 
-    /**
-     * Add a new offer in the current offers table.
-     *
-     * @return : integer representing the offer ID of the newly inserted offer row
-     */
     public int addOffer(
         int car_id,
         BigDecimal loan_amount,
@@ -157,11 +132,6 @@ public class TableOffers {
         return offer_id;
     }
 
-    /**
-     * Remove an offer row given an offer ID.
-     *
-     * @param offer_id : ID of the offer to be removed
-     */
     public void removeOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement deleting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
@@ -174,110 +144,47 @@ public class TableOffers {
         stmt.close();
     }
 
-    /**
-     * Remove all offers in the current offers table.
-     */
     public void removeAllOffers() throws SQLException {
         Statement stmt = this.db_conn.createStatement();
         stmt.executeUpdate("DELETE FROM " + this.table_name + ";");
         stmt.close();
     }
 
-    /**
-     * Helper method that extracts a HashMap object from a JDBC result containing an offer
-     * row.
-     *
-     * @param rs : ResultSet object already pointing to a result row, containing an offer
-     * @return : HashMap representation of the current offer result
-     */
-    private static HashMap<String, Object> offerResultToHashMap(ResultSet rs) throws SQLException {
-        return new HashMap<>() {{
-            put("offer_id", rs.getInt("offer_id"));
-            put("car_id", rs.getInt("car_id"));
-            put("loan_amount", rs.getBigDecimal("loan_amount"));
-            put("capital_sum", rs.getBigDecimal("capital_sum"));
-            put("interest_sum", rs.getBigDecimal("interest_sum"));
-            put("total_sum", rs.getBigDecimal("total_sum"));
-            put("interest_rate", rs.getDouble("interest_rate"));
-            put("term_mo", rs.getDouble("term_mo"));
-            put("installments", rs.getString("installments"));
-            put("claimed", rs.getBoolean("claimed"));
-        }};
-    }
-
-    /**
-     * Retrieve an offer in HashMap format given an offer ID.
-     *
-     * @param offer_id : ID of the offer to be retrieved
-     * @return : HashMap representation of the retrieved offer result
-     */
-    public HashMap<String, Object> getOfferByOfferId(int offer_id) throws SQLException {
+    public ResultSet getOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
-            "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
+                "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
 
         // execute the above SQL statement and extract result into a HashMap
         ResultSet rs = stmt.executeQuery();
         rs.next();
-        HashMap<String, Object> offer_result = offerResultToHashMap(rs);
         stmt.close();
-
-        return offer_result;
+        return rs;
     }
 
-    /**
-     * Retrieve all offers in the current offers table.
-     *
-     * @return : ArrayList of HashMaps, each representing a retrieved offer
-     */
-    public ArrayList<HashMap<String, Object>> getAllOffers() throws SQLException {
+    public ResultSet getAllOffers() throws SQLException {
         // construct a SQL statement selecting all offers
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
             "SELECT * FROM " + this.table_name + ";"
         );
-
-        // loop through all results and append their HashMap to an ArrayList
-        ArrayList<HashMap<String, Object>> offers_list = new ArrayList<>();
-        while (rs.next()) {
-            offers_list.add(offerResultToHashMap(rs));
-        }
         stmt.close();
-
-        return offers_list;
+        return rs;
     }
 
-    /**
-     * Retrieve all offers in the current offers table whose "claimed" field is set to
-     * true.
-     *
-     * @return : ArrayList of HashMaps, each representing a retrieved offer
-     */
-    public ArrayList<HashMap<String, Object>> getClaimedOffers() throws SQLException {
+    public ResultSet getClaimedOffers() throws SQLException {
         // construct a prepared SQL statement selecting all offers
         // where "claimed" is true
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
             "SELECT * FROM " + this.table_name + " WHERE 'claimed' = true;"
         );
-
-        // loop through all results and append their HashMap to an ArrayList
-        ArrayList<HashMap<String, Object>> offers_list = new ArrayList<>();
-        while (rs.next()) {
-            offers_list.add(offerResultToHashMap(rs));
-        }
         stmt.close();
-
-        return offers_list;
+        return rs;
     }
 
-    /**
-     * Set the "claimed" field of a given offer to true.
-     *
-     * @param offer_id : ID of the offer to be marked as claimed
-     */
     public void markOfferClaimed(int offer_id) throws SQLException {
         // construct a prepared SQL marking the specified offer claimed
         PreparedStatement stmt = this.db_conn.prepareStatement(
@@ -291,11 +198,6 @@ public class TableOffers {
         stmt.close();
     }
 
-    /**
-     * Set the "claimed" field of a given offer to false.
-     *
-     * @param offer_id : ID of the offer to be marked as unclaimed
-     */
     public void markOfferUnclaimed(int offer_id) throws SQLException {
         // construct a prepared SQL marking the specified offer unclaimed
         PreparedStatement stmt = this.db_conn.prepareStatement(
