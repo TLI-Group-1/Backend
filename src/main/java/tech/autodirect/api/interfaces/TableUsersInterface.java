@@ -17,8 +17,8 @@ limitations under the License.
 */
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface TableUsersInterface {
     /**
@@ -34,9 +34,9 @@ public interface TableUsersInterface {
 
     /**
      * Get a specific user entry by the user ID.
-     * @return A ResultSet containing the user entry.
+     * @return A Map representing a user entry in the database.
      */
-    public ResultSet getUserByID(String userId) throws SQLException;
+    public Map<String, Object> getUserByID(String userId) throws SQLException;
 
     /**
      * Remove a specific user entry by the user ID.

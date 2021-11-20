@@ -21,10 +21,10 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import javax.management.InstanceAlreadyExistsException;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class TableOffers implements TableOffersInterface {
+public class TableOffers extends Table implements TableOffersInterface {
     public Connection db_conn;
     private String table_name = null;
     private final String[] table_columns = {
@@ -150,39 +150,42 @@ public class TableOffers implements TableOffersInterface {
         stmt.close();
     }
 
-    public ResultSet getOfferByOfferId(int offer_id) throws SQLException {
+    public Map<String, Object> getOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
                 "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
 
-        // execute the above SQL statement and extract result into a HashMap
+        // execute the above SQL statement and extract result into a Map
         ResultSet rs = stmt.executeQuery();
         rs.next();
+        Map<String, Object> offer = resultSetToList(rs).get(0);
         stmt.close();
-        return rs;
+        return offer;
     }
 
-    public ResultSet getAllOffers() throws SQLException {
+    public List<Map<String, Object>> getAllOffers() throws SQLException {
         // construct a SQL statement selecting all offers
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
             "SELECT * FROM " + this.table_name + ";"
         );
+        List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
-        return rs;
+        return offers;
     }
 
-    public ResultSet getClaimedOffers() throws SQLException {
+    public List<Map<String, Object>> getClaimedOffers() throws SQLException {
         // construct a prepared SQL statement selecting all offers
         // where "claimed" is true
         Statement stmt = this.db_conn.createStatement();
         ResultSet rs = stmt.executeQuery(
             "SELECT * FROM " + this.table_name + " WHERE 'claimed' = true;"
         );
+        List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
-        return rs;
+        return offers;
     }
 
     public void markOfferClaimed(int offer_id) throws SQLException {

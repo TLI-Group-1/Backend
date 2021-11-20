@@ -18,10 +18,9 @@ limitations under the License.
 
 import javax.management.InstanceAlreadyExistsException;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface TableOffersInterface {
     /**
@@ -85,24 +84,24 @@ public interface TableOffersInterface {
      * Retrieve an offer in HashMap format given an offer ID.
      *
      * @param offer_id : ID of the offer to be retrieved
-     * @return : ResultSet containing the SQL query result.
+     * @return A Map representing an offer entry in the database.
      */
-    public ResultSet getOfferByOfferId(int offer_id) throws SQLException;
+    public Map<String, Object> getOfferByOfferId(int offer_id) throws SQLException;
 
     /**
      * Retrieve all offers in the current offers table.
      *
-     * @return : ResultSet containing the SQL query result.
+     * @return A List of Maps where each Map is a single offer entry in the database.
      */
-    public ResultSet getAllOffers() throws SQLException;
+    public List<Map<String, Object>> getAllOffers() throws SQLException;
 
     /**
      * Retrieve all offers in the current offers table whose "claimed" field is set to
      * true.
      *
-     * @return : ResultSet containing the SQL query result.
+     * @return A List of Maps where each Map is a single offer entry in the database.
      */
-    public ResultSet getClaimedOffers() throws SQLException;
+    public List<Map<String, Object>> getClaimedOffers() throws SQLException;
 
     /**
      * Set the "claimed" field of a given offer to true.
