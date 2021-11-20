@@ -16,5 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
+
 public interface TableCarsInterface {
+    /**
+     * Gets all cars from the cars table in the database.
+     * @return The ResultSet containing all car entries.
+     */
+    public ResultSet getAllCars() throws SQLException;
 }

@@ -17,4 +17,5 @@ limitations under the License.
 */
 
 public interface BankApiInterface {
+    public double getCreditScore();
 }
