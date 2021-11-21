@@ -16,5 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 public interface TableCarsInterface {
+    /**
+     * Gets all cars from the cars table in the database.
+     * @return A List of Maps where each Map is a single entry in the JDBC query result.
+     */
+    public List<Map<String, Object>> getAllCars() throws SQLException;
 }

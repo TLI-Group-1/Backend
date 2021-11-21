@@ -17,4 +17,8 @@ limitations under the License.
 */
 
 public interface BankApiInterface {
+    /**
+     * Query the Bank Api to get the credit score for a specific user.
+     */
+    public double getCreditScore(String userId);
 }

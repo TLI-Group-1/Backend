@@ -16,5 +16,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-public class TableCars {
+import tech.autodirect.api.interfaces.TableCarsInterface;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+public class TableCars extends Table implements TableCarsInterface {
+    private final Connection db_conn;
+    private final String table_name = "cars";
+
+    public TableCars(String db_name) throws SQLException {
+        this.db_conn = Conn.getConn(db_name);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllCars() throws SQLException {
+        // Construct and execute a prepared SQL statement selecting all cars
+        PreparedStatement stmt = this.db_conn.prepareStatement("SELECT * FROM " + this.table_name);
+        ResultSet rs = stmt.executeQuery();
+        List<Map<String, Object>> cars = resultSetToList(rs);
+        stmt.close();
+        return cars;
+    }
 }
