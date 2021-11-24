@@ -16,5 +16,72 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-public class TableUsers extends Table {
+import tech.autodirect.api.interfaces.TableUsersInterface;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+
+public class TableUsers extends Table implements TableUsersInterface {
+    private final Connection db_conn;
+    private final String table_name = "users";
+
+    public TableUsers(String db_name) throws SQLException {
+        this.db_conn = Conn.getConn(db_name);
+    }
+
+    @Override
+    public void addUser(
+            String userId,
+            int creditScore,
+            BigDecimal downPayment,
+            BigDecimal budgetMonthly,
+            String offersTableName
+    ) throws SQLException {
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+                "INSERT INTO " + this.table_name + " VALUES (?, ?, ?, ?, ?);"
+        );
+        stmt.setString(1, userId);
+        stmt.setInt(2, creditScore);
+        stmt.setBigDecimal(3, downPayment);
+        stmt.setBigDecimal(4, budgetMonthly);
+        stmt.setString(5, offersTableName);
+
+        // execute and close the above SQL statement
+        stmt.executeUpdate();
+        stmt.close();
+
+        // TODO: What happens if user already exists?
+    }
+
+    @Override
+    public Map<String, Object> getUserByID(String userId) throws SQLException {
+        // construct a prepared SQL statement selecting the specified user
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+                "SELECT FROM " + this.table_name + " WHERE user_id = ?;"
+        );
+        stmt.setString(1, userId);
+
+        // execute the above SQL statement and extract result into a Map
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        Map<String, Object> user = resultSetToList(rs).get(0);
+        stmt.close();
+        return user;
+    }
+
+    @Override
+    public void removeUserByID(String userId) throws SQLException {
+        // construct a prepared SQL statement selecting the specified user
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+                "DELETE FROM " + this.table_name + " WHERE user_id = ?;"
+        );
+        stmt.setString(1, userId);
+
+        // execute the above SQL statement and extract result into a Map
+        stmt.executeQuery();
+    }
 }
