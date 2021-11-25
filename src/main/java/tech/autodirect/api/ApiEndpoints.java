@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +25,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.autodirect.api.database.TableCars;
+import tech.autodirect.api.database.TableUsers;
+import tech.autodirect.api.interfaces.SensoApiInterface;
+import tech.autodirect.api.interfaces.TableCarsInterface;
+import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.services.SvcSearch;
 import tech.autodirect.api.upstream.SensoApi;
+
 
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
@@ -76,4 +84,32 @@ public class ApiEndpoints {
 		}
 	}
 
+	// Search endpoint
+	@GetMapping("/search")
+	public Object search(
+			@RequestParam String userId,
+			@RequestParam String downpayment,
+			@RequestParam String budgetMo,
+			@RequestParam String sortBy,
+			@RequestParam String sortAsc,
+			@RequestParam String keywords
+	) {
+		try {
+			TableCarsInterface tableCars = new TableCars("autodirect");
+			TableUsersInterface tableUser = new TableUsers("autodirect");
+			SensoApiInterface sensoApi = new SensoApi();
+			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
+			return svcSearch.searchCars(
+					userId,
+					Double.parseDouble(downpayment),
+					Double.parseDouble(budgetMo),
+					sortBy,
+					Boolean.parseBoolean(sortAsc),
+					keywords
+			);
+		} catch (IOException | InterruptedException | SQLException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
 }
