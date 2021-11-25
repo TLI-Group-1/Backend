@@ -10,9 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class SensoApiTest {
 
     @Test
-    void queryApi() {
+    void getLoanOffer() {
         try {
-            HashMap<String, Object> responseMap = SensoApi.queryApi(
+            SensoApi sensoApi = new SensoApi();
+            HashMap<String, Object> responseMap = sensoApi.getLoanOffer(
                 "10000",
                 "700",
                 "300",

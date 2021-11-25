@@ -25,19 +25,25 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import com.google.gson.Gson;
+import tech.autodirect.api.interfaces.SensoApiInterface;
 
-public class SensoApi{
-
+public class SensoApi implements SensoApiInterface {
     // API connection parameters
     private static String senso_url;
     private static String senso_key;
     // Gson object for JSON/Map conversions
     private static Gson gson = new Gson();
 
-    public static HashMap<String, Object> queryApi(
-        String loanAmount, String creditScore, String budget,
-        String vehicleMake, String vehicleModel, String vehicleYear,
-        String vehicleKms, String listPrice, String downpayment
+    public HashMap<String, Object> getLoanOffer(
+        String loanAmount,
+        String creditScore,
+        String budget,
+        String vehicleMake,
+        String vehicleModel,
+        String vehicleYear,
+        String vehicleKms,
+        String listPrice,
+        String downpayment
     ) throws IOException, InterruptedException {
         // create request body
         Map<String, String> queryMap = new HashMap<>() {{

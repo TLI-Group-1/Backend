@@ -49,7 +49,6 @@ public class ApiEndpoints {
 		@RequestParam String creditScore,
 		@RequestParam String budget
 	) {
-
 		// TODO: Remove this hardcoding and read params from other parts of the program.
 		String vehicleMake = "Honda";
 		String vehicleModel = "Civic";
@@ -59,7 +58,8 @@ public class ApiEndpoints {
 		String downpayment = "1000";
 
 		try {
-			return SensoApi.queryApi(
+			SensoApi sensoApi = new SensoApi();
+			return sensoApi.getLoanOffer(
 				loanAmount,
 				creditScore,
 				budget,
@@ -74,7 +74,6 @@ public class ApiEndpoints {
 			e.printStackTrace();
 			return "Server Error!";
 		}
-
 	}
 
 }
