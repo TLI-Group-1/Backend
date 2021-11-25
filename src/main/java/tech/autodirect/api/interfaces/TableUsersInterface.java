@@ -23,8 +23,9 @@ import java.util.Map;
 public interface TableUsersInterface {
     /**
      * Add a user entry to the users table in the database.
+     * @return
      */
-    public void addUser(
+    public Map<String, Object> addUser(
             String userId,
             int creditScore,
             BigDecimal downPayment,
@@ -42,4 +43,12 @@ public interface TableUsersInterface {
      * Remove a specific user entry by the user ID.
      */
     public void removeUserByID(String userId) throws SQLException;
+
+    /**
+     * Checks if the userid exists
+     *
+     * @param userId: the user id that uniquely identifies a user, same a "user_id" in the public.users table
+     * @return true if the user exists, or false if the user does not exist
+     */
+    public boolean checkUser(String userId);
 }

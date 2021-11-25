@@ -34,7 +34,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public void addUser(
+    public Map<String, Object> addUser(
             String userId,
             int creditScore,
             BigDecimal downPayment,
@@ -55,6 +55,7 @@ public class TableUsers extends Table implements TableUsersInterface {
         stmt.close();
 
         // TODO: What happens if user already exists?
+        return null;
     }
 
     @Override
@@ -83,5 +84,10 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // execute the above SQL statement and extract result into a Map
         stmt.executeQuery();
+    }
+
+    @Override
+    public boolean checkUser(String userId) {
+        return false;
     }
 }
