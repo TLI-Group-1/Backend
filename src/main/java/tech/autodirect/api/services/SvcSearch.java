@@ -35,7 +35,11 @@ public class SvcSearch {
     private final TableUsersInterface tableUsers;
     private final SensoApiInterface sensoApi;
 
-    public SvcSearch(TableCarsInterface tableCars, TableUsersInterface tableUsers, SensoApiInterface sensoApi) {
+    public SvcSearch(
+        TableCarsInterface tableCars,
+        TableUsersInterface tableUsers,
+        SensoApiInterface sensoApi
+    ) {
         this.tableCars = tableCars;
         this.sensoApi = sensoApi;
         this.tableUsers = tableUsers;
@@ -47,12 +51,12 @@ public class SvcSearch {
      * @return A list of car entities.
      */
     public List<EntCar> searchCars(
-            String userId,
-            double downpayment,
-            double budgetMo,
-            String sortBy,
-            Boolean sortAsc,
-            String keywords
+        String userId,
+        double downpayment,
+        double budgetMo,
+        String sortBy,
+        Boolean sortAsc,
+        String keywords
     ) throws SQLException, IOException, InterruptedException {
         // Get user information from database and populate user entity with user info
         Map<String, Object> userEntry = this.tableUsers.getUserByID(userId);
@@ -67,15 +71,15 @@ public class SvcSearch {
             car.loadFromList(entry);
 
             Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
-                    Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
-                    Integer.toString(user.getCreditScore()), // creditScore
-                    Double.toString(budgetMo), // budget
-                    car.getBrand(), // vehicleMake
-                    car.getModel(), // vehicleModel
-                    Integer.toString(car.getYear()), // vehicleYear
-                    Double.toString(car.getKms()), // vehicleKms
-                    Double.toString(car.getPrice()), // listPrice
-                    Double.toString(downpayment) // downpayment
+                Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
+                Integer.toString(user.getCreditScore()), // creditScore
+                Double.toString(budgetMo), // budget
+                car.getBrand(), // vehicleMake
+                car.getModel(), // vehicleModel
+                Integer.toString(car.getYear()), // vehicleYear
+                Double.toString(car.getKms()), // vehicleKms
+                Double.toString(car.getPrice()), // listPrice
+                Double.toString(downpayment) // downpayment
             );
 
             // If successfully called api, add car to carsWithOffer

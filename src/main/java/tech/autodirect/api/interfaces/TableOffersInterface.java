@@ -57,15 +57,15 @@ public interface TableOffersInterface {
      * @return : integer representing the offer ID of the newly inserted offer row
      */
     public int addOffer(
-            int car_id,
-            BigDecimal loan_amount,
-            BigDecimal capital_sum,
-            BigDecimal interest_sum,
-            BigDecimal total_sum,
-            double interest_rate,
-            double term_mo,
-            String installments,
-            boolean claimed
+        int car_id,
+        BigDecimal loan_amount,
+        BigDecimal capital_sum,
+        BigDecimal interest_sum,
+        BigDecimal total_sum,
+        double interest_rate,
+        double term_mo,
+        String installments,
+        boolean claimed
     ) throws SQLException;
 
     /**

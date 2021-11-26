@@ -25,11 +25,11 @@ public interface TableUsersInterface {
      * Add a user entry to the users table in the database.
      */
     public void addUser(
-            String userId,
-            int creditScore,
-            BigDecimal downPayment,
-            BigDecimal budgetMonthly,
-            String offersTableName
+        String userId,
+        int creditScore,
+        BigDecimal downPayment,
+        BigDecimal budgetMonthly,
+        String offersTableName
     ) throws SQLException;
 
     /**
