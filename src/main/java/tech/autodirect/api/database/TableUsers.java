@@ -37,8 +37,8 @@ public class TableUsers extends Table implements TableUsersInterface {
     public void addUser(
             String userId,
             int creditScore,
-            BigDecimal downPayment,
-            BigDecimal budgetMonthly,
+            double downPayment,
+            double budgetMonthly,
             String offersTableName
     ) throws SQLException {
         PreparedStatement stmt = this.db_conn.prepareStatement(
@@ -46,8 +46,8 @@ public class TableUsers extends Table implements TableUsersInterface {
         );
         stmt.setString(1, userId);
         stmt.setInt(2, creditScore);
-        stmt.setBigDecimal(3, downPayment);
-        stmt.setBigDecimal(4, budgetMonthly);
+        stmt.setBigDecimal(3, BigDecimal.valueOf(downPayment));
+        stmt.setBigDecimal(4, BigDecimal.valueOf(budgetMonthly));
         stmt.setString(5, offersTableName);
 
         // execute and close the above SQL statement
@@ -55,6 +55,7 @@ public class TableUsers extends Table implements TableUsersInterface {
         stmt.close();
 
         // TODO: What happens if user already exists?
+        // TODO: What happens if there is no offers table for this user yet (which is usually the case)?
     }
 
     @Override

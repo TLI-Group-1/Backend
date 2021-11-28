@@ -92,10 +92,10 @@ public class TableOffers extends Table implements TableOffersInterface {
 
     public int addOffer(
         int car_id,
-        BigDecimal loan_amount,
-        BigDecimal capital_sum,
-        BigDecimal interest_sum,
-        BigDecimal total_sum,
+        double loan_amount,
+        double capital_sum,
+        double interest_sum,
+        double total_sum,
         double interest_rate,
         double term_mo,
         String installments,
@@ -109,10 +109,10 @@ public class TableOffers extends Table implements TableOffersInterface {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
         );
         stmt.setInt(1, car_id);
-        stmt.setBigDecimal(2, loan_amount);
-        stmt.setBigDecimal(3, capital_sum);
-        stmt.setBigDecimal(4, interest_sum);
-        stmt.setBigDecimal(5, total_sum);
+        stmt.setBigDecimal(2, BigDecimal.valueOf(loan_amount));
+        stmt.setBigDecimal(3, BigDecimal.valueOf(capital_sum));
+        stmt.setBigDecimal(4, BigDecimal.valueOf(interest_sum));
+        stmt.setBigDecimal(5, BigDecimal.valueOf(total_sum));
         stmt.setDouble(6, interest_rate);
         stmt.setDouble(7, term_mo);
         stmt.setString(8, installments);

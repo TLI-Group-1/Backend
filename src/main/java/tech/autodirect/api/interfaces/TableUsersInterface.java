@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -27,8 +26,8 @@ public interface TableUsersInterface {
     public void addUser(
             String userId,
             int creditScore,
-            BigDecimal downPayment,
-            BigDecimal budgetMonthly,
+            double downPayment,
+            double budgetMonthly,
             String offersTableName
     ) throws SQLException;
 

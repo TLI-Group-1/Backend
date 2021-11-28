@@ -17,7 +17,6 @@ limitations under the License.
 */
 
 import javax.management.InstanceAlreadyExistsException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +57,10 @@ public interface TableOffersInterface {
      */
     public int addOffer(
             int car_id,
-            BigDecimal loan_amount,
-            BigDecimal capital_sum,
-            BigDecimal interest_sum,
-            BigDecimal total_sum,
+            double loan_amount,
+            double capital_sum,
+            double interest_sum,
+            double total_sum,
             double interest_rate,
             double term_mo,
             String installments,
