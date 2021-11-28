@@ -20,30 +20,36 @@ import tech.autodirect.api.interfaces.TableUsersInterface;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class SvcUserLogin{
+public class SvcUserLogin {
     private TableUsersInterface tableUsers;
     private BankApiInterface bankApi;
 
-    public SvcUserLogin(TableUsersInterface tableUsers, BankApiInterface bankApi){
+    public SvcUserLogin(TableUsersInterface tableUsers, BankApiInterface bankApi) {
         this.tableUsers = tableUsers;
         this.bankApi = bankApi;
     }
+
     /**
      * if the userid exists, retrieve the username's information, if it does not exist, create a new username
      *
      * @param userId: the user string that uniquely identifies a user, same as "user_id" in the public.users table
      * @return the user's
      */
-    public Map<String, Object> loginUser(String userId)throws SQLException {
-        if (tableUsers.checkUser(userId)){
+    public Map<String, Object> loginUser(String userId) throws SQLException {
+        if (tableUsers.checkUser(userId)) {
+            // check if user ID exits in the table of users
             Map<String, Object> userInfo = tableUsers.getUserByID(userId);
             userInfo.remove("offers_table");
             return userInfo;
-        }
-        else{
-            Map<String, Object> userInfo = tableUsers.addUser(userId,
-                    bankApi.getCreditScore(Integer.parseInt(userId.substring(-3))),null, null,
-                    null);
+        } else {
+            // creates a new user ID
+            Map<String, Object> userInfo = tableUsers.addUser(
+                    userId,
+                    bankApi.getCreditScore(userId),
+                    null,
+                    null,
+                    null
+            );
             return userInfo;
         }
     }
