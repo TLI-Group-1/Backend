@@ -24,7 +24,6 @@ import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +41,63 @@ public class SvcSearch {
     }
 
     /**
-     * Get a list of cars (from the database) for which a loan offer is pre-approved by the Senso /rate Api.
+     * Perform a car search. If userId is not null, only get cars which have offers for this user.
+     * Otherwise, get all cars.
      *
      * @return A list of car entities.
      */
     public List<EntCar> searchCars(
+        String userId,
+        double downpayment,
+        double budgetMo,
+        String sortBy,
+        Boolean sortAsc,
+        String keywords
+    ) throws SQLException, IOException, InterruptedException {
+        if (userId == null) {
+            // User is not logged in, return all cars
+            return searchCarsAll(sortBy, sortAsc, keywords);
+        } else {
+            // User is logged in, return only cars which have offers for this user
+            return searchCarsWithOffer(userId, downpayment, budgetMo, sortBy, sortAsc, keywords);
+        }
+    }
+
+    /**
+     * Get a list of all cars from the database.
+     *
+     * @return A list of car entities.
+     */
+    private List<EntCar> searchCarsAll(
+            String sortBy, // TODO
+            Boolean sortAsc, // TODO
+            String keywords // TODO
+    ) throws SQLException, IOException, InterruptedException {
+        List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
+
+        // Convert each entry of carsMapsAll to EntCar
+        List<EntCar> carEntsAll = new ArrayList<>();
+        for (Map<String, Object> carMap : carsMapsAll) {
+            EntCar car = new EntCar();
+            car.loadFromList(carMap);
+            carEntsAll.add(car);
+        }
+
+        return carEntsAll;
+    }
+
+    /**
+     * Get a list of cars from the database for which a loan offer is pre-approved by the Senso /rate Api.
+     *
+     * @return A list of car entities.
+     */
+    private List<EntCar> searchCarsWithOffer(
             String userId,
             double downpayment,
             double budgetMo,
-            String sortBy,
-            Boolean sortAsc,
-            String keywords
+            String sortBy, // TODO
+            Boolean sortAsc, // TODO
+            String keywords // TODO
     ) throws SQLException, IOException, InterruptedException {
         // Get user information from database and populate user entity with user info
         Map<String, Object> userEntry = this.tableUsers.getUserByID(userId);
@@ -60,12 +105,13 @@ public class SvcSearch {
         user.loadFromList(userEntry);
 
         // Get list of all cars and add all cars for which a Senso /rate Api loan offer is approved to carsWithOffer
-        List<Map<String, Object>> cars = this.tableCars.getAllCars();
-        List<EntCar> carsWithOffer = new ArrayList<>();
-        for (Map<String, Object> entry : cars) {
+        List<Map<String, Object>> carMapsAll = this.tableCars.getAllCars();
+        List<EntCar> carEntsWithOffer = new ArrayList<>();
+        for (Map<String, Object> carMap : carMapsAll) {
             EntCar car = new EntCar();
-            car.loadFromList(entry);
+            car.loadFromList(carMap);
 
+            // Query senso Api for this car
             Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
                     Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
                     Integer.toString(user.getCreditScore()), // creditScore
@@ -80,9 +126,9 @@ public class SvcSearch {
 
             // If successfully called api, add car to carsWithOffer
             if (queryResult.get("status").equals(200)) {
-                carsWithOffer.add(car);
+                carEntsWithOffer.add(car);
             }
         }
-        return carsWithOffer;
+        return carEntsWithOffer;
     }
 }
