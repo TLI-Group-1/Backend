@@ -16,5 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-public class BankApi {
+import tech.autodirect.api.interfaces.BankApiInterface;
+
+public class BankApi implements BankApiInterface {
+    public int getCreditScore(String userId) {
+        return Integer.parseInt(userId.substring(userId.length() - 3));
+    }
 }

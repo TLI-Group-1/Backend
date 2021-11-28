@@ -21,5 +21,5 @@ public interface BankApiInterface {
      * Query the Bank Api to get the credit score for a specific user.
      * @param userId
      */
-    public int getCreditScore(int userId);
+    public int getCreditScore(String userId);
 }

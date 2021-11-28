@@ -16,5 +16,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.BankApiInterface;
+
 public class SvcMockBankApi {
+    private BankApiInterface bankApi;
+
+    public SvcMockBankApi(BankApiInterface bankApi) {
+        this.bankApi = bankApi;
+    }
+
+    public int getCreditScore(String userId) {
+        return this.bankApi.getCreditScore(userId);
+    }
 }
