@@ -39,10 +39,10 @@ import tech.autodirect.api.upstream.SensoApi;
 @RestController
 // specify hosts allowed to access the AutoDirect API
 @CrossOrigin(origins = {
-		"http://localhost",
-		"http://localhost:8080",
-		"https://autodirect.tech",
-		"https://api.autodirect.tech"
+	"http://localhost",
+	"http://localhost:8080",
+	"https://autodirect.tech",
+	"https://api.autodirect.tech"
 })
 public class ApiEndpoints {
 

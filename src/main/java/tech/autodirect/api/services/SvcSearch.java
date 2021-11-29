@@ -31,10 +31,15 @@ public class SvcSearch {
     private final TableCarsInterface tableCars;
     private final TableUsersInterface tableUsers;
     private final SensoApiInterface sensoApi;
-    private final Set<String> valuesOfSortBy =
-            new HashSet<>(Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length"));
+    private final Set<String> valuesOfSortBy = new HashSet<>(
+        Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length")
+    );
 
-    public SvcSearch(TableCarsInterface tableCars, TableUsersInterface tableUsers, SensoApiInterface sensoApi) {
+    public SvcSearch(
+        TableCarsInterface tableCars,
+        TableUsersInterface tableUsers,
+        SensoApiInterface sensoApi
+    ) {
         this.tableCars = tableCars;
         this.sensoApi = sensoApi;
         this.tableUsers = tableUsers;
@@ -66,10 +71,10 @@ public class SvcSearch {
         boolean areValidParams;
         try {
             areValidParams = !userId.equals("")
-                            && !downPaymentString.equals("")
-                            && !budgetMoString.equals("")
-                            && ParseChecker.isParsableToDouble(downPaymentString)
-                            && ParseChecker.isParsableToDouble(budgetMoString);
+                && !downPaymentString.equals("")
+                && !budgetMoString.equals("")
+                && ParseChecker.isParsableToDouble(downPaymentString)
+                && ParseChecker.isParsableToDouble(budgetMoString);
         } catch (NullPointerException ignored) {
             areValidParams = false;
         }
@@ -92,9 +97,9 @@ public class SvcSearch {
      * @return A list of car entities.
      */
     private List<EntCar> searchCarsAll(
-            String sortBy,
-            boolean sortAsc,
-            String keywords
+        String sortBy,
+        boolean sortAsc,
+        String keywords
     ) throws SQLException {
         List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars(keywords);
 
@@ -114,12 +119,12 @@ public class SvcSearch {
      * @return A list of car entities.
      */
     private List<EntCar> searchCarsWithOffer(
-            String userId,
-            double downpayment,
-            double budgetMo,
-            String sortBy,
-            boolean sortAsc,
-            String keywords
+        String userId,
+        double downpayment,
+        double budgetMo,
+        String sortBy,
+        boolean sortAsc,
+        String keywords
     ) throws SQLException, IOException, InterruptedException {
         // Get user information from database and populate user entity with user info
         Map<String, Object> userEntry = this.tableUsers.getUserByID(userId);
@@ -135,15 +140,15 @@ public class SvcSearch {
 
             // Query senso Api for this car
             Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
-                    Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
-                    Integer.toString(user.getCreditScore()), // creditScore
-                    Double.toString(budgetMo), // budget
-                    car.getBrand(), // vehicleMake
-                    car.getModel(), // vehicleModel
-                    Integer.toString(car.getYear()), // vehicleYear
-                    Double.toString(car.getKms()), // vehicleKms
-                    Double.toString(car.getPrice()), // listPrice
-                    Double.toString(downpayment) // downpayment
+                Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
+                Integer.toString(user.getCreditScore()), // creditScore
+                Double.toString(budgetMo), // budget
+                car.getBrand(), // vehicleMake
+                car.getModel(), // vehicleModel
+                Integer.toString(car.getYear()), // vehicleYear
+                Double.toString(car.getKms()), // vehicleKms
+                Double.toString(car.getPrice()), // listPrice
+                Double.toString(downpayment) // downpayment
             );
 
             // If successfully called api, add car to carsWithOffer

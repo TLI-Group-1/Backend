@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -34,8 +35,8 @@ public class EntUser {
     public void loadFromMap(Map<String, Object> entry) throws SQLException {
         userId = (String) entry.get("user_id");
         creditScore = (int) entry.get("credit_score");
-        downPayment = (double) entry.get("down_payment");
-        budgetMo = (double) entry.get("budget_mo");
+        downPayment = ((BigDecimal) entry.get("down_payment")).doubleValue();
+        budgetMo = ((BigDecimal) entry.get("budget_mo")).doubleValue();
         offersTable = (String) entry.get("offers_table");
     }
 

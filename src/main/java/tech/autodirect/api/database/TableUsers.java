@@ -35,14 +35,14 @@ public class TableUsers extends Table implements TableUsersInterface {
 
     @Override
     public void addUser(
-            String userId,
-            int creditScore,
-            double downPayment,
-            double budgetMonthly,
-            String offersTableName
+        String userId,
+        int creditScore,
+        double downPayment,
+        double budgetMonthly,
+        String offersTableName
     ) throws SQLException {
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "INSERT INTO " + this.table_name + " VALUES (?, ?, ?, ?, ?);"
+            "INSERT INTO " + this.table_name + " VALUES (?, ?, ?, ?, ?);"
         );
         stmt.setString(1, userId);
         stmt.setInt(2, creditScore);
@@ -62,7 +62,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     public Map<String, Object> getUserByID(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "SELECT * FROM " + this.table_name + " WHERE user_id = ?;"
+            "SELECT * FROM " + this.table_name + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
@@ -77,25 +77,27 @@ public class TableUsers extends Table implements TableUsersInterface {
     public void removeUserByID(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "DELETE FROM " + this.table_name + " WHERE user_id = ?;"
+            "DELETE FROM " + this.table_name + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
         // execute the above SQL statement
-        stmt.executeQuery();
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     @Override
     public boolean userExists(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "SELECT 1 FROM " + this.table_name + " WHERE user_id = ?;"
+            "SELECT 1 FROM " + this.table_name + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
         // execute the above SQL statement and check whether the user exists
         ResultSet rs = stmt.executeQuery();
-        return resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
+        boolean user_count = resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
+        stmt.close();
+        return user_count;
     }
 }
-
