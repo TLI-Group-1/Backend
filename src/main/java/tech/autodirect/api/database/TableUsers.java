@@ -68,7 +68,6 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // execute the above SQL statement and extract result into a Map
         ResultSet rs = stmt.executeQuery();
-        rs.next();
         Map<String, Object> user = resultSetToList(rs).get(0);
         stmt.close();
         return user;
@@ -96,7 +95,6 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // execute the above SQL statement and check whether the user exists
         ResultSet rs = stmt.executeQuery();
-        rs.next();
         return resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
     }
 }

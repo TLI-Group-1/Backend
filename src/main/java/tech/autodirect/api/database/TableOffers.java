@@ -159,7 +159,6 @@ public class TableOffers extends Table implements TableOffersInterface {
 
         // execute the above SQL statement and extract result into a Map
         ResultSet rs = stmt.executeQuery();
-        rs.next();
         Map<String, Object> offer = resultSetToList(rs).get(0);
         stmt.close();
         return offer;
