@@ -99,11 +99,11 @@ public class SensoApi implements SensoApiInterface {
         throws IOException, InterruptedException {
         // create an HTTP POST request
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(senso_url + "/rate"))
-                .header("Content-Type", "application/json")
-                .header("x-api-key", senso_key)
-                .POST(HttpRequest.BodyPublishers.ofString(request_body))
-                .build();
+            .uri(URI.create(senso_url + "/rate"))
+            .header("Content-Type", "application/json")
+            .header("x-api-key", senso_key)
+            .POST(HttpRequest.BodyPublishers.ofString(request_body))
+            .build();
 
         // create an HTTP client
         var client = HttpClient.newHttpClient();
