@@ -37,7 +37,7 @@ public class EntOffer {
      *
      * @param entry : A Map containing representing an offer entry in the database.
      */
-    public void loadFromList(Map<String, Object> entry) throws SQLException {
+    public void loadFromMap(Map<String, Object> entry) throws SQLException {
         offerId = (int) entry.get("offer_id");
         carId = (int) entry.get("car_id");
         loanAmount = ((BigDecimal) entry.get("loan_amount")).doubleValue();

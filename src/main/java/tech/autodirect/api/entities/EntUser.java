@@ -31,7 +31,7 @@ public class EntUser {
      *
      * @param entry : A Map containing representing a user entry in the database.
      */
-    public void loadFromList(Map<String, Object> entry) throws SQLException {
+    public void loadFromMap(Map<String, Object> entry) throws SQLException {
         userId = (String) entry.get("user_id");
         creditScore = (int) entry.get("credit_score");
         downPayment = (double) entry.get("down_payment");

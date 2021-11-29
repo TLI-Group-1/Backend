@@ -16,14 +16,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import org.springframework.boot.web.embedded.undertow.UndertowServletWebServer;
 import tech.autodirect.api.entities.EntCar;
 import tech.autodirect.api.entities.EntUser;
 import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.utils.ParseChecker;
-import tech.autodirect.api.utils.UnitConv;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -104,7 +102,7 @@ public class SvcSearch {
         List<EntCar> carEntsAll = new ArrayList<>();
         for (Map<String, Object> carMap : carsMapsAll) {
             EntCar car = new EntCar();
-            car.loadFromList(carMap);
+            car.loadFromMap(carMap);
             carEntsAll.add(car);
         }
         return sortCars(carEntsAll, sortBy, sortAsc);
@@ -126,14 +124,14 @@ public class SvcSearch {
         // Get user information from database and populate user entity with user info
         Map<String, Object> userEntry = this.tableUsers.getUserByID(userId);
         EntUser user = new EntUser();
-        user.loadFromList(userEntry);
+        user.loadFromMap(userEntry);
 
         // Get list of all cars and add all cars for which a Senso /rate Api loan offer is approved to carsWithOffer
         List<Map<String, Object>> carMapsAll = this.tableCars.getAllCars(keywords);
         List<EntCar> carEntsWithOffer = new ArrayList<>();
         for (Map<String, Object> carMap : carMapsAll) {
             EntCar car = new EntCar();
-            car.loadFromList(carMap);
+            car.loadFromMap(carMap);
 
             // Query senso Api for this car
             Map<String, Object> queryResult = this.sensoApi.getLoanOffer(

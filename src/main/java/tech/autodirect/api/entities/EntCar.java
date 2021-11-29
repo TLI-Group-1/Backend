@@ -35,7 +35,7 @@ public class EntCar {
      *
      * @param entry : A Map containing representing a car entry in the database.
      */
-    public void loadFromList(Map<String, Object> entry) throws SQLException {
+    public void loadFromMap(Map<String, Object> entry) throws SQLException {
         id = (int) entry.get("id");
         brand = (String) entry.get("brand");
         model = (String) entry.get("model");
