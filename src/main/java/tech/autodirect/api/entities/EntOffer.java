@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -39,10 +40,10 @@ public class EntOffer {
     public void loadFromList(Map<String, Object> entry) throws SQLException {
         offerId = (int) entry.get("offer_id");
         carId = (int) entry.get("car_id");
-        loanAmount = (double) entry.get("loan_amount");
-        capitalSum = (double) entry.get("capital_sum");
-        interestSum = (double) entry.get("interest_sum");
-        totalSum = (double) entry.get("total_sum");
+        loanAmount = ((BigDecimal) entry.get("loan_amount")).doubleValue();
+        capitalSum = ((BigDecimal) entry.get("capital_sum")).doubleValue();
+        interestSum = ((BigDecimal) entry.get("interest_sum")).doubleValue();
+        totalSum = ((BigDecimal) entry.get("total_sum")).doubleValue();
         interestRate = (double) entry.get("interest_rate");
         termMo = (double) entry.get("term_mo");
         installments = (String) entry.get("installments");

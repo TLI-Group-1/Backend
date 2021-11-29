@@ -18,6 +18,7 @@ limitations under the License.
 
 import tech.autodirect.api.utils.UnitConv;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -39,8 +40,8 @@ public class EntCar {
         brand = (String) entry.get("brand");
         model = (String) entry.get("model");
         year = (int) entry.get("year");
-        price = (double) entry.get("price");
-        kms = UnitConv.mileToKm((double) entry.get("mileage"));
+        price = ((BigDecimal) entry.get("price")).doubleValue();
+        kms = UnitConv.mileToKm(((Float) entry.get("mileage")).doubleValue());
     }
 
     public int getId() {
