@@ -99,14 +99,7 @@ public class ApiEndpoints {
 			TableUsersInterface tableUser = new TableUsers("autodirect");
 			SensoApiInterface sensoApi = new SensoApi();
 			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
-			return svcSearch.searchCars(
-				userId,
-				Double.parseDouble(downpayment),
-				Double.parseDouble(budgetMo),
-				sortBy,
-				Boolean.parseBoolean(sortAsc),
-				keywords
-			);
+			return svcSearch.searchCars(userId, downpayment, budgetMo, sortBy, sortAsc, keywords);
 		} catch (IOException | InterruptedException | SQLException e) {
 			e.printStackTrace();
 			return "Server Error!";
