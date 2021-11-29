@@ -11,7 +11,9 @@ import tech.autodirect.api.upstream.SensoApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -22,19 +24,28 @@ class SvcSearchTest {
     private SvcSearch svcSearch;
 
     @Test
-    void searchCars() {
+    void testSearchCarsPrelogin() {
+        try {
+            List<EntCar> carsResult = svcSearch.searchCars(null, -1, -1, "", false, "");
+            assert carsResult.size() > 0;
+        } catch (IOException | InterruptedException | SQLException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    void testSearchCarsPostLogin() {
         try {
             // Create user in users table if not exists
             int creditScore = 700;
             double downPayment = 1000;
             double budgetMonthly = 500;
-            tableUser.addUser(testUserId, 700, 1000, 500, testUserOffersTableName);
+            tableUser.addUser(testUserId, creditScore, downPayment, budgetMonthly, testUserOffersTableName);
 
             // Perform search
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, downPayment, budgetMonthly, "", false, "");
-
-            assert carsResult.size()
-
+            assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
             assert false;
@@ -51,10 +62,5 @@ class SvcSearchTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @AfterAll
-    public void tearDownAll() {
-        this.tableUser
     }
 }
