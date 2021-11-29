@@ -62,7 +62,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     public Map<String, Object> getUserByID(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "SELECT FROM " + this.table_name + " WHERE user_id = ?;"
+                "SELECT * FROM " + this.table_name + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 

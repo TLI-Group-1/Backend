@@ -153,7 +153,7 @@ public class TableOffers extends Table implements TableOffersInterface {
     public Map<String, Object> getOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
+                "SELECT * FROM " + this.table_name + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
 
