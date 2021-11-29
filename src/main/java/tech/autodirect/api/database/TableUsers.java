@@ -82,7 +82,22 @@ public class TableUsers extends Table implements TableUsersInterface {
         );
         stmt.setString(1, userId);
 
-        // execute the above SQL statement and extract result into a Map
+        // execute the above SQL statement
         stmt.executeQuery();
     }
+
+    @Override
+    public boolean userExists(String userId) throws SQLException {
+        // construct a prepared SQL statement selecting the specified user
+        PreparedStatement stmt = this.db_conn.prepareStatement(
+                "SELECT 1 FROM " + this.table_name + " WHERE user_id = ?;"
+        );
+        stmt.setString(1, userId);
+
+        // execute the above SQL statement and check whether the user exists
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        return resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
+    }
 }
+

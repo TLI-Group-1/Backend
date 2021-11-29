@@ -23,7 +23,7 @@ public interface TableUsersInterface {
     /**
      * Add a user entry to the users table in the database.
      */
-    public void addUser(
+    void addUser(
             String userId,
             int creditScore,
             double downPayment,
@@ -35,10 +35,15 @@ public interface TableUsersInterface {
      * Get a specific user entry by the user ID.
      * @return A Map representing a user entry in the database.
      */
-    public Map<String, Object> getUserByID(String userId) throws SQLException;
+    Map<String, Object> getUserByID(String userId) throws SQLException;
 
     /**
      * Remove a specific user entry by the user ID.
      */
-    public void removeUserByID(String userId) throws SQLException;
+    void removeUserByID(String userId) throws SQLException;
+
+    /**
+     * Check if user exists in database.
+     */
+    boolean userExists(String userId) throws SQLException;
 }
