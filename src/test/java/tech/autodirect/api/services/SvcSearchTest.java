@@ -24,9 +24,42 @@ class SvcSearchTest {
     private SvcSearch svcSearch;
 
     @Test
-    void testSearchCarsPrelogin() {
+    void testSearchCarsAllNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars(null, -1, -1, "", false, "");
+            List<EntCar> carsResult = svcSearch.searchCars(null, null, null, null, null, null);
+            assert carsResult.size() > 0;
+        } catch (IOException | InterruptedException | SQLException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    void testSearchCarsAllEmpty() {
+        try {
+            List<EntCar> carsResult = svcSearch.searchCars("", "", "", "", "", "");
+            assert carsResult.size() > 0;
+        } catch (IOException | InterruptedException | SQLException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    void testSearchCarsRandomStrings() {
+        try {
+            List<EntCar> carsResult = svcSearch.searchCars("xyz", "xyz", "xyz", "xyz", "xyz", "");
+            assert carsResult.size() > 0;
+        } catch (IOException | InterruptedException | SQLException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    void testSearchCarsSomeNull() {
+        try {
+            List<EntCar> carsResult = svcSearch.searchCars(null, "1000", null, "price", "true", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -37,14 +70,20 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLogin() {
         try {
-            // Create user in users table if not exists
-            int creditScore = 700;
-            double downPayment = 1000;
-            double budgetMonthly = 500;
-            tableUser.addUser(testUserId, creditScore, downPayment, budgetMonthly, testUserOffersTableName);
+            tableUser.addUser(testUserId, 700, 1000, 200, testUserOffersTableName);
+            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true", "");
+            assert carsResult.size() > 0;
+        } catch (IOException | InterruptedException | SQLException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
 
-            // Perform search
-            List<EntCar> carsResult = svcSearch.searchCars(testUserId, downPayment, budgetMonthly, "", false, "");
+    @Test
+    void testSearchCarsPostLoginBadSortBy() {
+        try {
+            tableUser.addUser(testUserId, 700, 1000, 200, testUserOffersTableName);
+            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -55,10 +94,26 @@ class SvcSearchTest {
     @BeforeAll
     public void setUpAll() {
         try {
-            TableCarsInterface tableCars = new TableCars("testing");
-            this.tableUser = new TableUsers("testing");
+            TableCarsInterface tableCars = new TableCars("autodirect");
+            this.tableUser = new TableUsers("autodirect");
             SensoApiInterface sensoApi = new SensoApi();
             this.svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
+
+            // testUserId user will be created in tests, ensure it doesn't exist yet
+            if (tableUser.userExists(testUserId)) {
+                tableUser.removeUserByID(testUserId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterEach
+    public void tearDownEach() {
+        try {
+            if (tableUser.userExists(testUserId)) {
+                tableUser.removeUserByID(testUserId);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
