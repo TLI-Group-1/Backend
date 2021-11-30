@@ -24,7 +24,13 @@ import java.sql.*;
 import java.util.List;
 import java.util.Map;
 
-public class TableOffers extends Table implements TableOffersInterface {
+public class
+
+
+
+
+
+TableOffers extends Table implements TableOffersInterface {
     public Connection db_conn;
     private String table_name = null;
     private final String[] table_columns = {

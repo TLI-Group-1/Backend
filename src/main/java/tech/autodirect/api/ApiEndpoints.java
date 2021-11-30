@@ -16,15 +16,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.io.IOException;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.autodirect.api.database.TableUsers;
+import tech.autodirect.api.interfaces.BankApiInterface;
+import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.services.SvcUserLogin;
+import tech.autodirect.api.upstream.BankApi;
 import tech.autodirect.api.upstream.SensoApi;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
@@ -76,5 +82,17 @@ public class ApiEndpoints {
 		}
 
 	}
-
+	// User Login endpoint
+	@GetMapping("/login")
+	public Object login(@RequestParam(name = "user_id") String userId) {
+		try {
+			TableUsersInterface tableUser = new TableUsers("autodirect");
+			BankApiInterface bankApi = new BankApi();
+			SvcUserLogin svcUserLogin = new SvcUserLogin(tableUser, bankApi);
+			return svcUserLogin.loginUser(userId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
 }
