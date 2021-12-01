@@ -98,10 +98,10 @@ TableOffers extends Table implements TableOffersInterface {
 
     public int addOffer(
         int car_id,
-        BigDecimal loan_amount,
-        BigDecimal capital_sum,
-        BigDecimal interest_sum,
-        BigDecimal total_sum,
+        double loan_amount,
+        double capital_sum,
+        double interest_sum,
+        double total_sum,
         double interest_rate,
         double term_mo,
         String installments,
