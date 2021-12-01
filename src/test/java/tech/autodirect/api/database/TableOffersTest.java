@@ -71,9 +71,10 @@ public class TableOffersTest {
         }
     }
     @Test
-    void testGetOfferByOfferIdEmpty(int offerId){
+    void testGetOfferByOfferIdEmpty(){
         try{
             //create an offer Id
+            int offerId = 123;
             TableOffers table = new TableOffers(db_name);
             Map<String, Object> emptyMap = Collections.emptyMap();
             assert table.getOfferByOfferId(offerId) == emptyMap;
@@ -84,14 +85,14 @@ public class TableOffersTest {
         }
     }
     @Test
-    void testGetOfferByOfferId(int offerId){
+    void testGetOfferByOfferId(){
         try{
             //create an offer Id
             TableOffers table = new TableOffers(db_name);
             Map<String, Object> offerMap = new HashMap<String, Object>()
             {
                 {
-                    put("offer_id", offerId);
+                    put("offer_id", 123);
                     put("car_id", 5);
                     put("loan_amount", 1000);
                     put("capital_sum", 50);
@@ -103,7 +104,7 @@ public class TableOffersTest {
                     put("claimed", true);
                 }
             };
-            assert Objects.equals(table.getOfferByOfferId(offerId), offerMap);
+            assert Objects.equals(table.getOfferByOfferId(123), offerMap);
         }
         catch (SQLException e){
             e.printStackTrace();
