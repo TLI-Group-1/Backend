@@ -36,14 +36,15 @@ import tech.autodirect.api.upstream.SensoApi;
 
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
-@RestController
 // specify hosts allowed to access the AutoDirect API
 @CrossOrigin(origins = {
+	"http://0.0.0.0",
 	"http://localhost",
 	"http://localhost:8080",
 	"https://autodirect.tech",
 	"https://api.autodirect.tech"
 })
+@RestController
 public class ApiEndpoints {
 
 	public static void main(String[] args) {

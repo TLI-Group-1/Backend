@@ -60,7 +60,7 @@ public class SvcSearch {
         String keywords
     ) throws SQLException, IOException, InterruptedException {
         // Set sortBy, sortAsc, and keywords search params to default values if not in correct format
-        if (!valuesOfSortBy.contains(sortBy) || sortBy == null) { sortBy = "price"; }
+        if (!valuesOfSortBy.contains(sortBy) || sortBy == null) { sortBy = "apr"; }
         if (sortAscString == null) { sortAscString = "true"; }
         if (keywords == null) { sortAscString = ""; }
 
@@ -71,6 +71,7 @@ public class SvcSearch {
         boolean areValidParams;
         try {
             areValidParams = !userId.equals("")
+                && !userId.equals("null")
                 && !downPaymentString.equals("")
                 && !budgetMoString.equals("")
                 && ParseChecker.isParsableToDouble(downPaymentString)
