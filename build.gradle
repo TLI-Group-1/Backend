@@ -2,12 +2,15 @@ plugins {
 	id 'org.springframework.boot' version '2.6.0-M3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'war'
 }
+
+apply plugin: 'war'
+apply plugin: 'application'
 
 group = 'tech.autodirect'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+mainClassName='tech.autodirect.api.ApiEndpoints'
 
 repositories {
 	mavenCentral()
