@@ -16,6 +16,7 @@ limitations under the License.
 
 import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class SvcUserLogin {
         } else {
             // userId does not exist, create new user with default info
             int creditScore = bankApi.getCreditScore(userId);
-            String offersTableName = "offers_table_" + userId;
+            String offersTableName = TableOffersInterface.createTableName(userId);
             double defaultDownPayment = 1000; // TODO: update?
             double defaultBudgetMonthly = 250; // TODO: update?
             tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMonthly, offersTableName);
