@@ -1,7 +1,9 @@
 package tech.autodirect.api.database;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import tech.autodirect.api.interfaces.TableCarsInterface;
+import tech.autodirect.api.services.SvcSearch;
+import tech.autodirect.api.upstream.SensoApi;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TableOffersTest {
     private static final String db_name = "testing";
 
@@ -51,6 +56,7 @@ public class TableOffersTest {
             // create a new table for "test_user"
             String userId = "test_user";
             TableOffers table = new TableOffers(db_name);
+            table.newTable("test_offer");
 
             int offerId = table.addOffer(5, 1000, 50, 50, 50, 50, 50, "TEST", true);
             Map<String, Object> offer = table.getOfferByOfferId(offerId);
@@ -70,6 +76,7 @@ public class TableOffersTest {
             assert false;
         }
     }
+
     @Test
     void testGetOfferByOfferIdEmpty(){
         try{
@@ -84,6 +91,7 @@ public class TableOffersTest {
             assert false;
         }
     }
+
     @Test
     void testGetOfferByOfferId(){
         try{
@@ -113,13 +121,31 @@ public class TableOffersTest {
     }
 
 
-    /**
-     * Drop the entire "offers" schema from the testing database
-     */
-    @AfterAll public static void cleanupOffersTables() throws SQLException {
-//        Connection db_conn = Conn.getConn(db_name);
-//        Statement stmt = db_conn.createStatement();
-//        stmt.executeUpdate("DROP SCHEMA offers CASCADE;");
-//        stmt.close();
-    }
+//    @BeforeAll
+//    public void setUpAll() {
+//        try {
+//            this.tableUser = new TableUsers("autodirect");
+//            this.tableOffers = new TableOffers("autodirect");
+//            SensoApiInterface sensoApi = new SensoApi();
+//            this.svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
+//
+//            // testUserId user will be created in tests, ensure it doesn't exist yet
+//            if (tableUser.userExists(testUserId)) {
+//                tableUser.removeUserByID(testUserId);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @AfterEach
+//    public void tearDownEach() {
+//        try {
+//            if (tableUser.userExists(testUserId)) {
+//                tableUser.removeUserByID(testUserId);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
