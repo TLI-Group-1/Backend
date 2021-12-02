@@ -16,32 +16,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableUsers;
-import tech.autodirect.api.interfaces.BankApiInterface;
+import tech.autodirect.api.interfaces.SensoApiInterface;
+import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.services.SvcSearch;
+import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.services.SvcUserLogin;
 import tech.autodirect.api.upstream.BankApi;
 import tech.autodirect.api.upstream.SensoApi;
+
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
-@RestController
 // specify hosts allowed to access the AutoDirect API
 @CrossOrigin(origins = {
-		"http://localhost",
-		"http://localhost:8080",
-		"https://autodirect.tech",
-		"https://api.autodirect.tech"
+	"http://0.0.0.0",
+	"http://localhost",
+	"http://localhost:8080",
+	"https://autodirect.tech",
+	"https://api.autodirect.tech"
 })
+@RestController
 public class ApiEndpoints {
 
 	public static void main(String[] args) {
@@ -55,7 +64,6 @@ public class ApiEndpoints {
 		@RequestParam String creditScore,
 		@RequestParam String budget
 	) {
-
 		// TODO: Remove this hardcoding and read params from other parts of the program.
 		String vehicleMake = "Honda";
 		String vehicleModel = "Civic";
@@ -65,7 +73,8 @@ public class ApiEndpoints {
 		String downpayment = "1000";
 
 		try {
-			return SensoApi.queryApi(
+			SensoApi sensoApi = new SensoApi();
+			return sensoApi.getLoanOffer(
 				loanAmount,
 				creditScore,
 				budget,
@@ -82,6 +91,29 @@ public class ApiEndpoints {
 		}
 
 	}
+
+	// Search endpoint
+	@GetMapping("/search")
+	public Object search(
+			@RequestParam(name = "user_id") String userId,
+			@RequestParam(name = "down_payment") String downpayment,
+			@RequestParam(name = "budget_mo") String budgetMo,
+			@RequestParam(name = "sort_by") String sortBy,
+			@RequestParam(name = "sort_asc") String sortAsc,
+			@RequestParam(name = "keywords") String keywords
+	) {
+		try {
+			TableCarsInterface tableCars = new TableCars("autodirect");
+			TableUsersInterface tableUser = new TableUsers("autodirect");
+			SensoApiInterface sensoApi = new SensoApi();
+			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
+			return svcSearch.searchCars(userId, downpayment, budgetMo, sortBy, sortAsc, keywords);
+		} catch (IOException | InterruptedException | SQLException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
+
 	// User Login endpoint
 	@GetMapping("/login")
 	public Object login(@RequestParam(name = "user_id") String userId) {

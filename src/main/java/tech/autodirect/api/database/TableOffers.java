@@ -115,10 +115,10 @@ TableOffers extends Table implements TableOffersInterface {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
         );
         stmt.setInt(1, car_id);
-        stmt.setBigDecimal(2, loan_amount);
-        stmt.setBigDecimal(3, capital_sum);
-        stmt.setBigDecimal(4, interest_sum);
-        stmt.setBigDecimal(5, total_sum);
+        stmt.setBigDecimal(2, BigDecimal.valueOf(loan_amount));
+        stmt.setBigDecimal(3, BigDecimal.valueOf(capital_sum));
+        stmt.setBigDecimal(4, BigDecimal.valueOf(interest_sum));
+        stmt.setBigDecimal(5, BigDecimal.valueOf(total_sum));
         stmt.setDouble(6, interest_rate);
         stmt.setDouble(7, term_mo);
         stmt.setString(8, installments);
@@ -159,13 +159,12 @@ TableOffers extends Table implements TableOffersInterface {
     public Map<String, Object> getOfferByOfferId(int offer_id) throws SQLException {
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.db_conn.prepareStatement(
-                "SELECT FROM " + this.table_name + " WHERE offer_id = ?;"
+                "SELECT * FROM " + this.table_name + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offer_id);
 
         // execute the above SQL statement and extract result into a Map
         ResultSet rs = stmt.executeQuery();
-        rs.next();
         Map<String, Object> offer = resultSetToList(rs).get(0);
         stmt.close();
         return offer;

@@ -11,6 +11,8 @@ import java.util.Map;
 public class Table {
     /**
      * Convert a JDBC ResultSet to a List of Maps (where each Map is a single entry in the ResultSet).
+     * NOTE: Do not execute rs.next() BEFORE calling this method on rs (unless you have good reason to).
+     *
      * @param rs A ResultSet containing the resulting entries of a JDBC query to the database server.
      * @return A List of Maps where each Map is a single entry in the JDBC database query result.
      */
