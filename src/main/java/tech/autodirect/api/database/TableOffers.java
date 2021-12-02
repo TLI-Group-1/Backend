@@ -24,13 +24,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Map;
 
-public class
-
-
-
-
-
-TableOffers extends Table implements TableOffersInterface {
+public class TableOffers extends Table implements TableOffersInterface {
     public Connection dbConn;
     private String tableName = null;
     private final String[] tableColumns = {
@@ -219,17 +213,38 @@ TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
-    public void dropTable() throws SQLException {
-        // construct a prepared SQL marking the specified offer unclaimed and execute
-        PreparedStatement stmt = this.dbConn.prepareStatement("DROP TABLE " + this.tableName + ";");
-        stmt.executeUpdate();
-        stmt.close();
+    public boolean dropTable() throws SQLException {
+        return dropTable(this.tableName);
     }
 
-    public void dropTable(String tableName) throws SQLException {
+    public boolean dropTable(String tableName) throws SQLException {
         // construct a prepared SQL marking the specified offer unclaimed and execute
         PreparedStatement stmt = this.dbConn.prepareStatement("DROP TABLE " + tableName + ";");
         stmt.executeUpdate();
         stmt.close();
+        return !checkTableExists(tableName);
     }
+
+    public boolean checkTableExists() throws SQLException {
+        return checkTableExists(this.tableName);
+    }
+
+    public boolean checkTableExists(String tableName) throws SQLException {
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "SELECT EXISTS (" +
+                        "SELECT 1 " +
+                        "FROM   information_schema.tables " +
+                        "WHERE  table_schema = 'offers'" +
+                        "   and table_name=" + tableName +
+                ");"
+        );
+
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        boolean exists = rs.getBoolean("exists");
+        stmt.close();
+
+        return exists;
+    }
+
 }
