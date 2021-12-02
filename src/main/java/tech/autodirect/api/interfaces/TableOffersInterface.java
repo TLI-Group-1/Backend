@@ -115,4 +115,9 @@ public interface TableOffersInterface {
      * @param offer_id : ID of the offer to be marked as unclaimed
      */
     public void markOfferUnclaimed(int offer_id) throws SQLException;
+
+    /**
+     * Delete the current offers table.
+     */
+    public void dropTable() throws SQLException;
 }
