@@ -225,4 +225,11 @@ TableOffers extends Table implements TableOffersInterface {
         stmt.executeUpdate();
         stmt.close();
     }
+
+    public void dropTable(String tableName) throws SQLException {
+        // construct a prepared SQL marking the specified offer unclaimed and execute
+        PreparedStatement stmt = this.dbConn.prepareStatement("DROP TABLE " + tableName + ";");
+        stmt.executeUpdate();
+        stmt.close();
+    }
 }

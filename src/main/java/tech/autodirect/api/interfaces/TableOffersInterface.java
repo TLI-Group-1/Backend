@@ -120,4 +120,9 @@ public interface TableOffersInterface {
      * Delete the current offers table.
      */
     public void dropTable() throws SQLException;
+
+    /**
+     * Delete the offers table given by tableName.
+     */
+    public void dropTable(String tableName) throws SQLException;
 }
