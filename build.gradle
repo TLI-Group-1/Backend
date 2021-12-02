@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.0-M3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'war'
 }
 
 group = 'tech.autodirect'
@@ -17,6 +18,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.google.code.gson:gson:2.8.8'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	compileOnly 'javax.json:javax.json-api:1.1.4'
 	implementation 'com.opencsv:opencsv:5.5.2'
 	implementation 'org.postgresql:postgresql:42.3.1'
