@@ -25,17 +25,16 @@ public interface TableOffersInterface {
     /**
      * Create a new offers table for a given user inside the "offers" schema.
      *
-     * @param user_id : the user string that uniquely identifies a user, same as
+     * @param userId : the user string that uniquely identifies a user, same as
      *     "user_id" in the public.users table
-     * @return : the name of the newly created offers table, follows
-     *     "offers.offers_<userid>" format
+     * @return : the name of the newly created offers table, follows TableOffersInterface.createTableName(userId).
      */
-    public String newTable(String user_id) throws SQLException;
+    public String newTable(String userId) throws SQLException;
 
     /**
      * Public getter for the "tableName" property.
      *
-     * @return : the name of the offers table, follows "offers.offers_<userid>" format
+     * @return : the name of the offers table, follows TableOffersInterface.createTableName(userId).
      */
     public String getTableName();
 

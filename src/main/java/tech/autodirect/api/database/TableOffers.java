@@ -42,16 +42,15 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public String newTable(String userId) throws SQLException {
+        this.tableName = TableOffersInterface.createTableName(userId);
+
         // create the "offers" schema if it does not exist yet
         Statement stmtCreateSchema = this.dbConn.createStatement();
         stmtCreateSchema.executeUpdate(
             "CREATE SCHEMA IF NOT EXISTS offers;"
         );
         stmtCreateSchema.close();
-
-        // construct the name of the table following "offers.offers_userid"
-        this.tableName = "offers.offers_" + userId;
-
+        
         // create and execute the SQL statement that will create an offer table
         Statement stmt = this.dbConn.createStatement();
         stmt.executeUpdate(
