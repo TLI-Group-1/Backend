@@ -108,7 +108,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			SensoApiInterface sensoApi = new SensoApi();
 			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
 			return svcSearch.searchCars(userId, downpayment, budgetMo, sortBy, sortAsc, keywords);
-		} catch (IOException | InterruptedException | SQLException e) {
+		} catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}

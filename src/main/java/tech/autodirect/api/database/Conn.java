@@ -34,8 +34,7 @@ public class Conn {
     private static HashMap<String, String> db_params = new HashMap<>();
 
     public static Connection getConn(String db_name)
-        throws MissingEnvironmentVariableException, SQLException
-    {
+            throws MissingEnvironmentVariableException, SQLException, ClassNotFoundException {
         // get the database configuration parameters from environment variables
         getEnvVars();
 
@@ -51,6 +50,9 @@ public class Conn {
         props.setProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
         props.setProperty("user", db_params.get("AUTODIRECT_DB_USER"));
         props.setProperty("password", db_params.get("AUTODIRECT_DB_PASS"));
+
+        // ensure PostgreSQL driver is present
+        Class.forName("org.postgresql.Driver");
 
         // print connection info and return the obtained DB connection object
         Connection conn = DriverManager.getConnection(db_url, props);
