@@ -29,7 +29,7 @@ public class TableCars extends Table implements TableCarsInterface {
     private final Connection db_conn;
     private final String table_name = "cars";
 
-    public TableCars(String db_name) throws SQLException {
+    public TableCars(String db_name) throws SQLException, ClassNotFoundException {
         this.db_conn = Conn.getConn(db_name);
     }
 
