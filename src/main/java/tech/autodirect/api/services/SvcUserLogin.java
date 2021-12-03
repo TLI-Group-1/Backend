@@ -51,9 +51,9 @@ public class SvcUserLogin {
             tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMonthly, offersTableName);
 
             // Return user info from database
-            Map<String, Object> userInfo = tableUsers.getUserByID(userId);
-            userInfo.remove("offers_table");
-            return userInfo;
+            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            userMap.remove("offers_table");
+            return userMap;
         }
     }
 }
