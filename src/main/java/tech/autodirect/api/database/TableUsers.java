@@ -29,7 +29,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     private final Connection db_conn;
     private final String table_name = "users";
 
-    public TableUsers(String db_name) throws SQLException {
+    public TableUsers(String db_name) throws SQLException, ClassNotFoundException {
         this.db_conn = Conn.getConn(db_name);
     }
 

@@ -103,7 +103,7 @@ class SvcSearchTest {
             if (tableUser.userExists(testUserId)) {
                 tableUser.removeUserByID(testUserId);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

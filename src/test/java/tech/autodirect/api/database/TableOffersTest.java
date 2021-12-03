@@ -36,7 +36,7 @@ public class TableOffersTest {
             stmt.close();
             assert result;
         }
-        catch (SQLException e) {
+        catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
