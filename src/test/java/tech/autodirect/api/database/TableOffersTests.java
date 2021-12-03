@@ -128,11 +128,10 @@ public class TableOffersTests {
     }
 
     @AfterAll
-    public void tearDownAll() {
+    public void tearDownEach() {
         try {
             TableOffers table = new TableOffers(dbName);
-            String tableName = TableOffersInterface.createTableName(testUserId);
-            table.dropTable(tableName); // drop table if already exists
+            table.dropTable(TableOffersInterface.createTableName(testUserId)); // drop table is already exists
         } catch (SQLException e) {
             e.printStackTrace();
         }
