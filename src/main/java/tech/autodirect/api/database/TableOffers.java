@@ -40,8 +40,8 @@ public class TableOffers extends Table implements TableOffersInterface {
      *
      * @param dbName : name of the database to connect to
      */
-    public TableOffers(String db_name) throws SQLException, ClassNotFoundException {
-        this.db_conn = Conn.getConn(db_name);
+    public TableOffers(String dbName) throws SQLException, ClassNotFoundException {
+        this.dbConn = Conn.getConn(dbName);
     }
 
     public String newTable(String userId) throws SQLException {
