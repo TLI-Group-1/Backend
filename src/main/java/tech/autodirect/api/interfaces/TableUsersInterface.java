@@ -27,8 +27,7 @@ public interface TableUsersInterface {
         String userId,
         int creditScore,
         double downPayment,
-        double budgetMonthly,
-        String offersTableName
+        double budgetMonthly
     ) throws SQLException;
 
     /**
