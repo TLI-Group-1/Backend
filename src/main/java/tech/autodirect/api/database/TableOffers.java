@@ -21,12 +21,15 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import javax.management.InstanceAlreadyExistsException;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class TableOffers extends Table implements TableOffersInterface {
     public Connection dbConn;
     private String tableName = null;
+    private final String schemaName = "offers";
     private final String[] tableColumns = {
         "car_id", "loan_amount", "capital_sum", "interest_sum", "total_sum",
         "interest_rate", "term_mo", "installments", "claimed"
@@ -50,11 +53,11 @@ public class TableOffers extends Table implements TableOffersInterface {
             "CREATE SCHEMA IF NOT EXISTS offers;"
         );
         stmtCreateSchema.close();
-        
+
         // create and execute the SQL statement that will create an offer table
         Statement stmt = this.dbConn.createStatement();
         stmt.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS " + this.tableName + " (" +
+            "CREATE TABLE IF NOT EXISTS " + this.schemaName + "." + this.tableName + " (" +
                 "offer_id       serial      NOT NULL PRIMARY KEY, " +
                 "car_id         integer     NOT NULL, " +
                 "loan_amount    decimal(12) NOT NULL, " +
@@ -63,7 +66,7 @@ public class TableOffers extends Table implements TableOffersInterface {
                 "total_sum      decimal(12) NOT NULL, " +
                 "interest_rate  real        NOT NULL, " +
                 "term_mo        real        NOT NULL, " +
-                "installments   jsonb       NOT NULL, " +
+                "installments   varchar(10000) NOT NULL, " +
                 "claimed        boolean     NOT NULL" +
             ");"
         );
@@ -102,10 +105,9 @@ public class TableOffers extends Table implements TableOffersInterface {
     ) throws SQLException {
         // construct a prepared SQL statement inserting the specified values
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "INSERT INTO " + this.tableName + " (" +
+            "INSERT INTO " + this.schemaName + "." + this.tableName + " (" +
                 String.join(", ", tableColumns) +
-            ")" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+            ")" + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
         );
         stmt.setInt(1, carId);
         stmt.setBigDecimal(2, BigDecimal.valueOf(loanAmount));
@@ -134,7 +136,7 @@ public class TableOffers extends Table implements TableOffersInterface {
     public void removeOfferByOfferId(int offerId) throws SQLException {
         // construct a prepared SQL statement deleting the specified offer
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "DELETE FROM " + this.tableName + " WHERE offer_id = ?;"
+            "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 
@@ -145,29 +147,32 @@ public class TableOffers extends Table implements TableOffersInterface {
 
     public void removeAllOffers() throws SQLException {
         Statement stmt = this.dbConn.createStatement();
-        stmt.executeUpdate("DELETE FROM " + this.tableName + ";");
+        stmt.executeUpdate("DELETE FROM " + this.schemaName + "." + this.tableName + ";");
         stmt.close();
     }
 
     public Map<String, Object> getOfferByOfferId(int offerId) throws SQLException {
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT * FROM " + this.tableName + " WHERE offer_id = ?;"
+                "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 
-        // execute the above SQL statement and extract result into a Map
         ResultSet rs = stmt.executeQuery();
-        Map<String, Object> offer = resultSetToList(rs).get(0);
+        List<Map<String, Object>> rsList = resultSetToList(rs);
         stmt.close();
-        return offer;
+        if (rsList.size() == 0) {
+            return Collections.emptyMap();
+        } else {
+            return rsList.get(0);
+        }
     }
 
     public List<Map<String, Object>> getAllOffers() throws SQLException {
         // construct a SQL statement selecting all offers
         Statement stmt = this.dbConn.createStatement();
         ResultSet rs = stmt.executeQuery(
-            "SELECT * FROM " + this.tableName + ";"
+            "SELECT * FROM " + this.schemaName + "." + this.tableName + ";"
         );
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
@@ -179,7 +184,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // where "claimed" is true
         Statement stmt = this.dbConn.createStatement();
         ResultSet rs = stmt.executeQuery(
-            "SELECT * FROM " + this.tableName + " WHERE 'claimed' = true;"
+            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE 'claimed' = true;"
         );
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
@@ -189,7 +194,7 @@ public class TableOffers extends Table implements TableOffersInterface {
     public void markOfferClaimed(int offerId) throws SQLException {
         // construct a prepared SQL marking the specified offer claimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "UPDATE " + this.tableName +
+            "UPDATE " + this.schemaName + "." + this.tableName +
             " SET 'claimed' = true WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
@@ -202,7 +207,7 @@ public class TableOffers extends Table implements TableOffersInterface {
     public void markOfferUnclaimed(int offerId) throws SQLException {
         // construct a prepared SQL marking the specified offer unclaimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "UPDATE " + this.tableName +
+            "UPDATE " + this.schemaName + "." + this.tableName +
             " SET 'claimed' = false WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
@@ -217,11 +222,16 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public boolean dropTable(String tableName) throws SQLException {
-        // construct a prepared SQL marking the specified offer unclaimed and execute
-        PreparedStatement stmt = this.dbConn.prepareStatement("DROP TABLE " + tableName + ";");
-        stmt.executeUpdate();
-        stmt.close();
-        return !checkTableExists(tableName);
+        if (checkTableExists(tableName)) {
+            PreparedStatement stmt = this.dbConn.prepareStatement(
+                    "DROP TABLE " + this.schemaName + "." + tableName + ";"
+            );
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean checkTableExists() throws SQLException {
@@ -231,10 +241,10 @@ public class TableOffers extends Table implements TableOffersInterface {
     public boolean checkTableExists(String tableName) throws SQLException {
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "SELECT EXISTS (" +
-                        "SELECT 1 " +
+                        "SELECT * " +
                         "FROM   information_schema.tables " +
                         "WHERE  table_schema = 'offers'" +
-                        "   and table_name=" + tableName +
+                        "   and table_name= '" + tableName.toLowerCase(Locale.ROOT) + "'" +
                 ");"
         );
 

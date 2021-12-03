@@ -19,14 +19,15 @@ limitations under the License.
 import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public interface TableOffersInterface {
     /**
-     * Create a new offers table for a given user inside the "offers" schema.
+     * Create a new offers table for a given user inside the "offers" schema
+     * following TableOffersInterface.createTableName(userId) naming.
      *
-     * @param userId : the user string that uniquely identifies a user, same as
-     *     "user_id" in the public.users table
+     * @param userId : the user string that uniquely identifies a user, same as "user_id" in the public.users table
      * @return : the name of the newly created offers table, follows TableOffersInterface.createTableName(userId).
      */
     public String newTable(String userId) throws SQLException;
@@ -116,13 +117,13 @@ public interface TableOffersInterface {
 
     /**
      * Delete the current offers table given by the "tableName" property.
-     * @return Whether the table existed (and so whether the drop was successful).
+     * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
     */
     public boolean dropTable() throws SQLException;
 
     /**
      * Delete the offers table given by tableName.
-     * @return Whether the table existed (and so whether the drop was successful).
+     * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
      */
     public boolean dropTable(String tableName) throws SQLException;
 
@@ -135,7 +136,7 @@ public interface TableOffersInterface {
      * process for an offers table incorrect. Anyway, this is important, please use it!
      */
     public static String createTableName(String userId) throws SQLException {
-        return "offers_" + userId;
+        return "offers_" + userId.toLowerCase(Locale.ROOT);
     }
 
     /**
