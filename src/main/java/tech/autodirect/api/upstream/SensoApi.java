@@ -43,7 +43,7 @@ public class SensoApi implements SensoApiInterface {
         String vehicleYear,
         String vehicleKms,
         String listPrice,
-        String downpayment
+        String downPayment
     ) throws IOException, InterruptedException {
         // create request body
         Map<String, String> queryMap = new HashMap<>() {{
@@ -55,7 +55,7 @@ public class SensoApi implements SensoApiInterface {
             put("vehicleYear", vehicleYear);
             put("vehicleKms", vehicleKms);
             put("listPrice", listPrice);
-            put("downpayment", downpayment);
+            put("downpayment", downPayment);
         }};
         // convert request body to JSON string
         String query_body = gson.toJson(queryMap, Map.class);

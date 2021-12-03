@@ -21,6 +21,8 @@ import java.sql.SQLException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,10 +53,15 @@ import java.sql.SQLException;
 	"https://api.autodirect.tech"
 })
 @RestController
-public class ApiEndpoints {
+public class ApiEndpoints extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiEndpoints.class, args);
+	}
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(ApiEndpoints.class);
 	}
 
 	// demo API endpoint; use for reference
@@ -70,7 +77,7 @@ public class ApiEndpoints {
 		String vehicleYear = "2018";
 		String vehicleKms = "1";
 		String listPrice = "1000";
-		String downpayment = "1000";
+		String downPayment = "1000";
 
 		try {
 			SensoApi sensoApi = new SensoApi();
@@ -83,7 +90,7 @@ public class ApiEndpoints {
 				vehicleYear,
 				vehicleKms,
 				listPrice,
-				downpayment
+				downPayment
 			);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
@@ -95,20 +102,20 @@ public class ApiEndpoints {
 	// Search endpoint
 	@GetMapping("/search")
 	public Object search(
-			@RequestParam(name = "user_id") String userId,
-			@RequestParam(name = "down_payment") String downpayment,
-			@RequestParam(name = "budget_mo") String budgetMo,
-			@RequestParam(name = "sort_by") String sortBy,
-			@RequestParam(name = "sort_asc") String sortAsc,
-			@RequestParam(name = "keywords") String keywords
+		@RequestParam(name = "user_id") String userId,
+		@RequestParam(name = "downpayment") String downPayment,
+		@RequestParam(name = "budget_mo") String budgetMo,
+		@RequestParam(name = "sort_by") String sortBy,
+		@RequestParam(name = "sort_asc") String sortAsc,
+		@RequestParam(name = "keywords") String keywords
 	) {
 		try {
 			TableCarsInterface tableCars = new TableCars("autodirect");
 			TableUsersInterface tableUser = new TableUsers("autodirect");
 			SensoApiInterface sensoApi = new SensoApi();
 			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
-			return svcSearch.searchCars(userId, downpayment, budgetMo, sortBy, sortAsc, keywords);
-		} catch (IOException | InterruptedException | SQLException e) {
+			return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc, keywords);
+		} catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}

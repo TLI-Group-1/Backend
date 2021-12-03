@@ -121,7 +121,7 @@ public class SvcSearch {
      */
     private List<EntCar> searchCarsWithOffer(
         String userId,
-        double downpayment,
+        double downPayment,
         double budgetMo,
         String sortBy,
         boolean sortAsc,
@@ -149,7 +149,7 @@ public class SvcSearch {
                 Integer.toString(car.getYear()), // vehicleYear
                 Double.toString(car.getKms()), // vehicleKms
                 Double.toString(car.getPrice()), // listPrice
-                Double.toString(downpayment) // downpayment
+                Double.toString(downPayment) // downpayment
             );
 
             // If successfully called api, add car to carsWithOffer
