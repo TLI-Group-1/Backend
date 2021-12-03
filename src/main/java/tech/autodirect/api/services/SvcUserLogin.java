@@ -34,7 +34,7 @@ public class SvcUserLogin {
      * If the userid exists, retrieve the userId's information, if it does not exist, create a new userId.
      *
      * @param userId: the userId that uniquely identifies a user, same as "user_id" in the public.users table
-     * @return the user's
+     * @return the user's information that is stored in the database (excluding their offersTableName)
      */
     public Map<String, Object> loginUser(String userId) throws SQLException {
         if (tableUsers.userExists(userId)) {
