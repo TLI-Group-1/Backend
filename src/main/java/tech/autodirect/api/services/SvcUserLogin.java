@@ -16,13 +16,14 @@ limitations under the License.
 
 import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 import java.util.Map;
 
 public class SvcUserLogin {
-    private TableUsersInterface tableUsers;
-    private BankApiInterface bankApi;
+    private final TableUsersInterface tableUsers;
+    private final BankApiInterface bankApi;
 
     public SvcUserLogin(TableUsersInterface tableUsers, BankApiInterface bankApi) {
         this.tableUsers = tableUsers;
@@ -30,26 +31,28 @@ public class SvcUserLogin {
     }
 
     /**
-     * if the userid exists, retrieve the username's information, if it does not exist, create a new username
+     * If the userid exists, retrieve the userId's information, if it does not exist, create a new userId.
      *
-     * @param userId: the user string that uniquely identifies a user, same as "user_id" in the public.users table
+     * @param userId: the userId that uniquely identifies a user, same as "user_id" in the public.users table
      * @return the user's
      */
     public Map<String, Object> loginUser(String userId) throws SQLException {
-        if (tableUsers.checkUser(userId)) {
-            // check if user ID exits in the table of users
+        if (tableUsers.userExists(userId)) {
+            // userId exists, return existing user info
             Map<String, Object> userInfo = tableUsers.getUserByID(userId);
             userInfo.remove("offers_table");
             return userInfo;
         } else {
-            // creates a new user ID
-            Map<String, Object> userInfo = tableUsers.addUser(
-                    userId,
-                    bankApi.getCreditScore(userId),
-                    null,
-                    null,
-                    null
-            );
+            // userId does not exist, create new user with default info
+            int creditScore = bankApi.getCreditScore(userId);
+            String offersTableName = TableOffersInterface.createTableName(userId);
+            double defaultDownPayment = 1000; // TODO: update?
+            double defaultBudgetMonthly = 250; // TODO: update?
+            tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMonthly, offersTableName);
+
+            // Return user info from database
+            Map<String, Object> userInfo = tableUsers.getUserByID(userId);
+            userInfo.remove("offers_table");
             return userInfo;
         }
     }

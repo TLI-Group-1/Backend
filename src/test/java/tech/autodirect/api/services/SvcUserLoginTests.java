@@ -12,9 +12,7 @@ public class SvcUserLoginTests {
     @Test void svcUserLoginTest(){
         try{
             SvcUserLogin loginClass = new SvcUserLogin(new TableUsers("autodirect"), new BankApi());
-            String userId = new String("username_member824");
-            Map<String, Object> result = (username);
-
+            String username = new String("username_member824");
         }
         catch(SQLException e) {
             e.printStackTrace();

@@ -4,9 +4,13 @@ plugins {
 	id 'java'
 }
 
+apply plugin: 'war'
+apply plugin: 'application'
+
 group = 'tech.autodirect'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+mainClassName='tech.autodirect.api.ApiEndpoints'
 
 repositories {
 	mavenCentral()
@@ -17,6 +21,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.google.code.gson:gson:2.8.8'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	compileOnly 'javax.json:javax.json-api:1.1.4'
 	implementation 'com.opencsv:opencsv:5.5.2'
 	implementation 'org.postgresql:postgresql:42.3.1'

@@ -26,8 +26,7 @@ import java.sql.*;
 public class InitDatabase {
 
     public static void main(String[] args)
-        throws SQLException, IOException, CsvValidationException
-    {
+            throws SQLException, IOException, CsvValidationException, ClassNotFoundException {
         // parse command-line arguments and obtain the CSV file path
         String csv_path = parseArgs(args);
 

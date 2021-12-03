@@ -29,12 +29,12 @@ public class TableCars extends Table implements TableCarsInterface {
     private final Connection db_conn;
     private final String table_name = "cars";
 
-    public TableCars(String db_name) throws SQLException {
+    public TableCars(String db_name) throws SQLException, ClassNotFoundException {
         this.db_conn = Conn.getConn(db_name);
     }
 
     @Override
-    public List<Map<String, Object>> getAllCars() throws SQLException {
+    public List<Map<String, Object>> getAllCars(String keywords) throws SQLException { // TODO: keywords
         // Construct and execute a prepared SQL statement selecting all cars
         PreparedStatement stmt = this.db_conn.prepareStatement("SELECT * FROM " + this.table_name);
         ResultSet rs = stmt.executeQuery();

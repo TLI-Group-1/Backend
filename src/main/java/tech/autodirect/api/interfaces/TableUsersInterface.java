@@ -16,39 +16,34 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
 
 public interface TableUsersInterface {
     /**
      * Add a user entry to the users table in the database.
-     * @return
      */
-    public Map<String, Object> addUser(
-            String userId,
-            int creditScore,
-            BigDecimal downPayment,
-            BigDecimal budgetMonthly,
-            String offersTableName
+    void addUser(
+        String userId,
+        int creditScore,
+        double downPayment,
+        double budgetMonthly,
+        String offersTableName
     ) throws SQLException;
 
     /**
      * Get a specific user entry by the user ID.
      * @return A Map representing a user entry in the database.
      */
-    public Map<String, Object> getUserByID(String userId) throws SQLException;
+    Map<String, Object> getUserByID(String userId) throws SQLException;
 
     /**
      * Remove a specific user entry by the user ID.
      */
-    public void removeUserByID(String userId) throws SQLException;
+    void removeUserByID(String userId) throws SQLException;
 
     /**
-     * Checks if the userid exists
-     *
-     * @param userId: the user id that uniquely identifies a user, same a "user_id" in the public.users table
-     * @return true if the user exists, or false if the user does not exist
+     * Check if user exists in database.
      */
-    public boolean checkUser(String userId);
+    boolean userExists(String userId) throws SQLException;
 }
