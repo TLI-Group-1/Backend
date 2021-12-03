@@ -23,6 +23,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class TableUsers extends Table implements TableUsersInterface {
@@ -66,11 +68,14 @@ public class TableUsers extends Table implements TableUsersInterface {
         );
         stmt.setString(1, userId);
 
-        // execute the above SQL statement and extract result into a Map
         ResultSet rs = stmt.executeQuery();
-        Map<String, Object> user = resultSetToList(rs).get(0);
+        List<Map<String, Object>> rsList = resultSetToList(rs);
         stmt.close();
-        return user;
+        if (rsList.size() == 0) {
+            return Collections.emptyMap();
+        } else {
+            return rsList.get(0);
+        }
     }
 
     @Override
