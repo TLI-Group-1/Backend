@@ -18,8 +18,8 @@ import java.util.Map;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcSearchTest {
+    private static final String dbName = "testing";
     private final String testUserId = "SvcSearchTest.test_user";
-    private final String testUserOffersTableName = "SvcSearchTest.test_user.offers_table";
     private TableUsersInterface tableUser;
     private SvcSearch svcSearch;
 
@@ -70,7 +70,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLogin() {
         try {
-            tableUser.addUser(testUserId, 700, 1000, 200, testUserOffersTableName);
+            tableUser.addUser(testUserId, 700, 1000, 200);
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
@@ -82,7 +82,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLoginBadSortBy() {
         try {
-            tableUser.addUser(testUserId, 700, 1000, 200, testUserOffersTableName);
+            tableUser.addUser(testUserId, 700, 1000, 200);
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
@@ -94,8 +94,8 @@ class SvcSearchTest {
     @BeforeAll
     public void setUpAll() {
         try {
-            TableCarsInterface tableCars = new TableCars("autodirect");
-            this.tableUser = new TableUsers("autodirect");
+            TableCarsInterface tableCars = new TableCars(dbName);
+            this.tableUser = new TableUsers(dbName);
             SensoApiInterface sensoApi = new SensoApi();
             this.svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
 
