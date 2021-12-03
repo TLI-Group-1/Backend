@@ -44,8 +44,8 @@ public class EntOffer {
         capitalSum = ((BigDecimal) entry.get("capital_sum")).doubleValue();
         interestSum = ((BigDecimal) entry.get("interest_sum")).doubleValue();
         totalSum = ((BigDecimal) entry.get("total_sum")).doubleValue();
-        interestRate = (double) entry.get("interest_rate");
-        termMo = (double) entry.get("term_mo");
+        interestRate = ((Float) entry.get("interest_rate")).doubleValue();
+        termMo = ((Float) entry.get("term_mo")).doubleValue();
         installments = (String) entry.get("installments");
         claimed = (boolean) entry.get("claimed");
     }
