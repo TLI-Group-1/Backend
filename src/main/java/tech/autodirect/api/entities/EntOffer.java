@@ -23,10 +23,10 @@ import java.util.Map;
 public class EntOffer {
     private int offerId;
     private int carId;
-    private BigDecimal loanAmount;
-    private BigDecimal capitalSum;
-    private BigDecimal interestSum;
-    private BigDecimal totalSum;
+    private double loanAmount;
+    private double capitalSum;
+    private double interestSum;
+    private double totalSum;
     private double interestRate;
     private double termMo;
     private String installments;
@@ -37,15 +37,15 @@ public class EntOffer {
      *
      * @param entry : A Map containing representing an offer entry in the database.
      */
-    public void loadFromList(Map<String, Object> entry) throws SQLException {
+    public void loadFromMap(Map<String, Object> entry) throws SQLException {
         offerId = (int) entry.get("offer_id");
         carId = (int) entry.get("car_id");
-        loanAmount = (BigDecimal) entry.get("loan_amount");
-        capitalSum = (BigDecimal) entry.get("capital_sum");
-        interestSum = (BigDecimal) entry.get("interest_sum");
-        totalSum = (BigDecimal) entry.get("total_sum");
-        interestRate = (double) entry.get("interest_rate");
-        termMo = (double) entry.get("term_mo");
+        loanAmount = ((BigDecimal) entry.get("loan_amount")).doubleValue();
+        capitalSum = ((BigDecimal) entry.get("capital_sum")).doubleValue();
+        interestSum = ((BigDecimal) entry.get("interest_sum")).doubleValue();
+        totalSum = ((BigDecimal) entry.get("total_sum")).doubleValue();
+        interestRate = ((Float) entry.get("interest_rate")).doubleValue();
+        termMo = ((Float) entry.get("term_mo")).doubleValue();
         installments = (String) entry.get("installments");
         claimed = (boolean) entry.get("claimed");
     }
@@ -58,19 +58,19 @@ public class EntOffer {
         return carId;
     }
 
-    public BigDecimal getLoanAmount() {
+    public double getLoanAmount() {
         return loanAmount;
     }
 
-    public BigDecimal getCapitalSum() {
+    public double getCapitalSum() {
         return capitalSum;
     }
 
-    public BigDecimal getInterestSum() {
+    public double getInterestSum() {
         return interestSum;
     }
 
-    public BigDecimal getTotalSum() {
+    public double getTotalSum() {
         return totalSum;
     }
 

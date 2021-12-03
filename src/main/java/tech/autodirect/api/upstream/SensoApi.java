@@ -25,19 +25,25 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import com.google.gson.Gson;
+import tech.autodirect.api.interfaces.SensoApiInterface;
 
-public class SensoApi{
-
+public class SensoApi implements SensoApiInterface {
     // API connection parameters
     private static String senso_url;
     private static String senso_key;
     // Gson object for JSON/Map conversions
     private static Gson gson = new Gson();
 
-    public static HashMap<String, Object> queryApi(
-        String loanAmount, String creditScore, String budget,
-        String vehicleMake, String vehicleModel, String vehicleYear,
-        String vehicleKms, String listPrice, String downpayment
+    public HashMap<String, Object> getLoanOffer(
+        String loanAmount,
+        String creditScore,
+        String budget,
+        String vehicleMake,
+        String vehicleModel,
+        String vehicleYear,
+        String vehicleKms,
+        String listPrice,
+        String downpayment
     ) throws IOException, InterruptedException {
         // create request body
         Map<String, String> queryMap = new HashMap<>() {{
@@ -93,11 +99,11 @@ public class SensoApi{
         throws IOException, InterruptedException {
         // create an HTTP POST request
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(senso_url + "/rate"))
-                .header("Content-Type", "application/json")
-                .header("x-api-key", senso_key)
-                .POST(HttpRequest.BodyPublishers.ofString(request_body))
-                .build();
+            .uri(URI.create(senso_url + "/rate"))
+            .header("Content-Type", "application/json")
+            .header("x-api-key", senso_key)
+            .POST(HttpRequest.BodyPublishers.ofString(request_body))
+            .build();
 
         // create an HTTP client
         var client = HttpClient.newHttpClient();
