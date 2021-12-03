@@ -33,7 +33,7 @@ public class TableOffersTests {
             // check if the created table exists under the correct name (both should work)
             assert table.checkTableExists();
             assert table.checkTableExists(tableName);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -61,7 +61,7 @@ public class TableOffersTests {
             assert offer.getTermMo() == 7;
             assert Objects.equals(offer.getInstallments(), "TEST");
             assert offer.isClaimed();
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -89,7 +89,7 @@ public class TableOffersTests {
             assert offer.getTermMo() == 7;
             assert Objects.equals(offer.getInstallments(), "TEST");
             assert !offer.isClaimed();
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -107,7 +107,7 @@ public class TableOffersTests {
             Map<String, Object> emptyMap = Collections.emptyMap();
             Map<String, Object> offerMap = table.getOfferByOfferId(1);
             assert offerMap == emptyMap;
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -122,7 +122,7 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(dbName);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -133,7 +133,7 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(dbName);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
