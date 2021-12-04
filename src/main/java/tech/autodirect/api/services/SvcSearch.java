@@ -60,9 +60,9 @@ public class SvcSearch {
         String keywords
     ) throws SQLException, IOException, InterruptedException {
         // Set sortBy, sortAsc, and keywords search params to default values if not in correct format
-        if (!valuesOfSortBy.contains(sortBy) || sortBy == null) { sortBy = "apr"; }
-        if (sortAscString == null) { sortAscString = "true"; }
-        if (keywords == null) { sortAscString = ""; }
+        if (!valuesOfSortBy.contains(sortBy) || Objects.equals(sortBy, "null")) { sortBy = "apr"; }
+        if (Objects.equals(sortAscString, "null")) { sortAscString = "true"; }
+        if (Objects.equals(keywords, "null")) { sortAscString = ""; }
 
         // Parse sortAscString to boolean
         boolean sortAsc = Boolean.parseBoolean(sortAscString);
@@ -73,7 +73,9 @@ public class SvcSearch {
             areValidParams = !userId.equals("")
                 && !userId.equals("null")
                 && !downPaymentString.equals("")
+                && !downPaymentString.equals("null")
                 && !budgetMoString.equals("")
+                && !budgetMoString.equals("null")
                 && ParseChecker.isParsableToDouble(downPaymentString)
                 && ParseChecker.isParsableToDouble(budgetMoString);
         } catch (NullPointerException ignored) {
