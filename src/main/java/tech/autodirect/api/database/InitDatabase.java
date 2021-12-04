@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 
 public class InitDatabase {
-    private static final String dbName = "testing";
+    private static final String dbName = "autodirect";
 
     public static void main(String[] args)
             throws SQLException, IOException, CsvValidationException, ClassNotFoundException {
@@ -136,17 +136,16 @@ public class InitDatabase {
             );
 
             PreparedStatement stmt = conn.prepareStatement(
-                "INSERT INTO public.cars (id, brand, model, year, price, mileage)" +
-                "VALUES (?, ?, ?, ?, ?, ?)"
+                "INSERT INTO public.cars (brand, model, year, price, mileage)" +
+                "VALUES (?, ?, ?, ?, ?)"
             );
 
             // populate values from the CSV into the prepared statement
-            stmt.setInt(1, Integer.parseInt(line[0]));
-            stmt.setString(2, line[2]);
-            stmt.setString(3, line[3]);
-            stmt.setInt(4, Integer.parseInt(line[4]));
-            stmt.setBigDecimal(5, BigDecimal.valueOf(Long.parseLong(line[1])));
-            stmt.setDouble(6, Double.parseDouble(line[6]));
+            stmt.setString(1, line[2]);
+            stmt.setString(2, line[3]);
+            stmt.setInt(3, Integer.parseInt(line[4]));
+            stmt.setBigDecimal(4, BigDecimal.valueOf(Long.parseLong(line[1])));
+            stmt.setDouble(5, Double.parseDouble(line[6]));
             stmt.executeUpdate();
 
             stmt.close();
