@@ -129,7 +129,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			BankApiInterface bankApi = new BankApi();
 			SvcUserLogin svcUserLogin = new SvcUserLogin(tableUser, bankApi);
 			return svcUserLogin.loginUser(userId);
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}

@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 
 import java.math.BigDecimal;
@@ -28,11 +29,12 @@ import java.util.List;
 import java.util.Map;
 
 public class TableUsers extends Table implements TableUsersInterface {
-    private final Connection db_conn;
-    private final String table_name = "users";
+    private final Connection dbConn;
+    private final String schemaName = "public";
+    private final String tableName = "users";
 
     public TableUsers(String db_name) throws SQLException, ClassNotFoundException {
-        this.db_conn = Conn.getConn(db_name);
+        this.dbConn = Conn.getConn(db_name);
     }
 
     @Override
@@ -40,17 +42,16 @@ public class TableUsers extends Table implements TableUsersInterface {
         String userId,
         int creditScore,
         double downPayment,
-        double budgetMonthly,
-        String offersTableName
+        double budgetMonthly
     ) throws SQLException {
-        PreparedStatement stmt = this.db_conn.prepareStatement(
-            "INSERT INTO " + this.table_name + " VALUES (?, ?, ?, ?, ?);"
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+            "INSERT INTO " + this.schemaName + "." + this.tableName + " VALUES (?, ?, ?, ?, ?);"
         );
         stmt.setString(1, userId);
         stmt.setInt(2, creditScore);
         stmt.setBigDecimal(3, BigDecimal.valueOf(downPayment));
         stmt.setBigDecimal(4, BigDecimal.valueOf(budgetMonthly));
-        stmt.setString(5, offersTableName);
+        stmt.setString(5, TableOffersInterface.createTableName(userId));
 
         // execute and close the above SQL statement
         stmt.executeUpdate();
@@ -63,8 +64,8 @@ public class TableUsers extends Table implements TableUsersInterface {
     @Override
     public Map<String, Object> getUserByID(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
-        PreparedStatement stmt = this.db_conn.prepareStatement(
-            "SELECT * FROM " + this.table_name + " WHERE user_id = ?;"
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
@@ -81,8 +82,8 @@ public class TableUsers extends Table implements TableUsersInterface {
     @Override
     public void removeUserByID(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
-        PreparedStatement stmt = this.db_conn.prepareStatement(
-            "DELETE FROM " + this.table_name + " WHERE user_id = ?;"
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+            "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
@@ -94,8 +95,8 @@ public class TableUsers extends Table implements TableUsersInterface {
     @Override
     public boolean userExists(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
-        PreparedStatement stmt = this.db_conn.prepareStatement(
-            "SELECT 1 FROM " + this.table_name + " WHERE user_id = ?;"
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+            "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
