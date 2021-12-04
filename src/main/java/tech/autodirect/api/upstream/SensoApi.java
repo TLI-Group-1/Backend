@@ -29,8 +29,8 @@ import tech.autodirect.api.interfaces.SensoApiInterface;
 
 public class SensoApi implements SensoApiInterface {
     // API connection parameters
-    private static String senso_url;
-    private static String senso_key;
+    private static String sensoUrl;
+    private static String sensoKey;
     // Gson object for JSON/Map conversions
     private static Gson gson = new Gson();
 
@@ -58,13 +58,13 @@ public class SensoApi implements SensoApiInterface {
             put("downpayment", downPayment);
         }};
         // convert request body to JSON string
-        String query_body = gson.toJson(queryMap, Map.class);
+        String queryBody = gson.toJson(queryMap, Map.class);
 
         // get the Senso API URL and KEY from environment variables
         getEnvVars();
 
         // make the API call and collect response
-        HttpResponse<String> response = httpRequest(query_body);
+        HttpResponse<String> response = httpRequest(queryBody);
 
         // construct the return data as a HashMap
         return new HashMap<String, Object>() {{
@@ -91,17 +91,17 @@ public class SensoApi implements SensoApiInterface {
         }
 
         // if the environment variables are set, set the corresponding private variables
-        senso_url = url;
-        senso_key = key;
+        sensoUrl = url;
+        sensoKey = key;
     }
 
     private static HttpResponse<String> httpRequest(String request_body)
         throws IOException, InterruptedException {
         // create an HTTP POST request
         var request = HttpRequest.newBuilder()
-            .uri(URI.create(senso_url + "/rate"))
+            .uri(URI.create(sensoUrl + "/rate"))
             .header("Content-Type", "application/json")
-            .header("x-api-key", senso_key)
+            .header("x-api-key", sensoKey)
             .POST(HttpRequest.BodyPublishers.ofString(request_body))
             .build();
 

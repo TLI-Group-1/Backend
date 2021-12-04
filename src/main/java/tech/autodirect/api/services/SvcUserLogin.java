@@ -45,9 +45,9 @@ public class SvcUserLogin {
         } else {
             // userId does not exist, create new user with default info
             int creditScore = bankApi.getCreditScore(userId);
-            double defaultDownPayment = 1000; // TODO: update?
-            double defaultBudgetMonthly = 250; // TODO: update?
-            tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMonthly);
+            double defaultDownPayment = 1000;
+            double defaultBudgetMo = 250;
+            tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMo);
 
             // Return user info from database
             Map<String, Object> userMap = tableUsers.getUserByID(userId);

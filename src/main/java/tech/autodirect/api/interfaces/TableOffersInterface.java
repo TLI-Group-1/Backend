@@ -43,11 +43,11 @@ public interface TableOffersInterface {
      * Public setter for the "tableName" property.
      * Use in place of newTable() when operating on an existing offers table.
      *
-     * @param table_name : Name of the table to connect to, should be created using createTableName().
+     * @param tableName : Name of the table to connect to, should be created using createTableName().
      * @throws InstanceAlreadyExistsException : when trying to set "tableName" but the
      *     object already carries a "tableName", refuse to proceed.
      */
-    public void useExistingTable(String table_name) throws InstanceAlreadyExistsException;
+    public void useExistingTable(String tableName) throws InstanceAlreadyExistsException;
 
     /**
      * Add a new offer in the current offers table.
@@ -55,13 +55,13 @@ public interface TableOffersInterface {
      * @return : integer representing the offer ID of the newly inserted offer row
      */
     public int addOffer(
-            int car_id,
-            double loan_amount,
-            double capital_sum,
-            double interest_sum,
-            double total_sum,
-            double interest_rate,
-            double term_mo,
+            int carId,
+            double loanAmount,
+            double capitalSum,
+            double interestSum,
+            double totalSum,
+            double interestRate,
+            double termMo,
             String installments,
             boolean claimed
     ) throws SQLException;

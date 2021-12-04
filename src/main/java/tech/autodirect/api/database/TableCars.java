@@ -26,20 +26,23 @@ import java.util.List;
 import java.util.Map;
 
 public class TableCars extends Table implements TableCarsInterface {
-    private final Connection db_conn;
-    private final String table_name = "cars";
+    private final Connection dbConn;
+    private final String schemaName = "public";
+    private final String tableName = "cars";
 
-    public TableCars(String db_name) throws SQLException, ClassNotFoundException {
-        this.db_conn = Conn.getConn(db_name);
+    public TableCars(String dbName) throws SQLException, ClassNotFoundException {
+        this.dbConn = Conn.getConn(dbName);
     }
 
     @Override
     public List<Map<String, Object>> getAllCars(String keywords) throws SQLException { // TODO: keywords
         // Construct and execute a prepared SQL statement selecting all cars
-        PreparedStatement stmt = this.db_conn.prepareStatement("SELECT * FROM " + this.table_name);
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "SELECT * FROM " + this.schemaName + "." + this.tableName
+        );
         ResultSet rs = stmt.executeQuery();
-        List<Map<String, Object>> cars = resultSetToList(rs);
+        List<Map<String, Object>> carMaps = resultSetToList(rs);
         stmt.close();
-        return cars;
+        return carMaps;
     }
 }

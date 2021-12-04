@@ -26,7 +26,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsAllNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars(null, null, null, null, null, null);
+            List<EntCar> carsResult = svcSearch.searchCars("null", "null", "null", "null", "null", "null");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -59,7 +59,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsSomeNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars(null, "1000", null, "price", "true", "");
+            List<EntCar> carsResult = svcSearch.searchCars("null", "1000", "null", "price", "true", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
