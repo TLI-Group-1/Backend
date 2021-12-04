@@ -78,14 +78,14 @@ public class InitDatabase {
         return csvPath;
     }
 
-    private static void exitWithHelp(int exit_code) {
-        String help_text = "\nUsage: InitDatabase [options] <file> \n" +
+    private static void exitWithHelp(int exitCode) {
+        String helpText = "\nUsage: InitDatabase [options] <file> \n" +
             "\t -h --help\tdisplay this help message and exit\n" +
             "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
             "\nExample — use 'cars.csv' in the current working directory:\n" +
             "\t InitDatabase --csvfile ./cars.csv\n";
-        System.out.println(help_text);
-        System.exit(exit_code);
+        System.out.println(helpText);
+        System.exit(exitCode);
     }
 
     private static void createCarsTable(Connection conn) throws SQLException {
@@ -117,11 +117,11 @@ public class InitDatabase {
         stmt.close();
     }
 
-    private static void ingestCarsCsv(Connection conn, String csv_path)
+    private static void ingestCarsCsv(Connection conn, String csvPath)
         throws IOException, CsvValidationException, SQLException
     {
         // read the CSV file
-        CSVReader reader = new CSVReader(new FileReader(csv_path));
+        CSVReader reader = new CSVReader(new FileReader(csvPath));
 
         // iterate through the CSV file
         String [] line = reader.readNext(); // skip header

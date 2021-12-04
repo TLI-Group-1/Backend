@@ -23,7 +23,7 @@ import java.util.Properties;
 
 public class Conn {
     // list of environment variables to fetch
-    private static String[] environment_variables = {
+    private static String[] environmentVariables = {
         "AUTODIRECT_DB_HOST",
         "AUTODIRECT_DB_PORT",
         "AUTODIRECT_DB_SSL",
@@ -31,31 +31,31 @@ public class Conn {
         "AUTODIRECT_DB_PASS"
     };
     // database parameters
-    private static HashMap<String, String> db_params = new HashMap<>();
+    private static HashMap<String, String> dbParams = new HashMap<>();
 
-    public static Connection getConn(String db_name)
+    public static Connection getConn(String dbName)
             throws MissingEnvironmentVariableException, SQLException, ClassNotFoundException {
         // get the database configuration parameters from environment variables
         getEnvVars();
 
         // construct the DB URL according to "jdbc:postgresql://host:port/database"
-        String db_url = "jdbc:postgresql://" +
-            db_params.get("AUTODIRECT_DB_HOST") + ":" +
-            db_params.get("AUTODIRECT_DB_PORT") + "/" +
-            db_name;
+        String dbUrl = "jdbc:postgresql://" +
+            dbParams.get("AUTODIRECT_DB_HOST") + ":" +
+            dbParams.get("AUTODIRECT_DB_PORT") + "/" +
+            dbName;
 
         // supply the remaining DB parameters as properties
         Properties props = new Properties();
-        props.setProperty("ssl", db_params.get("AUTODIRECT_DB_SSL"));
+        props.setProperty("ssl", dbParams.get("AUTODIRECT_DB_SSL"));
         props.setProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
-        props.setProperty("user", db_params.get("AUTODIRECT_DB_USER"));
-        props.setProperty("password", db_params.get("AUTODIRECT_DB_PASS"));
+        props.setProperty("user", dbParams.get("AUTODIRECT_DB_USER"));
+        props.setProperty("password", dbParams.get("AUTODIRECT_DB_PASS"));
 
         // ensure PostgreSQL driver is present
         Class.forName("org.postgresql.Driver");
 
         // print connection info and return the obtained DB connection object
-        Connection conn = DriverManager.getConnection(db_url, props);
+        Connection conn = DriverManager.getConnection(dbUrl, props);
         DatabaseMetaData meta = conn.getMetaData();
         System.out.println("\n" + meta.getDatabaseProductName());
         System.out.println(meta.getDatabaseProductVersion() + "\n");
@@ -65,16 +65,16 @@ public class Conn {
 
     private static void getEnvVars() throws MissingEnvironmentVariableException {
         // attempt to obtain the relevant environment variables
-        for (String var_name : environment_variables) {
-            String var_value = System.getenv(var_name);
-            if (var_value == null) {
+        for (String varName : environmentVariables) {
+            String varValue = System.getenv(varName);
+            if (varValue == null) {
                 throw new MissingEnvironmentVariableException(
-                    "\n\n\t> \"" + var_name +
+                    "\n\n\t> \"" + varName +
                     "\" not specified in environment variables. \n"
                 );
             }
             else {
-                db_params.put(var_name, var_value);
+                dbParams.put(varName, varValue);
             }
         }
     }

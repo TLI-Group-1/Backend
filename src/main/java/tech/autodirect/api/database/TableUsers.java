@@ -33,8 +33,8 @@ public class TableUsers extends Table implements TableUsersInterface {
     private final String schemaName = "public";
     private final String tableName = "users";
 
-    public TableUsers(String db_name) throws SQLException, ClassNotFoundException {
-        this.dbConn = Conn.getConn(db_name);
+    public TableUsers(String dbName) throws SQLException, ClassNotFoundException {
+        this.dbConn = Conn.getConn(dbName);
     }
 
     @Override
@@ -102,8 +102,8 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // execute the above SQL statement and check whether the user exists
         ResultSet rs = stmt.executeQuery();
-        boolean user_count = resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
+        boolean userCount = resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
         stmt.close();
-        return user_count;
+        return userCount;
     }
 }
