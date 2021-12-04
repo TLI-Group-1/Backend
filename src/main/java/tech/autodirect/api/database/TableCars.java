@@ -41,8 +41,8 @@ public class TableCars extends Table implements TableCarsInterface {
                 "SELECT * FROM " + this.schemaName + "." + this.tableName
         );
         ResultSet rs = stmt.executeQuery();
-        List<Map<String, Object>> cars = resultSetToList(rs);
+        List<Map<String, Object>> carMaps = resultSetToList(rs);
         stmt.close();
-        return cars;
+        return carMaps;
     }
 }
