@@ -23,8 +23,8 @@ import java.util.Map;
 public class EntUser {
     private String userId;
     private int creditScore;
-    private BigDecimal downPayment;
-    private BigDecimal budgetMo;
+    private double downPayment;
+    private double budgetMo;
     private String offersTable;
 
     /**
@@ -32,11 +32,11 @@ public class EntUser {
      *
      * @param entry : A Map containing representing a user entry in the database.
      */
-    public void loadFromList(Map<String, Object> entry) throws SQLException {
+    public void loadFromMap(Map<String, Object> entry) throws SQLException {
         userId = (String) entry.get("user_id");
         creditScore = (int) entry.get("credit_score");
-        downPayment = (BigDecimal) entry.get("down_payment");
-        budgetMo = (BigDecimal) entry.get("budget_mo");
+        downPayment = ((BigDecimal) entry.get("down_payment")).doubleValue();
+        budgetMo = ((BigDecimal) entry.get("budget_mo")).doubleValue();
         offersTable = (String) entry.get("offers_table");
     }
 
@@ -48,11 +48,11 @@ public class EntUser {
         return creditScore;
     }
 
-    public BigDecimal getDownPayment() {
+    public double getDownPayment() {
         return downPayment;
     }
 
-    public BigDecimal getBudgetMo() {
+    public double getBudgetMo() {
         return budgetMo;
     }
 

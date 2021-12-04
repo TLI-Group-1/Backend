@@ -1,4 +1,4 @@
-package tech.autodirect.api.interfaces;
+package tech.autodirect.api.utils;
 
 /*
 Copyright (c) 2021 Ruofan Chen, Samm Du, Nada Eldin, Shalev Lifshitz
@@ -16,14 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-public interface TableCarsInterface {
-    /**
-     * Gets all cars from the cars table in the database, using full-text keyword search (TODO).
-     * @return A List of Maps where each Map is a single entry in the JDBC query result.
-     */
-    public List<Map<String, Object>> getAllCars(String keywords) throws SQLException;
+public class ParseChecker {
+    public static boolean isParsableToDouble(String input) {
+        try {
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+    }
 }

@@ -17,37 +17,35 @@ limitations under the License.
 */
 
 import javax.management.InstanceAlreadyExistsException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public interface TableOffersInterface {
     /**
-     * Create a new offers table for a given user inside the "offers" schema.
+     * Create a new offers table for a given user inside the "offers" schema
+     * following TableOffersInterface.createTableName(userId) naming.
      *
-     * @param user_id : the user string that uniquely identifies a user, same as
-     *     "user_id" in the public.users table
-     * @return : the name of the newly created offers table, follows
-     *     "offers.offers_<userid>" format
+     * @param userId : the user string that uniquely identifies a user, same as "user_id" in the public.users table
+     * @return : the name of the newly created offers table, follows TableOffersInterface.createTableName(userId).
      */
-    public String newTable(String user_id) throws SQLException;
+    public String newTable(String userId) throws SQLException;
 
     /**
-     * Public getter for the "table_name" property.
+     * Public getter for the "tableName" property.
      *
-     * @return : the name of the offers table, follows "offers.offers_<userid>" format
+     * @return : the name of the offers table, follows TableOffersInterface.createTableName(userId).
      */
     public String getTableName();
 
     /**
-     * Public setter for the "table_name" property.
+     * Public setter for the "tableName" property.
      * Use in place of newTable() when operating on an existing offers table.
      *
-     * @param table_name : name of the table to connect to, follows
-     *     "offers.offers_<userid>" format
-     * @throws InstanceAlreadyExistsException : when trying to set "table_name" but the
-     *     object already carries a "table_name", refuse to proceed
+     * @param table_name : Name of the table to connect to, should be created using createTableName().
+     * @throws InstanceAlreadyExistsException : when trying to set "tableName" but the
+     *     object already carries a "tableName", refuse to proceed.
      */
     public void useExistingTable(String table_name) throws InstanceAlreadyExistsException;
 
@@ -58,10 +56,10 @@ public interface TableOffersInterface {
      */
     public int addOffer(
             int car_id,
-            BigDecimal loan_amount,
-            BigDecimal capital_sum,
-            BigDecimal interest_sum,
-            BigDecimal total_sum,
+            double loan_amount,
+            double capital_sum,
+            double interest_sum,
+            double total_sum,
             double interest_rate,
             double term_mo,
             String installments,
@@ -116,4 +114,38 @@ public interface TableOffersInterface {
      * @param offer_id : ID of the offer to be marked as unclaimed
      */
     public void markOfferUnclaimed(int offer_id) throws SQLException;
+
+    /**
+     * Delete the current offers table given by the "tableName" property.
+     * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
+    */
+    public boolean dropTable() throws SQLException;
+
+    /**
+     * Delete the offers table given by tableName.
+     * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
+     */
+    public boolean dropTable(String tableName) throws SQLException;
+
+    /**
+     * Create and return the offers table name for the given userId.
+     *
+     * This is a very important method since, without it, we need to manually create the offers table name.
+     * This means that if we decide to change how we create the offers table name, we must change that everywhere.
+     * So, this method prevents that and also prevents issues that might arise when getting the name creation
+     * process for an offers table incorrect. Anyway, this is important, please use it!
+     */
+    public static String createTableName(String userId) throws SQLException {
+        return "offers_" + userId.toLowerCase(Locale.ROOT);
+    }
+
+    /**
+     * Return whether the current offers table given by the "tableName" property exists.
+     */
+    public boolean checkTableExists() throws SQLException;
+
+    /**
+     * Return whether the offers table given by the tableName exists.
+     */
+    public boolean checkTableExists(String tableName) throws SQLException;
 }

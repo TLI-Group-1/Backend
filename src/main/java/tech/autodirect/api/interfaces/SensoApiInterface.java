@@ -17,6 +17,6 @@ public interface SensoApiInterface {
         String vehicleYear,
         String vehicleKms,
         String listPrice,
-        String downpayment
+        String downPayment
     ) throws IOException, InterruptedException;
 }

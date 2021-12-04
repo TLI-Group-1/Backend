@@ -24,32 +24,32 @@ import java.math.BigDecimal;
 import java.sql.*;
 
 public class InitDatabase {
+    private static final String dbName = "testing";
 
     public static void main(String[] args)
-        throws SQLException, IOException, CsvValidationException
-    {
+            throws SQLException, IOException, CsvValidationException, ClassNotFoundException {
         // parse command-line arguments and obtain the CSV file path
-        String csv_path = parseArgs(args);
+        String csvPath = parseArgs(args);
 
         // obtain a database connection
-        Connection db_conn = Conn.getConn("autodirect");
+        Connection dbConn = Conn.getConn(dbName);
 
-        // create a cars table in the database given by db_conn
-        createCarsTable(db_conn);
+        // create a cars table in the database given by dbConn
+        createCarsTable(dbConn);
 
-        // create a users table in the database given by db_conn
-        createUsersTable(db_conn);
+        // create a users table in the database given by dbConn
+        createUsersTable(dbConn);
 
         // ingest the csv file given in the --csvpath parameter to the cars table
-        // at the database given by db_conn
-        ingestCarsCsv(db_conn, csv_path);
+        // at the database given by dbConn
+        ingestCarsCsv(dbConn, csvPath);
 
         // close the database connection at the end
-        db_conn.close();
+        dbConn.close();
     }
 
     private static String parseArgs(String[] args) {
-        String csv_path = null;
+        String csvPath = null;
 
         // exit immediately if no arguments are provided
         if (args.length == 0) {
@@ -65,17 +65,17 @@ public class InitDatabase {
             }
             // accept a path to the input CSV file, if a path is supplied
             else if (args[i].equals("--csvfile") && (i+1 < args.length)) {
-                csv_path = args[i+1];
+                csvPath = args[i+1];
             }
         }
 
         // report an error if the `--csvfile` option is not provided
-        if (csv_path == null) {
+        if (csvPath == null) {
             System.out.println("\n[!] --csvfile option not provided.");
             exitWithHelp(1);
         }
 
-        return csv_path;
+        return csvPath;
     }
 
     private static void exitWithHelp(int exit_code) {

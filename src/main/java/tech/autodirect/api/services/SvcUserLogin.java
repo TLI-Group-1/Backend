@@ -1,6 +1,4 @@
-package tech.autodirect.api.services;
-
-/*
+package tech.autodirect.api.services;/*
 Copyright (c) 2021 Ruofan Chen, Samm Du, Nada Eldin, Shalev Lifshitz
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,5 +14,45 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.BankApiInterface;
+import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.interfaces.TableOffersInterface;
+
+import java.sql.SQLException;
+import java.util.Map;
+
 public class SvcUserLogin {
+    private final TableUsersInterface tableUsers;
+    private final BankApiInterface bankApi;
+
+    public SvcUserLogin(TableUsersInterface tableUsers, BankApiInterface bankApi) {
+        this.tableUsers = tableUsers;
+        this.bankApi = bankApi;
+    }
+
+    /**
+     * If the userid exists, retrieve the userId's information, if it does not exist, create a new userId.
+     *
+     * @param userId: the userId that uniquely identifies a user, same as "user_id" in the public.users table
+     * @return the user's information that is stored in the database (excluding their offersTableName)
+     */
+    public Map<String, Object> loginUser(String userId) throws SQLException {
+        if (tableUsers.userExists(userId)) {
+            // userId exists, return existing user info
+            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            userMap.remove("offers_table");
+            return userMap;
+        } else {
+            // userId does not exist, create new user with default info
+            int creditScore = bankApi.getCreditScore(userId);
+            double defaultDownPayment = 1000; // TODO: update?
+            double defaultBudgetMonthly = 250; // TODO: update?
+            tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMonthly);
+
+            // Return user info from database
+            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            userMap.remove("offers_table");
+            return userMap;
+        }
+    }
 }
