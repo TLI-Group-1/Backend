@@ -16,5 +16,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.TableOffersInterface;
+
+import javax.management.InstanceAlreadyExistsException;
+import java.sql.SQLException;
+
 public class SvcClaimOffer {
+    /**
+     * Claim a specified offer for the specified user. Expects that tableOffers does not refer to any table yet.
+     */
+    public void claimOffer(
+            TableOffersInterface tableOffers,
+            String userId,
+            String offerId
+    ) throws InstanceAlreadyExistsException, SQLException {
+        tableOffers.useExistingTable(userId);
+        tableOffers.markOfferClaimed(Integer.parseInt(offerId));
+    }
 }
