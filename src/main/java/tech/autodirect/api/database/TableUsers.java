@@ -45,22 +45,25 @@ public class TableUsers extends Table implements TableUsersInterface {
         int creditScore,
         double downPayment,
         double budgetMonthly
-    ) throws SQLException {
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-            "INSERT INTO " + this.schemaName + "." + this.tableName + " VALUES (?, ?, ?, ?, ?);"
-        );
-        stmt.setString(1, userId);
-        stmt.setInt(2, creditScore);
-        stmt.setBigDecimal(3, BigDecimal.valueOf(downPayment));
-        stmt.setBigDecimal(4, BigDecimal.valueOf(budgetMonthly));
-        stmt.setString(5, TableOffersInterface.createTableName(userId));
+    ) throws SQLException, ClassNotFoundException {
+        if (!userExists(userId)) {
+            PreparedStatement stmt = this.dbConn.prepareStatement(
+                    "INSERT INTO " + this.schemaName + "." + this.tableName + " VALUES (?, ?, ?, ?, ?);"
+            );
+            stmt.setString(1, userId);
+            stmt.setInt(2, creditScore);
+            stmt.setBigDecimal(3, BigDecimal.valueOf(downPayment));
+            stmt.setBigDecimal(4, BigDecimal.valueOf(budgetMonthly));
+            stmt.setString(5, TableOffersInterface.createTableName(userId));
 
-        // execute and close the above SQL statement
-        stmt.executeUpdate();
-        stmt.close();
+            // Create offers for this user
+            TableOffersInterface tableOffers = new TableOffers(dbName);
+            tableOffers.newTable(userId);
 
-        // TODO: What happens if user already exists?
-        // TODO: What happens if there is no offers table for this user yet (which is usually the case)?
+            // execute and close the above SQL statement
+            stmt.executeUpdate();
+            stmt.close();
+        }
     }
 
     @Override

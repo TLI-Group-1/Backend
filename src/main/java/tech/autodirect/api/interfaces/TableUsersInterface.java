@@ -28,7 +28,7 @@ public interface TableUsersInterface {
         int creditScore,
         double downPayment,
         double budgetMonthly
-    ) throws SQLException;
+    ) throws SQLException, ClassNotFoundException;
 
     /**
      * Get a specific user entry by the user ID.
