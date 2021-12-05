@@ -29,11 +29,13 @@ import java.util.List;
 import java.util.Map;
 
 public class TableUsers extends Table implements TableUsersInterface {
+    private final String dbName;
     private final Connection dbConn;
     private final String schemaName = "public";
     private final String tableName = "users";
 
     public TableUsers(String dbName) throws SQLException, ClassNotFoundException {
+        this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
     }
 

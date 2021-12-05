@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TableOffers extends Table implements TableOffersInterface {
+    private final String dbName;
     public Connection dbConn;
     private String tableName = null;
     private final String schemaName = "offers";
@@ -41,6 +42,7 @@ public class TableOffers extends Table implements TableOffersInterface {
      * @param dbName : name of the database to connect to
      */
     public TableOffers(String dbName) throws SQLException, ClassNotFoundException {
+        this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
     }
 
