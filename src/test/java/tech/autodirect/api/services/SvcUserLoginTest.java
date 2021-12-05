@@ -28,7 +28,7 @@ public class SvcUserLoginTest {
             assert userMap.size() > 0;
             assert userMap.get("user_id").equals(testUserId);
             assert tableUser.userExists(testUserId);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -42,7 +42,7 @@ public class SvcUserLoginTest {
             assert userMap.size() > 0;
             assert userMap.get("user_id").equals(testUserId);
             assert tableUser.userExists(testUserId);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
