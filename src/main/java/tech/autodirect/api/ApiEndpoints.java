@@ -106,15 +106,14 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 		@RequestParam(name = "downpayment") String downPayment,
 		@RequestParam(name = "budget_mo") String budgetMo,
 		@RequestParam(name = "sort_by") String sortBy,
-		@RequestParam(name = "sort_asc") String sortAsc,
-		@RequestParam(name = "keywords") String keywords
+		@RequestParam(name = "sort_asc") String sortAsc
 	) {
 		try {
 			TableCarsInterface tableCars = new TableCars("autodirect");
 			TableUsersInterface tableUser = new TableUsers("autodirect");
 			SensoApiInterface sensoApi = new SensoApi();
 			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
-			return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc, keywords);
+			return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc);
 		} catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";

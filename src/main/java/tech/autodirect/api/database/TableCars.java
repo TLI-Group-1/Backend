@@ -35,7 +35,7 @@ public class TableCars extends Table implements TableCarsInterface {
     }
 
     @Override
-    public List<Map<String, Object>> getAllCars(String keywords) throws SQLException { // TODO: keywords
+    public List<Map<String, Object>> getAllCars() throws SQLException {
         // Construct and execute a prepared SQL statement selecting all cars
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "SELECT * FROM " + this.schemaName + "." + this.tableName

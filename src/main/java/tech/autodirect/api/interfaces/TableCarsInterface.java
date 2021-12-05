@@ -25,5 +25,5 @@ public interface TableCarsInterface {
      * Gets all cars from the cars table in the database, using full-text keyword search (TODO).
      * @return A List of Maps where each Map is a single entry in the JDBC query result.
      */
-    public List<Map<String, Object>> getAllCars(String keywords) throws SQLException;
+    public List<Map<String, Object>> getAllCars() throws SQLException;
 }

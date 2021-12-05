@@ -56,13 +56,11 @@ public class SvcSearch {
         String downPaymentString,
         String budgetMoString,
         String sortBy,
-        String sortAscString,
-        String keywords
+        String sortAscString
     ) throws SQLException, IOException, InterruptedException {
-        // Set sortBy, sortAsc, and keywords search params to default values if not in correct format
+        // Set sortBy and sortAsc search params to default values if not in correct format
         if (!valuesOfSortBy.contains(sortBy) || Objects.equals(sortBy, "null")) { sortBy = "apr"; }
         if (Objects.equals(sortAscString, "null")) { sortAscString = "true"; }
-        if (Objects.equals(keywords, "null")) { sortAscString = ""; }
 
         // Parse sortAscString to boolean
         boolean sortAsc = Boolean.parseBoolean(sortAscString);
@@ -85,12 +83,12 @@ public class SvcSearch {
         // Run the correct search algorithm, according the validity of the search params
         if (!areValidParams) {
             // Return all cars in the database.
-            return searchCarsAll(sortBy, sortAsc, keywords);
+            return searchCarsAll(sortBy, sortAsc);
         } else {
             // User is logged in and search params are valid. So, only return cars which have offers for this user.
             double downPayment = Double.parseDouble(downPaymentString);
             double budgetMo = Double.parseDouble(budgetMoString);
-            return searchCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc, keywords);
+            return searchCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc);
         }
     }
 
@@ -101,10 +99,9 @@ public class SvcSearch {
      */
     private List<EntCar> searchCarsAll(
         String sortBy,
-        boolean sortAsc,
-        String keywords
+        boolean sortAsc
     ) throws SQLException {
-        List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars(keywords);
+        List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
 
         // Convert each entry of carsMapsAll to EntCar
         List<EntCar> carEntsAll = new ArrayList<>();
@@ -126,8 +123,7 @@ public class SvcSearch {
         double downPayment,
         double budgetMo,
         String sortBy,
-        boolean sortAsc,
-        String keywords
+        boolean sortAsc
     ) throws SQLException, IOException, InterruptedException {
         // Get user information from database and populate user entity with user info
         Map<String, Object> userEntry = this.tableUsers.getUserByID(userId);
@@ -135,7 +131,7 @@ public class SvcSearch {
         user.loadFromMap(userEntry);
 
         // Get list of all cars and add all cars for which a Senso /rate Api loan offer is approved to carsWithOffer
-        List<Map<String, Object>> carMapsAll = this.tableCars.getAllCars(keywords);
+        List<Map<String, Object>> carMapsAll = this.tableCars.getAllCars();
         List<EntCar> carEntsWithOffer = new ArrayList<>();
         for (Map<String, Object> carMap : carMapsAll) {
             EntCar car = new EntCar();
