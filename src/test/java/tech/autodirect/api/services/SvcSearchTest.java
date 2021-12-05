@@ -26,7 +26,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsAllNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("null", "null", "null", "null", "null", "null");
+            List<EntCar> carsResult = svcSearch.searchCars("null", "null", "null", "null", "null");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -37,7 +37,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsAllEmpty() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("", "", "", "", "", "");
+            List<EntCar> carsResult = svcSearch.searchCars("", "", "", "", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsRandomStrings() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("xyz", "xyz", "xyz", "xyz", "xyz", "");
+            List<EntCar> carsResult = svcSearch.searchCars("xyz", "xyz", "xyz", "xyz", "xyz");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -59,7 +59,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsSomeNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("null", "1000", "null", "price", "true", "");
+            List<EntCar> carsResult = svcSearch.searchCars("null", "1000", "null", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -71,7 +71,7 @@ class SvcSearchTest {
     void testSearchCarsPostLogin() {
         try {
             tableUser.addUser(testUserId, 700, 1000, 200);
-            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true", "");
+            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -83,7 +83,7 @@ class SvcSearchTest {
     void testSearchCarsPostLoginBadSortBy() {
         try {
             tableUser.addUser(testUserId, 700, 1000, 200);
-            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true", "");
+            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
