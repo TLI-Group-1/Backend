@@ -30,7 +30,7 @@ public class SvcClaimOffer {
             String userId,
             String offerId
     ) throws InstanceAlreadyExistsException, SQLException {
-        tableOffers.useExistingTable(userId);
+        tableOffers.setUser(userId);
         tableOffers.markOfferClaimed(Integer.parseInt(offerId));
     }
 }

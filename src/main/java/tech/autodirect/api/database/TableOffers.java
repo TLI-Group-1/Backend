@@ -48,7 +48,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         this.dbConn = Conn.getConn(dbName);
     }
 
-    public String newTable(String userId) throws SQLException {
+    public String setUser(String userId) throws SQLException {
         this.tableName = TableOffersInterface.createTableName(userId);
 
         // create the "offers" schema if it does not exist yet
@@ -81,19 +81,6 @@ public class TableOffers extends Table implements TableOffersInterface {
 
     public String getTableName() {
         return this.tableName;
-    }
-
-    public void useExistingTable(String tableName) throws InstanceAlreadyExistsException {
-        if (this.tableName == null) {
-            this.tableName = tableName;
-        }
-        else {
-            throw new InstanceAlreadyExistsException(
-                "This object already carries a table name. \n" +
-                "You may not reuse the same TableOffers object for different tables. \n" +
-                "Please create a new TableOffers object for an individual table."
-            );
-        }
     }
 
     public int addOffer(

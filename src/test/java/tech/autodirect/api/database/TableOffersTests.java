@@ -28,7 +28,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
-            String tableName = table.newTable(testUserId);
+            String tableName = table.setUser(testUserId);
 
             // check if the created table exists under the correct name (both should work)
             assert table.checkTableExists();
@@ -44,7 +44,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
             Map<String, Object> offerMap = table.getOfferByOfferId(offerId);
@@ -72,7 +72,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             Map<String, Object> offerMap = table.getOfferByOfferId(offerId);
@@ -100,7 +100,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             // We know that this offerId does not exist in this offers table
             // since we just created the table (there are no offers in this table yet).
