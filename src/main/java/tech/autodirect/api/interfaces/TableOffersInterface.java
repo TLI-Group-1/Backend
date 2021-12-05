@@ -22,6 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * TableOffersInterface defines the behaviour of classes that interact with an offers table for a specific user.
+ * Implementing classes each refer to just one offers table (as each user has a unique offers table).
+ * Thus, once newTable(userId) or useExistingTable(userId), they now refer to specific user's offers table
+ * and these methods cannot be called again (or they throw).
+ */
 public interface TableOffersInterface {
     /**
      * Create a new offers table for a given user inside the "offers" schema
