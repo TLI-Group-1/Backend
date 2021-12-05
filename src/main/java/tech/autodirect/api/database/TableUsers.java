@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 
@@ -68,6 +70,12 @@ public class TableUsers extends Table implements TableUsersInterface {
 
     @Override
     public Map<String, Object> getUserByID(String userId) throws SQLException {
+        if (!checkUserExists(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "user not found"
+            );
+        }
+
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
@@ -86,6 +94,12 @@ public class TableUsers extends Table implements TableUsersInterface {
 
     @Override
     public void removeUserByID(String userId) throws SQLException {
+        if (!checkUserExists(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "user not found"
+            );
+        }
+
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
