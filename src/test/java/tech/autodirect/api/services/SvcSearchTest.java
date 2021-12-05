@@ -11,9 +11,7 @@ import tech.autodirect.api.upstream.SensoApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -100,7 +98,7 @@ class SvcSearchTest {
             this.svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
-            if (tableUser.userExists(testUserId)) {
+            if (tableUser.checkUserExists(testUserId)) {
                 tableUser.removeUserByID(testUserId);
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -111,7 +109,7 @@ class SvcSearchTest {
     @AfterEach
     public void tearDownEach() {
         try {
-            if (tableUser.userExists(testUserId)) {
+            if (tableUser.checkUserExists(testUserId)) {
                 tableUser.removeUserByID(testUserId);
             }
         } catch (SQLException e) {

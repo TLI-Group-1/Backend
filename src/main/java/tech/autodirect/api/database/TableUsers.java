@@ -98,7 +98,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public boolean userExists(String userId) throws SQLException {
+    public boolean checkUserExists(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"

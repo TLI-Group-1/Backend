@@ -44,5 +44,5 @@ public interface TableUsersInterface {
     /**
      * Check if user exists in database.
      */
-    boolean userExists(String userId) throws SQLException;
+    boolean checkUserExists(String userId) throws SQLException;
 }
