@@ -1,6 +1,7 @@
 package tech.autodirect.api.database;
 
 import org.junit.jupiter.api.*;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
@@ -102,14 +103,15 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(dbName);
             table.setUser(testUserId);
 
-            // We know that this offerId does not exist in this offers table
-            // since we just created the table (there are no offers in this table yet).
-            Map<String, Object> emptyMap = Collections.emptyMap();
-            Map<String, Object> offerMap = table.getOfferByOfferId(1);
-            assert offerMap == emptyMap;
+            // We know that this offerId does not exist in this offers table,
+            // so it should throw an HTTP 404 exception.
+            table.getOfferByOfferId(1);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
+        } catch (Exception e) {
+            assert e instanceof ResponseStatusException;
+            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
         }
     }
 
