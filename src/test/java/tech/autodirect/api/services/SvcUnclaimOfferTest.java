@@ -14,7 +14,7 @@ import java.sql.SQLException;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcUnclaimOfferTest {
     private static final String dbName = "testing";
-    private final String testUserId = "TableOffersTests_test_user";
+    private final String testUserId = "SvcUnclaimOfferTest_test_user";
 
     @Test
     void testUnclaimOffer() {

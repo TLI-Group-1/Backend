@@ -17,7 +17,7 @@ import java.util.Map;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SvcUserLoginTest {
     private static final String dbName = "testing";
-    private final String testUserId = "SvcUserLoginTest.test_user_700";
+    private final String testUserId = "SvcUserLoginTest_test_user_700";
     private TableUsersInterface tableUser;
     private BankApiInterface bankApi;
     private SvcUserLogin svcUserLogin;

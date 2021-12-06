@@ -17,7 +17,7 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcGetClaimedOffersTest {
     private static final String dbName = "testing";
-    private final String testUserId = "TableOffersTests_test_user";
+    private final String testUserId = "SvcGetClaimedOffersTest_test_user";
 
     @Test
     void testGetClaimedOffers() {
