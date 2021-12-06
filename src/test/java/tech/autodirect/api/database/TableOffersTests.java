@@ -150,6 +150,9 @@ public class TableOffersTests {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
+        } catch (Exception e) {
+            assert e instanceof ResponseStatusException;
+            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
         }
     }
 
@@ -172,6 +175,9 @@ public class TableOffersTests {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
+        } catch (Exception e) {
+            assert e instanceof ResponseStatusException;
+            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
         }
     }
 
