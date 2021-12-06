@@ -32,9 +32,11 @@ public class SvcGetOfferDetails {
             String offerId
     ) throws SQLException {
         tableOffers.setUser(userId);
+
         Map<String, Object> offerMap = tableOffers.getOfferByOfferId(Integer.parseInt(offerId));
         EntOffer offer = new EntOffer();
         offer.loadFromMap(offerMap);
+
         return offer;
     }
 }

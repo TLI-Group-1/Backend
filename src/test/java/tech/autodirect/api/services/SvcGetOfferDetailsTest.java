@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcGetOfferDetailsTest {
     private static final String dbName = "testing";
-    private final String testUserId = "TableOffersTests_test_user";
+    private final String testUserId = "SvcGetOfferDetailsTest_test_user";
 
     @Test
     void getOfferDetails() {

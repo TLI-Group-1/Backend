@@ -17,7 +17,7 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcSearchTest {
     private static final String dbName = "testing";
-    private final String testUserId = "SvcSearchTest.test_user";
+    private final String testUserId = "SvcSearchTest_test_user";
     private TableUsersInterface tableUser;
     private SvcSearch svcSearch;
 
