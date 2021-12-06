@@ -108,6 +108,14 @@ public interface TableOffersInterface {
     public void markOfferUnclaimed(int offer_id) throws SQLException;
 
     /**
+     * Sets the principal of offer_id offer to newPrincipal.
+     *
+     * @param offer_id : ID of the offer whose principal will be marked as unclaimed.
+     * @return double : The new principal.
+     */
+    public void updatePrincipal(int offer_id, double newPrincipal) throws SQLException;
+
+    /**
      * Delete the current offers table given by the "tableName" property.
      * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
     */

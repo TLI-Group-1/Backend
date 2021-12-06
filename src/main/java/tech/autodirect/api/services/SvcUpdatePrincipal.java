@@ -16,5 +16,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.TableOffersInterface;
+
+import java.sql.SQLException;
+
 public class SvcUpdatePrincipal {
+    public void updatePrincipal(
+            TableOffersInterface tableOffers,
+            String userId,
+            String offerId,
+            String newPrincipal
+    ) throws SQLException {
+        tableOffers.setUser(userId);
+        tableOffers.updatePrincipal(Integer.parseInt(offerId), Double.parseDouble(newPrincipal));
+    }
 }
