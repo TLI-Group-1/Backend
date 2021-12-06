@@ -184,7 +184,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // where "claimed" is true
         Statement stmt = this.dbConn.createStatement();
         ResultSet rs = stmt.executeQuery(
-            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE 'claimed' = true;"
+            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE claimed = true;"
         );
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
@@ -195,7 +195,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // construct a prepared SQL marking the specified offer claimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "UPDATE " + this.schemaName + "." + this.tableName +
-            " SET 'claimed' = true WHERE offer_id = ?;"
+            " SET claimed = true WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 
@@ -208,7 +208,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // construct a prepared SQL marking the specified offer unclaimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "UPDATE " + this.schemaName + "." + this.tableName +
-            " SET 'claimed' = false WHERE offer_id = ?;"
+            " SET claimed = false WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 

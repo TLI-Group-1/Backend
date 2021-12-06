@@ -16,9 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -29,18 +26,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableUsers;
+import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.services.SvcSearch;
-import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.services.SvcUserLogin;
 import tech.autodirect.api.upstream.BankApi;
 import tech.autodirect.api.upstream.SensoApi;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
+
+
+
 
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
