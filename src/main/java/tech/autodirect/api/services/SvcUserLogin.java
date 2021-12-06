@@ -21,21 +21,17 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class SvcUserLogin {
-    private final TableUsersInterface tableUsers;
-    private final BankApiInterface bankApi;
-
-    public SvcUserLogin(TableUsersInterface tableUsers, BankApiInterface bankApi) {
-        this.tableUsers = tableUsers;
-        this.bankApi = bankApi;
-    }
-
     /**
      * If the userid exists, retrieve the userId's information, if it does not exist, create a new userId.
      *
      * @param userId: the userId that uniquely identifies a user, same as "user_id" in the public.users table
      * @return the user's information that is stored in the database (excluding their offersTableName)
      */
-    public Map<String, Object> loginUser(String userId) throws SQLException, ClassNotFoundException {
+    public Map<String, Object> loginUser(
+            TableUsersInterface tableUsers,
+            BankApiInterface bankApi,
+            String userId
+    ) throws SQLException, ClassNotFoundException {
         if (tableUsers.checkUserExists(userId)) {
             // userId exists, return existing user info
             Map<String, Object> userMap = tableUsers.getUserByID(userId);

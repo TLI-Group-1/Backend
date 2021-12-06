@@ -19,13 +19,7 @@ limitations under the License.
 import tech.autodirect.api.interfaces.BankApiInterface;
 
 public class SvcMockBankApi {
-    private BankApiInterface bankApi;
-
-    public SvcMockBankApi(BankApiInterface bankApi) {
-        this.bankApi = bankApi;
-    }
-
-    public int getCreditScore(String userId) {
-        return this.bankApi.getCreditScore(userId);
+    public int getCreditScore(BankApiInterface bankApi, String userId) {
+        return bankApi.getCreditScore(userId);
     }
 }
