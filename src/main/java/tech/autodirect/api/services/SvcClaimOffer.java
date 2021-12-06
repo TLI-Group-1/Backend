@@ -18,7 +18,6 @@ limitations under the License.
 
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 
 public class SvcClaimOffer {
