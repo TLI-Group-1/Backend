@@ -28,12 +28,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.autodirect.api.database.TableCars;
+import tech.autodirect.api.database.TableOffers;
 import tech.autodirect.api.database.TableUsers;
-import tech.autodirect.api.interfaces.SensoApiInterface;
-import tech.autodirect.api.interfaces.TableCarsInterface;
-import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.interfaces.*;
+import tech.autodirect.api.services.SvcGetOfferDetails;
 import tech.autodirect.api.services.SvcSearch;
-import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.services.SvcUserLogin;
 import tech.autodirect.api.upstream.BankApi;
 import tech.autodirect.api.upstream.SensoApi;
@@ -128,6 +127,21 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			BankApiInterface bankApi = new BankApi();
 			SvcUserLogin svcUserLogin = new SvcUserLogin(tableUser, bankApi);
 			return svcUserLogin.loginUser(userId);
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
+
+	@GetMapping("/getOfferDetails")
+	public Object login(
+			@RequestParam(name = "user_id") String userId,
+			@RequestParam(name = "offer_id") String offerId
+	) {
+		try {
+			TableOffersInterface tableOffers = new TableOffers("autodirect");
+			SvcGetOfferDetails svcGetOfferDetails = new SvcGetOfferDetails();
+			return svcGetOfferDetails.getOfferDetails(tableOffers, userId, offerId);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";
