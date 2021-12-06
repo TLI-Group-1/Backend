@@ -148,4 +148,9 @@ public interface TableOffersInterface {
      * Return whether the offers table given by the tableName exists.
      */
     public boolean checkTableExists(String tableName) throws SQLException;
+
+    /**
+     * Return whether a specific offer exists (by offerId).
+     */
+    public boolean checkOfferExists(int offerId) throws SQLException;
 }

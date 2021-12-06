@@ -27,7 +27,7 @@ public class SvcUserLoginTest {
             Map<String, Object> userMap = svcUserLogin.loginUser(testUserId);
             assert userMap.size() > 0;
             assert userMap.get("user_id").equals(testUserId);
-            assert tableUser.userExists(testUserId);
+            assert tableUser.checkUserExists(testUserId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
@@ -41,7 +41,7 @@ public class SvcUserLoginTest {
             Map<String, Object> userMap = svcUserLogin.loginUser(testUserId);
             assert userMap.size() > 0;
             assert userMap.get("user_id").equals(testUserId);
-            assert tableUser.userExists(testUserId);
+            assert tableUser.checkUserExists(testUserId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
@@ -56,7 +56,7 @@ public class SvcUserLoginTest {
             this.svcUserLogin = new SvcUserLogin(tableUser, bankApi);
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
-            if (tableUser.userExists(testUserId)) {
+            if (tableUser.checkUserExists(testUserId)) {
                 tableUser.removeUserByID(testUserId);
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -67,7 +67,7 @@ public class SvcUserLoginTest {
     @AfterEach
     public void tearDownEach() {
         try {
-            if (tableUser.userExists(testUserId)) {
+            if (tableUser.checkUserExists(testUserId)) {
                 tableUser.removeUserByID(testUserId);
             }
         } catch (SQLException e) {

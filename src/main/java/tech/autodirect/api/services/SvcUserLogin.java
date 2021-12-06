@@ -16,7 +16,6 @@ limitations under the License.
 
 import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
-import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class SvcUserLogin {
      * @return the user's information that is stored in the database (excluding their offersTableName)
      */
     public Map<String, Object> loginUser(String userId) throws SQLException, ClassNotFoundException {
-        if (tableUsers.userExists(userId)) {
+        if (tableUsers.checkUserExists(userId)) {
             // userId exists, return existing user info
             Map<String, Object> userMap = tableUsers.getUserByID(userId);
             userMap.remove("offers_table");

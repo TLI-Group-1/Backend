@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -59,7 +61,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // create and execute the SQL statement that will create an offer table
         Statement stmt = this.dbConn.createStatement();
         stmt.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS " + this.schemaName + "." + this.tableName + " (" +
+            "CREATE TABLE " + this.schemaName + "." + this.tableName + " (" +
                 "offer_id       serial      NOT NULL PRIMARY KEY, " +
                 "car_id         integer     NOT NULL, " +
                 "loan_amount    decimal(12) NOT NULL, " +
@@ -136,6 +138,12 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public void removeOfferByOfferId(int offerId) throws SQLException {
+        if (!checkOfferExists(offerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "offer not found"
+            );
+        }
+
         // construct a prepared SQL statement deleting the specified offer
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
@@ -154,6 +162,12 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public Map<String, Object> getOfferByOfferId(int offerId) throws SQLException {
+        if (!checkOfferExists(offerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "offer not found"
+            );
+        }
+
         // construct a prepared SQL statement selecting the specified offer
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
@@ -194,6 +208,12 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public void markOfferClaimed(int offerId) throws SQLException {
+        if (!checkOfferExists(offerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "offer not found"
+            );
+        }
+
         // construct a prepared SQL marking the specified offer claimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "UPDATE " + this.schemaName + "." + this.tableName +
@@ -207,6 +227,12 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public void markOfferUnclaimed(int offerId) throws SQLException {
+        if (!checkOfferExists(offerId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "offer not found"
+            );
+        }
+
         // construct a prepared SQL marking the specified offer unclaimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
             "UPDATE " + this.schemaName + "." + this.tableName +
@@ -256,6 +282,20 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
 
         return exists;
+    }
+
+    public boolean checkOfferExists(int offerId) throws SQLException {
+        // construct a prepared SQL statement selecting the specified offer
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
+        );
+        stmt.setInt(1, offerId);
+
+        // execute the above SQL statement and check whether the offer exists
+        ResultSet rs = stmt.executeQuery();
+        boolean offerCount = resultSetToList(rs).size() > 0;
+        stmt.close();
+        return offerCount;
     }
 
 }
