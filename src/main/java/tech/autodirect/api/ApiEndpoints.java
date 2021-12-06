@@ -16,9 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -34,6 +31,12 @@ import tech.autodirect.api.interfaces.*;
 import tech.autodirect.api.services.*;
 import tech.autodirect.api.upstream.BankApi;
 import tech.autodirect.api.upstream.SensoApi;
+
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+
 
 
 // Mark the class as a Spring.io REST application
