@@ -187,7 +187,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // where "claimed" is true
         Statement stmt = this.dbConn.createStatement();
         ResultSet rs = stmt.executeQuery(
-            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE 'claimed' = true;"
+            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE claimed = true;"
         );
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
