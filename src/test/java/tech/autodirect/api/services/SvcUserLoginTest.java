@@ -19,12 +19,13 @@ public class SvcUserLoginTest {
     private static final String dbName = "testing";
     private final String testUserId = "SvcUserLoginTest.test_user_700";
     private TableUsersInterface tableUser;
+    private BankApiInterface bankApi;
     private SvcUserLogin svcUserLogin;
 
     @Test
     void testLoginUserNewUser() {
         try {
-            Map<String, Object> userMap = svcUserLogin.loginUser(testUserId);
+            Map<String, Object> userMap = svcUserLogin.loginUser(tableUser, bankApi, testUserId);
             assert userMap.size() > 0;
             assert userMap.get("user_id").equals(testUserId);
             assert tableUser.checkUserExists(testUserId);
@@ -38,7 +39,7 @@ public class SvcUserLoginTest {
     void testLoginUserExistingUser() {
         try {
             tableUser.addUser(testUserId, 700, 1000, 250);
-            Map<String, Object> userMap = svcUserLogin.loginUser(testUserId);
+            Map<String, Object> userMap = svcUserLogin.loginUser(tableUser, bankApi, testUserId);
             assert userMap.size() > 0;
             assert userMap.get("user_id").equals(testUserId);
             assert tableUser.checkUserExists(testUserId);
@@ -52,8 +53,8 @@ public class SvcUserLoginTest {
     public void setUpAll() {
         try {
             this.tableUser = new TableUsers(dbName);
-            BankApiInterface bankApi = new BankApi();
-            this.svcUserLogin = new SvcUserLogin(tableUser, bankApi);
+            this.bankApi = new BankApi();
+            this.svcUserLogin = new SvcUserLogin();
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
             if (tableUser.checkUserExists(testUserId)) {
