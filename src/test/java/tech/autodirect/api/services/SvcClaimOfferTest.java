@@ -37,7 +37,7 @@ class SvcClaimOfferTest {
             // Check that the offer is now claimed
             boolean claimedFinal = (boolean) tableOffers.getOfferByOfferId(offerId).get("claimed");
             assert claimedFinal;
-        } catch (SQLException | ClassNotFoundException | InstanceAlreadyExistsException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
