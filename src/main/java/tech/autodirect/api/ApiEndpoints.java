@@ -31,15 +31,10 @@ import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableOffers;
 import tech.autodirect.api.database.TableUsers;
 import tech.autodirect.api.interfaces.*;
-import tech.autodirect.api.services.SvcGetOfferDetails;
-import tech.autodirect.api.services.SvcSearch;
-import tech.autodirect.api.services.SvcUserLogin;
+import tech.autodirect.api.services.*;
 import tech.autodirect.api.upstream.BankApi;
 import tech.autodirect.api.upstream.SensoApi;
 
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
@@ -63,42 +58,6 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 		return builder.sources(ApiEndpoints.class);
 	}
 
-	// demo API endpoint; use for reference
-	@GetMapping("/demo")
-	public Object hello(
-		@RequestParam String loanAmount,
-		@RequestParam String creditScore,
-		@RequestParam String budget
-	) {
-		// TODO: Remove this hardcoding and read params from other parts of the program.
-		String vehicleMake = "Honda";
-		String vehicleModel = "Civic";
-		String vehicleYear = "2018";
-		String vehicleKms = "1";
-		String listPrice = "1000";
-		String downPayment = "1000";
-
-		try {
-			SensoApi sensoApi = new SensoApi();
-			return sensoApi.getLoanOffer(
-				loanAmount,
-				creditScore,
-				budget,
-				vehicleMake,
-				vehicleModel,
-				vehicleYear,
-				vehicleKms,
-				listPrice,
-				downPayment
-			);
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-			return "Server Error!";
-		}
-
-	}
-
-	// Search endpoint
 	@GetMapping("/search")
 	public Object search(
 		@RequestParam(name = "user_id") String userId,
@@ -119,7 +78,6 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 		}
 	}
 
-	// User Login endpoint
 	@GetMapping("/login")
 	public Object login(@RequestParam(name = "user_id") String userId) {
 		try {
@@ -127,6 +85,50 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			BankApiInterface bankApi = new BankApi();
 			SvcUserLogin svcUserLogin = new SvcUserLogin();
 			return svcUserLogin.loginUser(tableUser, bankApi, userId);
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
+
+	@GetMapping("/claimOffer")
+	public Object claimOffer(
+			@RequestParam(name = "user_id") String userId,
+			@RequestParam(name = "offer_id") String offerId
+	) {
+		try {
+			TableOffersInterface tableOffers = new TableOffers("autodirect");
+			SvcClaimOffer svcClaimOffer = new SvcClaimOffer();
+			svcClaimOffer.claimOffer(tableOffers, userId, offerId);
+			return "";
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
+
+	@GetMapping("/unclaimOffer")
+	public Object unclaimOffer(
+			@RequestParam(name = "user_id") String userId,
+			@RequestParam(name = "offer_id") String offerId
+	) {
+		try {
+			TableOffersInterface tableOffers = new TableOffers("autodirect");
+			SvcUnclaimOffer svcUnclaimOffer = new SvcUnclaimOffer();
+			svcUnclaimOffer.unclaimOffer(tableOffers, userId, offerId);
+			return "";
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return "Server Error!";
+		}
+	}
+
+	@GetMapping("/getClaimedOffers")
+	public Object getClaimedOffers(@RequestParam(name = "user_id") String userId) {
+		try {
+			TableOffersInterface tableOffers = new TableOffers("autodirect");
+			SvcGetClaimedOffers svcGetClaimedOffers = new SvcGetClaimedOffers();
+			return svcGetClaimedOffers.getClaimedOffers(tableOffers, userId);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";
