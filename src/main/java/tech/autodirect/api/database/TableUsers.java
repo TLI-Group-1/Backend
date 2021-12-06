@@ -59,7 +59,7 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // Create offers for this user
         TableOffersInterface tableOffers = new TableOffers(dbName);
-        tableOffers.newTable(userId);
+        tableOffers.setUser(userId);
 
         // execute and close the above SQL statement
         stmt.executeUpdate();

@@ -48,20 +48,20 @@ public class TableOffers extends Table implements TableOffersInterface {
         this.dbConn = Conn.getConn(dbName);
     }
 
-    public String newTable(String userId) throws SQLException {
+    public String setUser(String userId) throws SQLException {
         this.tableName = TableOffersInterface.createTableName(userId);
 
         // create the "offers" schema if it does not exist yet
         Statement stmtCreateSchema = this.dbConn.createStatement();
         stmtCreateSchema.executeUpdate(
-            "CREATE SCHEMA IF NOT EXISTS offers;"
+            "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + ";"
         );
         stmtCreateSchema.close();
 
         // create and execute the SQL statement that will create an offer table
         Statement stmt = this.dbConn.createStatement();
         stmt.executeUpdate(
-            "CREATE TABLE " + this.schemaName + "." + this.tableName + " (" +
+            "CREATE TABLE IF NOT EXISTS " + this.schemaName + "." + this.tableName + " (" +
                 "offer_id       serial      NOT NULL PRIMARY KEY, " +
                 "car_id         integer     NOT NULL, " +
                 "loan_amount    decimal(12) NOT NULL, " +
@@ -81,19 +81,6 @@ public class TableOffers extends Table implements TableOffersInterface {
 
     public String getTableName() {
         return this.tableName;
-    }
-
-    public void useExistingTable(String tableName) throws InstanceAlreadyExistsException {
-        if (this.tableName == null) {
-            this.tableName = tableName;
-        }
-        else {
-            throw new InstanceAlreadyExistsException(
-                "This object already carries a table name. \n" +
-                "You may not reuse the same TableOffers object for different tables. \n" +
-                "Please create a new TableOffers object for an individual table."
-            );
-        }
     }
 
     public int addOffer(

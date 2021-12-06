@@ -16,21 +16,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * TableOffersInterface defines the behaviour of classes that interact with an offers table for a specific user.
+ * setUser() must be called before any other method.
+ */
 public interface TableOffersInterface {
     /**
-     * Create a new offers table for a given user inside the "offers" schema
-     * following TableOffersInterface.createTableName(userId) naming.
+     * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
      *
      * @param userId : the user string that uniquely identifies a user, same as "user_id" in the public.users table
      * @return : the name of the newly created offers table, follows TableOffersInterface.createTableName(userId).
      */
-    public String newTable(String userId) throws SQLException;
+    public String setUser(String userId) throws SQLException;
 
     /**
      * Public getter for the "tableName" property.
@@ -38,16 +40,6 @@ public interface TableOffersInterface {
      * @return : the name of the offers table, follows TableOffersInterface.createTableName(userId).
      */
     public String getTableName();
-
-    /**
-     * Public setter for the "tableName" property.
-     * Use in place of newTable() when operating on an existing offers table.
-     *
-     * @param tableName : Name of the table to connect to, should be created using createTableName().
-     * @throws InstanceAlreadyExistsException : when trying to set "tableName" but the
-     *     object already carries a "tableName", refuse to proceed.
-     */
-    public void useExistingTable(String tableName) throws InstanceAlreadyExistsException;
 
     /**
      * Add a new offer in the current offers table.

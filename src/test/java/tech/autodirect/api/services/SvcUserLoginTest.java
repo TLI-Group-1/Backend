@@ -16,8 +16,8 @@ import java.util.Map;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SvcUserLoginTest {
-    private static final String dbName = "autodirect";
-    private final String testUserId = "SvcUserLoginTest.test_user.700";
+    private static final String dbName = "testing";
+    private final String testUserId = "SvcUserLoginTest.test_user_700";
     private TableUsersInterface tableUser;
     private SvcUserLogin svcUserLogin;
 
