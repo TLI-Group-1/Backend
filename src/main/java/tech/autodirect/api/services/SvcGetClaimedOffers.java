@@ -16,5 +16,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.entities.EntOffer;
+import tech.autodirect.api.interfaces.TableOffersInterface;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class SvcGetClaimedOffers {
+    /**
+     * Get all claimed offers for the specified user.
+     */
+    public List<EntOffer> getClaimedOffers(
+            TableOffersInterface tableOffers,
+            String userId
+    ) throws SQLException {
+        tableOffers.setUser(userId);
+        List<Map<String, Object>> offersList = tableOffers.getAllOffers();
+
+        List<EntOffer> offers = new ArrayList<>();
+        for (Map<String, Object> offerMap : offersList) {
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+            offers.add(offer);
+        }
+
+        return offers;
+    }
 }

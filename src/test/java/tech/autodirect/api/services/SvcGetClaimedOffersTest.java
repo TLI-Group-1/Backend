@@ -5,38 +5,47 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import tech.autodirect.api.database.TableOffers;
+import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
+import java.util.List;
 
 
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SvcClaimOfferTest {
+class SvcGetClaimedOffersTest {
     private static final String dbName = "testing";
     private final String testUserId = "TableOffersTests_test_user";
 
     @Test
-    void testClaimOffer() {
+    void testGetClaimedOffers() {
         try {
-            SvcClaimOffer svcClaimOffer = new SvcClaimOffer();
+            SvcGetClaimedOffers svcGetClaimedOffers = new SvcGetClaimedOffers();
             TableOffersInterface tableOffers = new TableOffers(dbName);
             tableOffers.setUser(testUserId);
 
-            // Add an unclaimed offerId to the offers table
-            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            // Add some offers
+            int offerId1 = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            int offerId2 = tableOffers.addOffer(2, 2, 3, 4, 5, 6, 7, "TEST", true);
+            int offerId3 = tableOffers.addOffer(3, 2, 3, 4, 5, 6, 7, "TEST", false);
+            int offerId4 = tableOffers.addOffer(4, 2, 3, 4, 5, 6, 7, "TEST", true);
 
-            // Verify the offer is initially not claimed
-            boolean claimedInit = (boolean) tableOffers.getOfferByOfferId(offerId).get("claimed");
-            assert !claimedInit;
+            //
+            List<EntOffer> offers = svcGetClaimedOffers.getClaimedOffers(tableOffers, testUserId);
+            boolean offerId1InOffers = false;
+            boolean offerId2InOffers = false;
+            boolean offerId3InOffers = false;
+            boolean offerId4InOffers = false;
+            for (EntOffer offer : offers) {
+                if (offer.getOfferId() == offerId1) { offerId1InOffers = true; }
+                if (offer.getOfferId() == offerId2) { offerId2InOffers = true; }
+                if (offer.getOfferId() == offerId3) { offerId3InOffers = true; }
+                if (offer.getOfferId() == offerId4) { offerId4InOffers = true; }
+            }
 
-            // Claim the offer
-            svcClaimOffer.claimOffer(tableOffers, testUserId, Integer.toString(offerId));
-
-            // Check that the offer is now claimed
-            boolean claimedFinal = (boolean) tableOffers.getOfferByOfferId(offerId).get("claimed");
-            assert claimedFinal;
+            assert offerId1InOffers && offerId2InOffers && offerId3InOffers && offerId4InOffers;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
