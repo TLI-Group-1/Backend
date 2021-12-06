@@ -36,7 +36,7 @@ public class SvcUserLogin {
      * @param userId: the userId that uniquely identifies a user, same as "user_id" in the public.users table
      * @return the user's information that is stored in the database (excluding their offersTableName)
      */
-    public Map<String, Object> loginUser(String userId) throws SQLException {
+    public Map<String, Object> loginUser(String userId) throws SQLException, ClassNotFoundException {
         if (tableUsers.userExists(userId)) {
             // userId exists, return existing user info
             Map<String, Object> userMap = tableUsers.getUserByID(userId);

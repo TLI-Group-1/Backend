@@ -73,7 +73,7 @@ class SvcSearchTest {
             tableUser.addUser(testUserId, 700, 1000, 200);
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
             assert carsResult.size() > 0;
-        } catch (IOException | InterruptedException | SQLException e) {
+        } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -85,7 +85,7 @@ class SvcSearchTest {
             tableUser.addUser(testUserId, 700, 1000, 200);
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true");
             assert carsResult.size() > 0;
-        } catch (IOException | InterruptedException | SQLException e) {
+        } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
