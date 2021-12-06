@@ -1,5 +1,9 @@
 package tech.autodirect.api.database;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.*;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntOffer;
@@ -29,7 +33,7 @@ public class TableOffersTests {
      * Create a new offers table, then verify it exists. Tests newTable method
      */
     @Test
-    void testNewTable() {
+    void testSetUser() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
@@ -129,24 +133,6 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests useExistingTable() when table name is null
-     */
-    @Test
-    void testUseExistingTable() {
-        try {
-            // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
-
-            table.useExistingTable("Testing");
-            assert Objects.equals(table.getTableName(), "Testing");
-
-        } catch (SQLException | ClassNotFoundException | InstanceAlreadyExistsException e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    /**
      * Tests removeOfferByOfferId
      */
     @Test
@@ -154,7 +140,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             table.removeOfferByOfferId(offerId);
@@ -175,7 +161,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
@@ -196,7 +182,7 @@ public class TableOffersTests {
     void testGetAllOffers() {
         try {
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
@@ -233,7 +219,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
@@ -257,7 +243,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
@@ -282,7 +268,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             table.markOfferClaimed(offerId);
@@ -308,7 +294,7 @@ public class TableOffersTests {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
-            table.newTable(testUserId);
+            table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
             table.markOfferUnclaimed(offerId);
