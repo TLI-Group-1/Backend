@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntCar;
 import tech.autodirect.api.entities.EntUser;
 import tech.autodirect.api.interfaces.SensoApiInterface;
@@ -59,32 +61,24 @@ public class SvcSearch {
         String sortAscString
     ) throws SQLException, IOException, InterruptedException {
         // Set sortBy and sortAsc search params to default values if not in correct format
-        if (!valuesOfSortBy.contains(sortBy) || Objects.equals(sortBy, "null")) { sortBy = "apr"; }
-        if (Objects.equals(sortAscString, "null")) { sortAscString = "true"; }
+        if (!valuesOfSortBy.contains(sortBy)) { sortBy = "apr"; }
+        if (!Objects.equals(sortAscString, "false")) { sortAscString = "true"; }
 
-        // Parse sortAscString to boolean
+        // Convert sortAscString to boolean sortAsc
         boolean sortAsc = Boolean.parseBoolean(sortAscString);
 
-        // If some required values are null, the body of the try will throw NullPointerException
-        boolean areValidParams;
-        try {
-            areValidParams = !userId.equals("")
-                && !userId.equals("null")
-                && !downPaymentString.equals("")
-                && !downPaymentString.equals("null")
-                && !budgetMoString.equals("")
-                && !budgetMoString.equals("null")
-                && ParseChecker.isParsableToDouble(downPaymentString)
-                && ParseChecker.isParsableToDouble(budgetMoString);
-        } catch (NullPointerException ignored) {
-            areValidParams = false;
-        }
-
-        // Run the correct search algorithm, according the validity of the search params
-        if (!areValidParams) {
-            // Return all cars in the database.
+        if (userId.equals("")) {
+            // If no userId, run pre-login search (return all cars)
             return searchCarsAll(sortBy, sortAsc);
         } else {
+            // Check if other values are good, throw BAD_REQUEST 400 error if bad values
+            boolean goodDownPaymentString = ParseChecker.isParsableToDouble(downPaymentString);
+            boolean goodBudgetMoString = ParseChecker.isParsableToDouble(budgetMoString);
+            boolean goodSortBy = valuesOfSortBy.contains(sortBy);
+            if (!goodDownPaymentString || !goodBudgetMoString || !goodSortBy) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid search params");
+            }
+
             // User is logged in and search params are valid. So, only return cars which have offers for this user.
             double downPayment = Double.parseDouble(downPaymentString);
             double budgetMo = Double.parseDouble(budgetMoString);

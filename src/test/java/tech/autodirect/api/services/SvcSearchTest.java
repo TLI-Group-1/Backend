@@ -1,6 +1,7 @@
 package tech.autodirect.api.services;
 
 import org.junit.jupiter.api.*;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableUsers;
 import tech.autodirect.api.entities.EntCar;
@@ -22,44 +23,38 @@ class SvcSearchTest {
     private SvcSearch svcSearch;
 
     @Test
-    void testSearchCarsAllNull() {
+    void testSearchCarsInvalidAllNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("null", "null", "null", "null", "null");
+            List<EntCar> carsResult = svcSearch.searchCars("", "null", "null", "null", "null");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
             assert false;
+        } catch (ResponseStatusException e) {
+            assert true; // check that 400 error is thrown
         }
     }
 
     @Test
-    void testSearchCarsAllEmpty() {
+    void testSearchCarsInvalidAllEmpty() {
         try {
             List<EntCar> carsResult = svcSearch.searchCars("", "", "", "", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
             assert false;
+        } catch (ResponseStatusException e) {
+            assert true; // check that 400 error is thrown
         }
     }
 
     @Test
-    void testSearchCarsRandomStrings() {
+    void testSearchCarsPreLogin() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("xyz", "xyz", "xyz", "xyz", "xyz");
+            tableUsers.addUser(testUserId, 700, 1000, 200);
+            List<EntCar> carsResult = svcSearch.searchCars("", "1000", "200", "price", "true");
             assert carsResult.size() > 0;
-        } catch (IOException | InterruptedException | SQLException e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    @Test
-    void testSearchCarsSomeNull() {
-        try {
-            List<EntCar> carsResult = svcSearch.searchCars("null", "1000", "null", "price", "true");
-            assert carsResult.size() > 0;
-        } catch (IOException | InterruptedException | SQLException e) {
+        } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
@@ -81,7 +76,7 @@ class SvcSearchTest {
     void testSearchCarsPostLoginBadSortBy() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
-            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true");
+            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
