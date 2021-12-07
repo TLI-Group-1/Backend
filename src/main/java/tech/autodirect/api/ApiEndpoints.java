@@ -36,8 +36,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 
-
-
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
 // specify hosts allowed to access the AutoDirect API
@@ -50,9 +48,53 @@ import java.sql.SQLException;
 })
 @RestController
 public class ApiEndpoints extends SpringBootServletInitializer {
+	// Name of the database to access
+	private final String dbName = "autodirect";
+
+	// Initialize Frameworks & Drivers
+	// TODO: Add explanation
+	private TableCarsInterface tableCars;
+	private TableUsersInterface tableUsers;
+	private TableOffersInterface tableOffers;
+	private SensoApiInterface sensoApi;
+	private BankApiInterface bankApi;
+
+	// Initialize Services (Use Cases)
+	private SvcClaimOffer svcClaimOffer;
+	private SvcGetClaimedOffers svcGetClaimedOffers;
+	private SvcGetOfferDetails svcGetOfferDetails;
+	private SvcMockBankApi svcMockBankApi;
+	private SvcSearch svcSearch;
+	private SvcUnclaimOffer svcUnclaimOffer;
+	private SvcUpdatePrincipal svcUpdatePrincipal;
+	private SvcUserLogin svcUserLogin;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiEndpoints.class, args);
+	}
+
+	public ApiEndpoints() {
+		try {
+			// Instantiate Frameworks & Drivers
+			tableCars = new TableCars(dbName);
+			tableUsers = new TableUsers(dbName);
+			tableOffers = new TableOffers(dbName);
+			sensoApi = new SensoApi();
+			bankApi = new BankApi();
+
+			// Instantiate Services (Use Cases)
+			svcClaimOffer = new SvcClaimOffer();
+			svcGetClaimedOffers = new SvcGetClaimedOffers();
+			svcGetOfferDetails = new SvcGetOfferDetails();
+			svcMockBankApi = new SvcMockBankApi();
+			svcSearch = new SvcSearch(tableCars, tableUsers, sensoApi);
+			svcUnclaimOffer = new SvcUnclaimOffer();
+			svcUpdatePrincipal = new SvcUpdatePrincipal();
+			svcUserLogin = new SvcUserLogin();
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -69,12 +111,8 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 		@RequestParam(name = "sort_asc") String sortAsc
 	) {
 		try {
-			TableCarsInterface tableCars = new TableCars("autodirect");
-			TableUsersInterface tableUser = new TableUsers("autodirect");
-			SensoApiInterface sensoApi = new SensoApi();
-			SvcSearch svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
 			return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc);
-		} catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
+		} catch (IOException | InterruptedException | SQLException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}
@@ -83,10 +121,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 	@GetMapping("/login")
 	public Object login(@RequestParam(name = "user_id") String userId) {
 		try {
-			TableUsersInterface tableUser = new TableUsers("autodirect");
-			BankApiInterface bankApi = new BankApi();
-			SvcUserLogin svcUserLogin = new SvcUserLogin();
-			return svcUserLogin.loginUser(tableUser, bankApi, userId);
+			return svcUserLogin.loginUser(tableUsers, bankApi, userId);
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return "Server Error!";
@@ -99,11 +134,9 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			@RequestParam(name = "offer_id") String offerId
 	) {
 		try {
-			TableOffersInterface tableOffers = new TableOffers("autodirect");
-			SvcClaimOffer svcClaimOffer = new SvcClaimOffer();
 			svcClaimOffer.claimOffer(tableOffers, userId, offerId);
 			return "";
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}
@@ -115,11 +148,9 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			@RequestParam(name = "offer_id") String offerId
 	) {
 		try {
-			TableOffersInterface tableOffers = new TableOffers("autodirect");
-			SvcUnclaimOffer svcUnclaimOffer = new SvcUnclaimOffer();
 			svcUnclaimOffer.unclaimOffer(tableOffers, userId, offerId);
 			return "";
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}
@@ -128,10 +159,8 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 	@GetMapping("/getClaimedOffers")
 	public Object getClaimedOffers(@RequestParam(name = "user_id") String userId) {
 		try {
-			TableOffersInterface tableOffers = new TableOffers("autodirect");
-			SvcGetClaimedOffers svcGetClaimedOffers = new SvcGetClaimedOffers();
 			return svcGetClaimedOffers.getClaimedOffers(tableOffers, userId);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}
@@ -143,10 +172,8 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 			@RequestParam(name = "offer_id") String offerId
 	) {
 		try {
-			TableOffersInterface tableOffers = new TableOffers("autodirect");
-			SvcGetOfferDetails svcGetOfferDetails = new SvcGetOfferDetails();
 			return svcGetOfferDetails.getOfferDetails(tableOffers, userId, offerId);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return "Server Error!";
 		}
