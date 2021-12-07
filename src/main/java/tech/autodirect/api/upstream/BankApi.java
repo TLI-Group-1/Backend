@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.BankApiInterface;
 
 import java.util.Random;
@@ -24,18 +26,15 @@ import java.util.Random;
  * This class represents a fictitious bank api that gets the credit score for a user.
  */
 public class BankApi implements BankApiInterface {
-    private int minCreditScore = 300;
-    private int maxCreditScore = 900;
-    private Random rand;
 
     /**
      * Get the credit score for userId (uses last 3 digits of userId as credit score).
      */
-    public int getCreditScore(String userId) {
+    public int getCreditScore(String userId) throws ResponseStatusException {
         try {
             return Integer.parseInt(userId.substring(userId.length() - 3));
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            return rand.nextInt((maxCreditScore - minCreditScore) + 1) + minCreditScore;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid credit score");
         }
     }
 }
