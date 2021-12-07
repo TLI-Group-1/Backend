@@ -18,8 +18,24 @@ limitations under the License.
 
 import tech.autodirect.api.interfaces.BankApiInterface;
 
+import java.util.Random;
+
+/**
+ * This class represents a fictitious bank api that gets the credit score for a user.
+ */
 public class BankApi implements BankApiInterface {
+    private int minCreditScore = 300;
+    private int maxCreditScore = 900;
+    private Random rand;
+
+    /**
+     * Get the credit score for userId (uses last 3 digits of userId as credit score).
+     */
     public int getCreditScore(String userId) {
-        return Integer.parseInt(userId.substring(userId.length() - 3));
+        try {
+            return Integer.parseInt(userId.substring(userId.length() - 3));
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            return rand.nextInt((maxCreditScore - minCreditScore) + 1) + minCreditScore;
+        }
     }
 }
