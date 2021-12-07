@@ -25,7 +25,6 @@ public class TableOffersTests {
     // Note: throughout this test class, we don't assume that testUserId exists in the users table.
     // We don't need to assume this since we never actually access this user in the users table.
     // We only use this userId to create offers (to help name the offers table).
-    // TODO (Nada): read this and make sure you understand. Don't delete the comment.
     private final String testUserId = "TableOffersTests_test_user";
 
 

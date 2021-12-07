@@ -21,6 +21,7 @@ import tech.autodirect.api.utils.UnitConv;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 
 public class EntCar {
     private int id;
@@ -66,6 +67,22 @@ public class EntCar {
 
     public double getKms() {
         return kms;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof EntCar) {
+            EntCar car = (EntCar) o;
+
+            return getId() == car.getId() &&
+                    Objects.equals(getBrand(), car.getBrand()) &&
+                    getKms() == car.getKms() &&
+                    Objects.equals(getModel(), car.getModel()) &&
+                    getYear() == car.getYear() &&
+                    getPrice() == car.getPrice();
+        } else {
+            return false;
+        }
     }
 
 }
