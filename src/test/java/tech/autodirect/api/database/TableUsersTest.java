@@ -36,6 +36,7 @@ class TableUsersTest {
     @Test
     void userExists() {
     }
+
     @BeforeEach
     public void setUpEach() {
         try {
@@ -53,7 +54,9 @@ class TableUsersTest {
     public void tearDownAll() {
         try {
             tableUsers = new TableUsers(dbName);
-            tableUsers.removeUserByID(testUserId);
+            if (tableUsers.checkUserExists(testUserId)) {
+                tableUsers.removeUserByID(testUserId);
+            }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }

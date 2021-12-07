@@ -21,7 +21,7 @@ class TableCarsTest {
     void testGetAllCars() {
         try {// Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableCars table = new TableCars(dbName);
-            List<Map<String, Object>> carMapsList = table.getAllCars("");
+            List<Map<String, Object>> carMapsList = table.getAllCars();
 
             EntCar car1 = new EntCar();
             car1.loadFromMap(new HashMap<>() {
