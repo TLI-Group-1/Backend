@@ -67,7 +67,7 @@ public class SvcSearch {
         // Convert sortAscString to boolean sortAsc
         boolean sortAsc = Boolean.parseBoolean(sortAscString);
 
-        if (userId.equals("")) {
+        if (userId.equals("") || userId.equals("null")) {
             // If no userId, run pre-login search (return all cars)
             return searchCarsAll(sortBy, sortAsc);
         } else {
