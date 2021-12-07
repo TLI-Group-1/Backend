@@ -128,7 +128,7 @@ public class TableOffersTests {
             assert false;
         } catch (Exception e) {
             assert e instanceof ResponseStatusException;
-            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"offer not found\"");
         }
     }
 
@@ -145,14 +145,13 @@ public class TableOffersTests {
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             table.removeOfferByOfferId(offerId);
 
-            assert Objects.equals(table.getOfferByOfferId(offerId), Collections.emptyMap());
-
+            table.getOfferByOfferId(offerId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
-        } catch (Exception e) {
-            assert e instanceof ResponseStatusException;
-            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
+        } catch (ResponseStatusException e) {
+            assert true;
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"offer not found\"");
         }
     }
 
@@ -170,14 +169,13 @@ public class TableOffersTests {
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
             table.removeAllOffers();
 
-            assert Objects.equals(table.getOfferByOfferId(offerId), Collections.emptyMap());
-
+            table.getOfferByOfferId(offerId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
-        } catch (Exception e) {
-            assert e instanceof ResponseStatusException;
-            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
+        } catch (ResponseStatusException e) {
+            assert true;
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"offer not found\"");
         }
     }
 

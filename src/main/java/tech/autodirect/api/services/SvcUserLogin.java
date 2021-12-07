@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.BankApiInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 
@@ -32,6 +34,12 @@ public class SvcUserLogin {
             BankApiInterface bankApi,
             String userId
     ) throws SQLException, ClassNotFoundException {
+        if (userId.equals("")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "empty userId"
+            );
+        }
+
         if (tableUsers.checkUserExists(userId)) {
             // userId exists, return existing user info
             Map<String, Object> userMap = tableUsers.getUserByID(userId);

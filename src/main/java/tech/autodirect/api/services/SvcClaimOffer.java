@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
@@ -29,6 +31,12 @@ public class SvcClaimOffer {
             String userId,
             String offerId
     ) throws SQLException {
+        if (userId.equals("") || offerId.equals("")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "empty userId or offerId"
+            );
+        }
+
         tableOffers.setUser(userId);
         tableOffers.markOfferClaimed(Integer.parseInt(offerId));
     }

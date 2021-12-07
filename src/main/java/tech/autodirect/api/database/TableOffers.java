@@ -54,7 +54,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // create the "offers" schema if it does not exist yet
         Statement stmtCreateSchema = this.dbConn.createStatement();
         stmtCreateSchema.executeUpdate(
-            "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + ";"
+            "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + " AUTHORIZATION tli;"
         );
         stmtCreateSchema.close();
 
