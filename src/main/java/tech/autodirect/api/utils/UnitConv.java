@@ -17,7 +17,7 @@ limitations under the License.
 */
 
 public class UnitConv {
-    public static double mileToKm(double mileage){
+    public static double mileToKm(double mileage) {
         return mileage / 0.62137;
     }
 }

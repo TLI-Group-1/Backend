@@ -29,24 +29,24 @@ public interface TableOffersInterface {
     /**
      * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
      *
-     * @param userId : the user string that uniquely identifies a user, same as "user_id" in the public.users table
+     * @param userId : the user string that uniquely identifies a user, same as "userId" in the public.users table
      * @return : the name of the newly created offers table, follows TableOffersInterface.createTableName(userId).
      */
-    public String setUser(String userId) throws SQLException;
+    String setUser(String userId) throws SQLException;
 
     /**
      * Public getter for the "tableName" property.
      *
      * @return : the name of the offers table, follows TableOffersInterface.createTableName(userId).
      */
-    public String getTableName();
+    String getTableName();
 
     /**
      * Add a new offer in the current offers table.
      *
      * @return : integer representing the offer ID of the newly inserted offer row
      */
-    public int addOffer(
+    int addOffer(
             int carId,
             double loanAmount,
             double capitalSum,
@@ -61,29 +61,29 @@ public interface TableOffersInterface {
     /**
      * Remove an offer row given an offer ID.
      *
-     * @param offer_id : ID of the offer to be removed
+     * @param offerId : ID of the offer to be removed
      */
-    public void removeOfferByOfferId(int offer_id) throws SQLException;
+    void removeOfferByOfferId(int offerId) throws SQLException;
 
     /**
      * Remove all offers in the current offers table.
      */
-    public void removeAllOffers() throws SQLException;
+    void removeAllOffers() throws SQLException;
 
     /**
      * Retrieve an offer in HashMap format given an offer ID.
      *
-     * @param offer_id : ID of the offer to be retrieved
+     * @param offerId : ID of the offer to be retrieved
      * @return A Map representing an offer entry in the database.
      */
-    public Map<String, Object> getOfferByOfferId(int offer_id) throws SQLException;
+    Map<String, Object> getOfferByOfferId(int offerId) throws SQLException;
 
     /**
      * Retrieve all offers in the current offers table.
      *
      * @return A List of Maps where each Map is a single offer entry in the database.
      */
-    public List<Map<String, Object>> getAllOffers() throws SQLException;
+    List<Map<String, Object>> getAllOffers() throws SQLException;
 
     /**
      * Retrieve all offers in the current offers table whose "claimed" field is set to
@@ -91,21 +91,21 @@ public interface TableOffersInterface {
      *
      * @return A List of Maps where each Map is a single offer entry in the database.
      */
-    public List<Map<String, Object>> getClaimedOffers() throws SQLException;
+    List<Map<String, Object>> getClaimedOffers() throws SQLException;
 
     /**
      * Set the "claimed" field of a given offer to true.
      *
      * @param offer_id : ID of the offer to be marked as claimed
      */
-    public void markOfferClaimed(int offer_id) throws SQLException;
+    void markOfferClaimed(int offer_id) throws SQLException;
 
     /**
      * Set the "claimed" field of a given offer to false.
      *
      * @param offer_id : ID of the offer to be marked as unclaimed
      */
-    public void markOfferUnclaimed(int offer_id) throws SQLException;
+    void markOfferUnclaimed(int offer_id) throws SQLException;
 
     /**
      * Sets the principal of offer_id offer to newPrincipal.
@@ -117,40 +117,42 @@ public interface TableOffersInterface {
 
     /**
      * Delete the current offers table given by the "tableName" property.
+     *
      * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
-    */
-    public boolean dropTable() throws SQLException;
+     */
+    boolean dropTable() throws SQLException;
 
     /**
      * Delete the offers table given by tableName.
+     *
      * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
      */
-    public boolean dropTable(String tableName) throws SQLException;
+    boolean dropTable(String tableName) throws SQLException;
 
     /**
      * Create and return the offers table name for the given userId.
-     *
+     * <p>
      * This is a very important method since, without it, we need to manually create the offers table name.
      * This means that if we decide to change how we create the offers table name, we must change that everywhere.
      * So, this method prevents that and also prevents issues that might arise when getting the name creation
      * process for an offers table incorrect. Anyway, this is important, please use it!
      */
-    public static String createTableName(String userId) throws SQLException {
+    static String createTableName(String userId) throws SQLException {
         return "offers_" + userId.toLowerCase(Locale.ROOT);
     }
 
     /**
      * Return whether the current offers table given by the "tableName" property exists.
      */
-    public boolean checkTableExists() throws SQLException;
+    boolean checkTableExists() throws SQLException;
 
     /**
      * Return whether the offers table given by the tableName exists.
      */
-    public boolean checkTableExists(String tableName) throws SQLException;
+    boolean checkTableExists(String tableName) throws SQLException;
 
     /**
      * Return whether a specific offer exists (by offerId).
      */
-    public boolean checkOfferExists(int offerId) throws SQLException;
+    boolean checkOfferExists(int offerId) throws SQLException;
 }

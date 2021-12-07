@@ -23,7 +23,7 @@ public class Table {
 
         while (rs.next()) {
             Map<String, Object> row = new HashMap<>(columns);
-            for (int i=1; i<=columns; ++i) {
+            for (int i = 1; i <= columns; ++i) {
                 row.put(md.getColumnName(i), rs.getObject(i));
             }
             list.add(row);

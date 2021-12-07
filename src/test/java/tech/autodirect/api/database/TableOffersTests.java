@@ -25,7 +25,6 @@ public class TableOffersTests {
     // Note: throughout this test class, we don't assume that testUserId exists in the users table.
     // We don't need to assume this since we never actually access this user in the users table.
     // We only use this userId to create offers (to help name the offers table).
-    // TODO (Nada): read this and make sure you understand. Don't delete the comment.
     private final String testUserId = "TableOffersTests_test_user";
 
 
@@ -128,7 +127,7 @@ public class TableOffersTests {
             assert false;
         } catch (Exception e) {
             assert e instanceof ResponseStatusException;
-            assert e.getMessage().equals("404 NOT_FOUND \"offer not found\"");
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"offer not found\"");
         }
     }
 
@@ -145,11 +144,13 @@ public class TableOffersTests {
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             table.removeOfferByOfferId(offerId);
 
-            assert Objects.equals(table.getOfferByOfferId(offerId), Collections.emptyMap());
-
+            table.getOfferByOfferId(offerId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
+        } catch (ResponseStatusException e) {
+            assert true;
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"offer not found\"");
         }
     }
 
@@ -167,11 +168,13 @@ public class TableOffersTests {
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
             table.removeAllOffers();
 
-            assert Objects.equals(table.getOfferByOfferId(offerId), Collections.emptyMap());
-
+            table.getOfferByOfferId(offerId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
+        } catch (ResponseStatusException e) {
+            assert true;
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"offer not found\"");
         }
     }
 
