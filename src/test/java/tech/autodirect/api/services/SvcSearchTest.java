@@ -18,7 +18,7 @@ import java.util.List;
 class SvcSearchTest {
     private static final String dbName = "testing";
     private final String testUserId = "SvcSearchTest_test_user";
-    private TableUsersInterface tableUser;
+    private TableUsersInterface tableUsers;
     private SvcSearch svcSearch;
 
     @Test
@@ -68,7 +68,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLogin() {
         try {
-            tableUser.addUser(testUserId, 700, 1000, 200);
+            tableUsers.addUser(testUserId, 700, 1000, 200);
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
@@ -80,7 +80,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLoginBadSortBy() {
         try {
-            tableUser.addUser(testUserId, 700, 1000, 200);
+            tableUsers.addUser(testUserId, 700, 1000, 200);
             List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "xyz", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
@@ -93,13 +93,13 @@ class SvcSearchTest {
     public void setUpAll() {
         try {
             TableCarsInterface tableCars = new TableCars(dbName);
-            this.tableUser = new TableUsers(dbName);
+            this.tableUsers = new TableUsers(dbName);
             SensoApiInterface sensoApi = new SensoApi();
-            this.svcSearch = new SvcSearch(tableCars, tableUser, sensoApi);
+            this.svcSearch = new SvcSearch(tableCars, tableUsers, sensoApi);
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
-            if (tableUser.checkUserExists(testUserId)) {
-                tableUser.removeUserByID(testUserId);
+            if (tableUsers.checkUserExists(testUserId)) {
+                tableUsers.removeUserByID(testUserId);
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -109,8 +109,8 @@ class SvcSearchTest {
     @AfterEach
     public void tearDownEach() {
         try {
-            if (tableUser.checkUserExists(testUserId)) {
-                tableUser.removeUserByID(testUserId);
+            if (tableUsers.checkUserExists(testUserId)) {
+                tableUsers.removeUserByID(testUserId);
             }
         } catch (SQLException e) {
             e.printStackTrace();
