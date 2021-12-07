@@ -144,7 +144,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "DELETE FROM " + this.schemaName + "." + this.tableName + ";"
         );
-        stmt.executeQuery();
+        stmt.executeUpdate();
         stmt.close();
     }
 
