@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 import org.yaml.snakeyaml.error.MissingEnvironmentVariableException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 import com.google.gson.Gson;
 import tech.autodirect.api.interfaces.SensoApiInterface;
 
@@ -32,18 +34,18 @@ public class SensoApi implements SensoApiInterface {
     private static String sensoUrl;
     private static String sensoKey;
     // Gson object for JSON/Map conversions
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public HashMap<String, Object> getLoanOffer(
-        String loanAmount,
-        String creditScore,
-        String budget,
-        String vehicleMake,
-        String vehicleModel,
-        String vehicleYear,
-        String vehicleKms,
-        String listPrice,
-        String downPayment
+            String loanAmount,
+            String creditScore,
+            String budget,
+            String vehicleMake,
+            String vehicleModel,
+            String vehicleYear,
+            String vehicleKms,
+            String listPrice,
+            String downPayment
     ) throws IOException, InterruptedException {
         // create request body
         Map<String, String> queryMap = new HashMap<>() {{
@@ -81,12 +83,12 @@ public class SensoApi implements SensoApiInterface {
         // if a relevant environment variable is not set, throw an error
         if (url == null) {
             throw new MissingEnvironmentVariableException(
-                "\n\n\t> \"SENSO_API_URL\" not specified in environment variables. \n"
+                    "\n\n\t> \"SENSO_API_URL\" not specified in environment variables. \n"
             );
         }
         if (key == null) {
             throw new MissingEnvironmentVariableException(
-                "\n\n\t> \"SENSO_API_KEY\" not specified in environment variables. \n"
+                    "\n\n\t> \"SENSO_API_KEY\" not specified in environment variables. \n"
             );
         }
 
@@ -96,14 +98,14 @@ public class SensoApi implements SensoApiInterface {
     }
 
     private static HttpResponse<String> httpRequest(String request_body)
-        throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
         // create an HTTP POST request
         var request = HttpRequest.newBuilder()
-            .uri(URI.create(sensoUrl + "/rate"))
-            .header("Content-Type", "application/json")
-            .header("x-api-key", sensoKey)
-            .POST(HttpRequest.BodyPublishers.ofString(request_body))
-            .build();
+                .uri(URI.create(sensoUrl + "/rate"))
+                .header("Content-Type", "application/json")
+                .header("x-api-key", sensoKey)
+                .POST(HttpRequest.BodyPublishers.ofString(request_body))
+                .build();
 
         // create an HTTP client
         var client = HttpClient.newHttpClient();

@@ -34,8 +34,8 @@ public class TableOffers extends Table implements TableOffersInterface {
     private String tableName = null;
     private final String schemaName = "offers";
     private final String[] tableColumns = {
-        "car_id", "loan_amount", "capital_sum", "interest_sum", "total_sum",
-        "interest_rate", "term_mo", "installments", "claimed"
+            "car_id", "loan_amount", "capital_sum", "interest_sum", "total_sum",
+            "interest_rate", "term_mo", "installments", "claimed"
     };
 
     /**
@@ -54,25 +54,25 @@ public class TableOffers extends Table implements TableOffersInterface {
         // create the "offers" schema if it does not exist yet
         Statement stmtCreateSchema = this.dbConn.createStatement();
         stmtCreateSchema.executeUpdate(
-            "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + " AUTHORIZATION tli;"
+                "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + " AUTHORIZATION tli;"
         );
         stmtCreateSchema.close();
 
         // create and execute the SQL statement that will create an offer table
         Statement stmt = this.dbConn.createStatement();
         stmt.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS " + this.schemaName + "." + this.tableName + " (" +
-                "offer_id       serial      NOT NULL PRIMARY KEY, " +
-                "car_id         integer     NOT NULL, " +
-                "loan_amount    decimal(12) NOT NULL, " +
-                "capital_sum    decimal(12) NOT NULL, " +
-                "interest_sum   decimal(12) NOT NULL, " +
-                "total_sum      decimal(12) NOT NULL, " +
-                "interest_rate  real        NOT NULL, " +
-                "term_mo        real        NOT NULL, " +
-                "installments   varchar(10000) NOT NULL, " +
-                "claimed        boolean     NOT NULL" +
-            ");"
+                "CREATE TABLE IF NOT EXISTS " + this.schemaName + "." + this.tableName + " (" +
+                        "offer_id       serial      NOT NULL PRIMARY KEY, " +
+                        "car_id         integer     NOT NULL, " +
+                        "loan_amount    decimal(12) NOT NULL, " +
+                        "capital_sum    decimal(12) NOT NULL, " +
+                        "interest_sum   decimal(12) NOT NULL, " +
+                        "total_sum      decimal(12) NOT NULL, " +
+                        "interest_rate  real        NOT NULL, " +
+                        "term_mo        real        NOT NULL, " +
+                        "installments   varchar(10000) NOT NULL, " +
+                        "claimed        boolean     NOT NULL" +
+                        ");"
         );
         stmt.close();
 
@@ -84,21 +84,21 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public int addOffer(
-        int carId,
-        double loanAmount,
-        double capitalSum,
-        double interestSum,
-        double totalSum,
-        double interestRate,
-        double termMo,
-        String installments,
-        boolean claimed
+            int carId,
+            double loanAmount,
+            double capitalSum,
+            double interestSum,
+            double totalSum,
+            double interestRate,
+            double termMo,
+            String installments,
+            boolean claimed
     ) throws SQLException {
         // construct a prepared SQL statement inserting the specified values
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "INSERT INTO " + this.schemaName + "." + this.tableName + " (" +
-                String.join(", ", tableColumns) +
-            ")" + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                "INSERT INTO " + this.schemaName + "." + this.tableName + " (" +
+                        String.join(", ", tableColumns) +
+                        ")" + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
         );
         stmt.setInt(1, carId);
         stmt.setBigDecimal(2, BigDecimal.valueOf(loanAmount));
@@ -133,7 +133,7 @@ public class TableOffers extends Table implements TableOffersInterface {
 
         // construct a prepared SQL statement deleting the specified offer
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
+                "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 
@@ -175,7 +175,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // construct a SQL statement selecting all offers
         Statement stmt = this.dbConn.createStatement();
         ResultSet rs = stmt.executeQuery(
-            "SELECT * FROM " + this.schemaName + "." + this.tableName + ";"
+                "SELECT * FROM " + this.schemaName + "." + this.tableName + ";"
         );
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
@@ -187,7 +187,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         // where "claimed" is true
         Statement stmt = this.dbConn.createStatement();
         ResultSet rs = stmt.executeQuery(
-            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE claimed = true;"
+                "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE claimed = true;"
         );
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
@@ -203,8 +203,8 @@ public class TableOffers extends Table implements TableOffersInterface {
 
         // construct a prepared SQL marking the specified offer claimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "UPDATE " + this.schemaName + "." + this.tableName +
-            " SET claimed = true WHERE offer_id = ?;"
+                "UPDATE " + this.schemaName + "." + this.tableName +
+                        " SET claimed = true WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 
@@ -222,8 +222,8 @@ public class TableOffers extends Table implements TableOffersInterface {
 
         // construct a prepared SQL marking the specified offer unclaimed
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "UPDATE " + this.schemaName + "." + this.tableName +
-            " SET claimed = false WHERE offer_id = ?;"
+                "UPDATE " + this.schemaName + "." + this.tableName +
+                        " SET claimed = false WHERE offer_id = ?;"
         );
         stmt.setInt(1, offerId);
 
@@ -260,7 +260,7 @@ public class TableOffers extends Table implements TableOffersInterface {
                         "FROM   information_schema.tables " +
                         "WHERE  table_schema = 'offers'" +
                         "   and table_name= '" + tableName.toLowerCase(Locale.ROOT) + "'" +
-                ");"
+                        ");"
         );
 
         ResultSet rs = stmt.executeQuery();

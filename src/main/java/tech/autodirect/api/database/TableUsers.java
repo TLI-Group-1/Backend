@@ -43,10 +43,10 @@ public class TableUsers extends Table implements TableUsersInterface {
 
     @Override
     public void addUser(
-        String userId,
-        int creditScore,
-        double downPayment,
-        double budgetMonthly
+            String userId,
+            int creditScore,
+            double downPayment,
+            double budgetMonthly
     ) throws SQLException, ClassNotFoundException {
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "INSERT INTO " + this.schemaName + "." + this.tableName + " VALUES (?, ?, ?, ?, ?);"
@@ -76,7 +76,7 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
+                "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
@@ -100,7 +100,7 @@ public class TableUsers extends Table implements TableUsersInterface {
 
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
+                "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
@@ -113,7 +113,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     public boolean checkUserExists(String userId) throws SQLException {
         // construct a prepared SQL statement selecting the specified user
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
+                "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
         );
         stmt.setString(1, userId);
 
