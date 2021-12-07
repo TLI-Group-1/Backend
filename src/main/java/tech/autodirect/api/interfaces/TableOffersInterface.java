@@ -29,7 +29,7 @@ public interface TableOffersInterface {
     /**
      * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
      *
-     * @param userId : the user string that uniquely identifies a user, same as "user_id" in the public.users table
+     * @param userId : the user string that uniquely identifies a user, same as "userId" in the public.users table
      * @return : the name of the newly created offers table, follows TableOffersInterface.createTableName(userId).
      */
     String setUser(String userId) throws SQLException;
@@ -61,9 +61,9 @@ public interface TableOffersInterface {
     /**
      * Remove an offer row given an offer ID.
      *
-     * @param offer_id : ID of the offer to be removed
+     * @param offerId : ID of the offer to be removed
      */
-    void removeOfferByOfferId(int offer_id) throws SQLException;
+    void removeOfferByOfferId(int offerId) throws SQLException;
 
     /**
      * Remove all offers in the current offers table.
@@ -73,10 +73,10 @@ public interface TableOffersInterface {
     /**
      * Retrieve an offer in HashMap format given an offer ID.
      *
-     * @param offer_id : ID of the offer to be retrieved
+     * @param offerId : ID of the offer to be retrieved
      * @return A Map representing an offer entry in the database.
      */
-    Map<String, Object> getOfferByOfferId(int offer_id) throws SQLException;
+    Map<String, Object> getOfferByOfferId(int offerId) throws SQLException;
 
     /**
      * Retrieve all offers in the current offers table.

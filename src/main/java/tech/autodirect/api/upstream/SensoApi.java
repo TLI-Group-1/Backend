@@ -97,14 +97,14 @@ public class SensoApi implements SensoApiInterface {
         sensoKey = key;
     }
 
-    private static HttpResponse<String> httpRequest(String request_body)
+    private static HttpResponse<String> httpRequest(String requestBody)
             throws IOException, InterruptedException {
         // create an HTTP POST request
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(sensoUrl + "/rate"))
                 .header("Content-Type", "application/json")
                 .header("x-api-key", sensoKey)
-                .POST(HttpRequest.BodyPublishers.ofString(request_body))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         // create an HTTP client
