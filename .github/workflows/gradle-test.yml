@@ -21,3 +21,5 @@ jobs:
         AUTODIRECT_DB_PORT: ${{ secrets.AUTODIRECT_DB_PORT }}
         AUTODIRECT_DB_SSL: ${{ secrets.AUTODIRECT_DB_SSL }}
         AUTODIRECT_DB_USER: ${{ secrets.AUTODIRECT_DB_USER }}
+        SENSO_API_KEY: ${{ secrets.SENSO_API_KEY }}
+        SENSO_API_URL: ${{ secrets.SENSO_API_URL }}
