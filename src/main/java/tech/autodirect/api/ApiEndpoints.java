@@ -20,10 +20,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableOffers;
 import tech.autodirect.api.database.TableUsers;
@@ -69,6 +71,10 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     private SvcUpdatePrincipal svcUpdatePrincipal;
     private SvcUserLogin svcUserLogin;
 
+    // server error that gets thrown to the frontend upon catching other errors
+    private ResponseStatusException SERVER_ERROR;
+
+
     public static void main(String[] args) {
         SpringApplication.run(ApiEndpoints.class, args);
     }
@@ -91,6 +97,11 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             svcUnclaimOffer = new SvcUnclaimOffer();
             svcUpdatePrincipal = new SvcUpdatePrincipal();
             svcUserLogin = new SvcUserLogin();
+
+            // Instantiate Server Error
+            SERVER_ERROR = new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Server Error!"
+            );
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -100,6 +111,11 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(ApiEndpoints.class);
+    }
+
+    @GetMapping("/")
+    public Object index() {
+        return "<center><h1>AutoDirect Backend API</h1></center>";
     }
 
     @GetMapping("/search")
@@ -114,7 +130,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc);
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
-            return "Server Error!";
+            throw SERVER_ERROR;
         }
     }
 
@@ -124,7 +140,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             return svcUserLogin.loginUser(tableUsers, bankApi, userId);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            return "Server Error!";
+            throw SERVER_ERROR;
         }
     }
 
@@ -138,7 +154,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             return "";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Server Error!";
+            throw SERVER_ERROR;
         }
     }
 
@@ -152,7 +168,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             return "";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Server Error!";
+            throw SERVER_ERROR;
         }
     }
 
@@ -162,7 +178,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             return svcGetClaimedOffers.getClaimedOffers(tableOffers, userId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Server Error!";
+            throw SERVER_ERROR;
         }
     }
 
@@ -175,7 +191,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             return svcGetOfferDetails.getOfferDetails(tableOffers, userId, offerId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Server Error!";
+            throw SERVER_ERROR;
         }
     }
 }

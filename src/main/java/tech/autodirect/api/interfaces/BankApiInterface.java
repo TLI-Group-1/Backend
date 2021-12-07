@@ -16,11 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.web.server.ResponseStatusException;
+
 public interface BankApiInterface {
     /**
      * Query the Bank Api to get the credit score for a specific user.
      *
      * @param userId
      */
-    int getCreditScore(String userId);
+    int getCreditScore(String userId) throws ResponseStatusException;
 }
