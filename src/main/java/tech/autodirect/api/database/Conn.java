@@ -23,7 +23,7 @@ import java.util.Properties;
 
 public class Conn {
     // list of environment variables to fetch
-    private static String[] environmentVariables = {
+    private static final String[] environmentVariables = {
         "AUTODIRECT_DB_HOST",
         "AUTODIRECT_DB_PORT",
         "AUTODIRECT_DB_SSL",
@@ -31,7 +31,7 @@ public class Conn {
         "AUTODIRECT_DB_PASS"
     };
     // database parameters
-    private static HashMap<String, String> dbParams = new HashMap<>();
+    private static final HashMap<String, String> dbParams = new HashMap<>();
 
     public static Connection getConn(String dbName)
             throws MissingEnvironmentVariableException, SQLException, ClassNotFoundException {

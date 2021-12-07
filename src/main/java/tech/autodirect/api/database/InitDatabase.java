@@ -18,6 +18,7 @@ limitations under the License.
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -58,14 +59,14 @@ public class InitDatabase {
         }
 
         // cycle through command line arguments and process them
-        for(int i = 0; i != args.length - 1; i++) {
+        for (int i = 0; i != args.length - 1; i++) {
             // help message
             if (args[i].equals("-h") || args[i].equals("--help")) {
                 exitWithHelp(0);
             }
             // accept a path to the input CSV file, if a path is supplied
-            else if (args[i].equals("--csvfile") && (i+1 < args.length)) {
-                csvPath = args[i+1];
+            else if (args[i].equals("--csvfile") && (i + 1 < args.length)) {
+                csvPath = args[i + 1];
             }
         }
 
@@ -80,64 +81,63 @@ public class InitDatabase {
 
     private static void exitWithHelp(int exitCode) {
         String helpText = "\nUsage: InitDatabase [options] <file> \n" +
-            "\t -h --help\tdisplay this help message and exit\n" +
-            "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
-            "\nExample — use 'cars.csv' in the current working directory:\n" +
-            "\t InitDatabase --csvfile ./cars.csv\n";
+                "\t -h --help\tdisplay this help message and exit\n" +
+                "\t --csvfile\tspecify a CSV file path which contains the cars dataset\n" +
+                "\nExample — use 'cars.csv' in the current working directory:\n" +
+                "\t InitDatabase --csvfile ./cars.csv\n";
         System.out.println(helpText);
         System.exit(exitCode);
     }
 
     private static void createCarsTable(Connection conn) throws SQLException {
-        Statement stmt = conn.createStatement();
-        stmt.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS public.cars (" +
-                "id         serial      NOT NULL PRIMARY KEY, " +
-                "brand      varchar(50) NOT NULL, " +
-                "model      varchar(50) NOT NULL, " +
-                "year       integer     NOT NULL, " +
-                "price      decimal(12) NOT NULL, " +
-                "mileage    real        NULL" +
-            ");"
+        PreparedStatement stmt = conn.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS public.cars (" +
+                        "id         serial      NOT NULL PRIMARY KEY, " +
+                        "brand      varchar(50) NOT NULL, " +
+                        "model      varchar(50) NOT NULL, " +
+                        "year       integer     NOT NULL, " +
+                        "price      decimal(12) NOT NULL, " +
+                        "mileage    real        NULL" +
+                        ");"
         );
+        stmt.executeUpdate();
         stmt.close();
     }
 
     private static void createUsersTable(Connection conn) throws SQLException {
-        Statement stmt = conn.createStatement();
-        stmt.executeUpdate(
-            "CREATE TABLE IF NOT EXISTS public.users (" +
-                "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
-                "credit_score   integer     NULL, " +
-                "down_payment   decimal(12) NULL, " +
-                "budget_mo      decimal(12) NULL, " +
-                "offers_table   varchar(50) NULL" +
-            ");"
+        PreparedStatement stmt = conn.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS public.users (" +
+                        "user_id        varchar(50) NOT NULL PRIMARY KEY, " +
+                        "credit_score   integer     NULL, " +
+                        "down_payment   decimal(12) NULL, " +
+                        "budget_mo      decimal(12) NULL, " +
+                        "offers_table   varchar(50) NULL" +
+                        ");"
         );
+        stmt.executeUpdate();
         stmt.close();
     }
 
     private static void ingestCarsCsv(Connection conn, String csvPath)
-        throws IOException, CsvValidationException, SQLException
-    {
+            throws IOException, CsvValidationException, SQLException {
         // read the CSV file
         CSVReader reader = new CSVReader(new FileReader(csvPath));
 
         // iterate through the CSV file
-        String [] line = reader.readNext(); // skip header
+        String[] line = reader.readNext(); // skip header
         while ((line = reader.readNext()) != null) {
             System.out.println(
-                line[0] + "\t" +  // id
-                line[1] + "\t" +  // price
-                line[2] + "\t" +  // brand
-                line[3] + "\t" +  // model
-                line[4] + "\t" +  // year
-                line[6] + "\t"    // mileage
+                    line[0] + "\t" +  // id
+                            line[1] + "\t" +  // price
+                            line[2] + "\t" +  // brand
+                            line[3] + "\t" +  // model
+                            line[4] + "\t" +  // year
+                            line[6] + "\t"    // mileage
             );
 
             PreparedStatement stmt = conn.prepareStatement(
-                "INSERT INTO public.cars (brand, model, year, price, mileage)" +
-                "VALUES (?, ?, ?, ?, ?)"
+                    "INSERT INTO public.cars (brand, model, year, price, mileage)" +
+                            "VALUES (?, ?, ?, ?, ?)"
             );
 
             // populate values from the CSV into the prepared statement

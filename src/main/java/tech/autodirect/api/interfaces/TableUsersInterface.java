@@ -24,14 +24,15 @@ public interface TableUsersInterface {
      * Add a user entry to the users table in the database.
      */
     void addUser(
-        String userId,
-        int creditScore,
-        double downPayment,
-        double budgetMonthly
+            String userId,
+            int creditScore,
+            double downPayment,
+            double budgetMonthly
     ) throws SQLException, ClassNotFoundException;
 
     /**
      * Get a specific user entry by the user ID.
+     *
      * @return A Map representing a user entry in the database.
      */
     Map<String, Object> getUserByID(String userId) throws SQLException;
