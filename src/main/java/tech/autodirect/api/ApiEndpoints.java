@@ -167,7 +167,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
 	}
 
 	@GetMapping("/getOfferDetails")
-	public Object login(
+	public Object getOfferDetails(
 			@RequestParam(name = "user_id") String userId,
 			@RequestParam(name = "offer_id") String offerId
 	) {
