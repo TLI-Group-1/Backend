@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Collections;
@@ -52,15 +51,13 @@ public class TableOffers extends Table implements TableOffersInterface {
         this.tableName = TableOffersInterface.createTableName(userId);
 
         // create the "offers" schema if it does not exist yet
-        Statement stmtCreateSchema = this.dbConn.createStatement();
-        stmtCreateSchema.executeUpdate(
+        PreparedStatement stmtCreateSchema = this.dbConn.prepareStatement(
                 "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + " AUTHORIZATION tli;"
         );
         stmtCreateSchema.close();
 
         // create and execute the SQL statement that will create an offer table
-        Statement stmt = this.dbConn.createStatement();
-        stmt.executeUpdate(
+        PreparedStatement stmt = this.dbConn.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS " + this.schemaName + "." + this.tableName + " (" +
                         "offer_id       serial      NOT NULL PRIMARY KEY, " +
                         "car_id         integer     NOT NULL, " +
@@ -74,6 +71,7 @@ public class TableOffers extends Table implements TableOffersInterface {
                         "claimed        boolean     NOT NULL" +
                         ");"
         );
+        stmt.executeUpdate();
         stmt.close();
 
         return this.getTableName();
@@ -115,8 +113,8 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
 
         // retrieve the offer ID and save it to "offer_id"
-        Statement stmt_lastval = this.dbConn.createStatement();
-        ResultSet rs = stmt_lastval.executeQuery("SELECT LASTVAL();");
+        PreparedStatement stmt_lastval = this.dbConn.prepareStatement("SELECT LASTVAL();");
+        ResultSet rs = stmt_lastval.executeQuery();
         rs.next();
         int offerId = rs.getInt("lastval");
         stmt.close();
@@ -143,8 +141,10 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public void removeAllOffers() throws SQLException {
-        Statement stmt = this.dbConn.createStatement();
-        stmt.executeUpdate("DELETE FROM " + this.schemaName + "." + this.tableName + ";");
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "DELETE FROM " + this.schemaName + "." + this.tableName + ";"
+        );
+        stmt.executeQuery();
         stmt.close();
     }
 
@@ -173,10 +173,10 @@ public class TableOffers extends Table implements TableOffersInterface {
 
     public List<Map<String, Object>> getAllOffers() throws SQLException {
         // construct a SQL statement selecting all offers
-        Statement stmt = this.dbConn.createStatement();
-        ResultSet rs = stmt.executeQuery(
+        PreparedStatement stmt = this.dbConn.prepareStatement(
                 "SELECT * FROM " + this.schemaName + "." + this.tableName + ";"
         );
+        ResultSet rs = stmt.executeQuery();
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
         return offers;
@@ -185,10 +185,10 @@ public class TableOffers extends Table implements TableOffersInterface {
     public List<Map<String, Object>> getClaimedOffers() throws SQLException {
         // construct a prepared SQL statement selecting all offers
         // where "claimed" is true
-        Statement stmt = this.dbConn.createStatement();
-        ResultSet rs = stmt.executeQuery(
+        PreparedStatement stmt = this.dbConn.prepareStatement(
                 "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE claimed = true;"
         );
+        ResultSet rs = stmt.executeQuery();
         List<Map<String, Object>> offers = resultSetToList(rs);
         stmt.close();
         return offers;
