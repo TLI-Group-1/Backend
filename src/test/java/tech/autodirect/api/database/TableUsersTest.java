@@ -4,47 +4,120 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.web.server.ResponseStatusException;
+import tech.autodirect.api.entities.EntUser;
+import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.Objects;
 
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TableUsersTest {
     private static final String dbName = "testing";
-
+    private final String testUserId = "TableUsersTests_test_user";
     private TableUsersInterface tableUsers;
 
-    // Note: throughout this test class, we don't assume that testUserId exists in the users table.
-    // We don't need to assume this since we never actually access this user in the users table.
-    // We only use this userId to create offers (to help name the offers table).
-    private final String testUserId = "TableUsersTests_test_user";
-
-
+    /**
+     * Tests addUser() using checkUserExists().
+     */
     @Test
-    void addUser() {
+    void testAddUser() {
+        try {
+            tableUsers.addUser(testUserId, 1, 2, 3);
+            assert tableUsers.checkUserExists(testUserId);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Tests getUserById().
+     */
     @Test
-    void getUserByID() {
+    void testGetUserById() {
+        try {
+            tableUsers.addUser(testUserId, 1, 2, 3);
+
+            // Get user entry and convert to use entity
+            Map<String, Object> userMap = tableUsers.getUserById(testUserId);
+            EntUser user = new EntUser();
+            user.loadFromMap(userMap);
+
+            assert user.getUserId().equals(testUserId);
+            assert user.getCreditScore() == 1;
+            assert user.getDownPayment() == 2;
+            assert user.getBudgetMo() == 3;
+            assert user.getOffersTable().equals(TableOffersInterface.createTableName(testUserId));
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Tests checkUserExists() when it exists.
+     */
     @Test
-    void removeUserByID() {
+    void testCheckUserExistsWhenExists() {
+        try {
+            tableUsers.addUser(testUserId, 1, 2, 3);
+            assert tableUsers.checkUserExists(testUserId);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Tests checkUserExists() when it does not exist.
+     */
     @Test
-    void userExists() {
+    void testUserExistsWhenNotExists() {
+        try {
+            assert !tableUsers.checkUserExists(testUserId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests removeUserById().
+     */
+    @Test
+    void testRemoveUser() {
+        try {
+            tableUsers.addUser(testUserId, 1, 2, 3);
+            assert tableUsers.checkUserExists(testUserId);
+            tableUsers.removeUserById(testUserId);
+            assert !tableUsers.checkUserExists(testUserId);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests that 404 error is raised when user does not exist.
+     */
+    @Test
+    void test404Error() {
+        try {
+            tableUsers.getUserById(testUserId); // Should return 404 error
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ResponseStatusException e) {
+            assert true;
+            assert Objects.equals(e.getMessage(), "404 NOT_FOUND \"user not found\"");
+        }
     }
 
     @BeforeEach
     public void setUpEach() {
         try {
-            // Drop testUserId's offers table before each test.
-            // This is especially important for tests which test the creation new tables
-            // (no point in testing the creation of a new table if it already exists).
-            TableUsers tableUsers = new TableUsers(dbName);
-
+            tableUsers = new TableUsers(dbName);
+            if (tableUsers.checkUserExists(testUserId)) {
+                tableUsers.removeUserById(testUserId);
+            }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -55,7 +128,7 @@ class TableUsersTest {
         try {
             tableUsers = new TableUsers(dbName);
             if (tableUsers.checkUserExists(testUserId)) {
-                tableUsers.removeUserByID(testUserId);
+                tableUsers.removeUserById(testUserId);
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
