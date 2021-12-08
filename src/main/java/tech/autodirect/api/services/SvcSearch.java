@@ -60,7 +60,7 @@ public class SvcSearch {
         String budgetMoString,
         String sortBy,
         String sortAscString
-    ) throws SQLException, IOException, InterruptedException {
+    ) throws SQLException, IOException, InterruptedException, ResponseStatusException {
         // Set sortBy and sortAsc search params to default values if not in correct format
         if (!valuesOfSortBy.contains(sortBy)) { sortBy = "apr"; }
         if (!Objects.equals(sortAscString, "false")) { sortAscString = "true"; }
@@ -115,7 +115,7 @@ public class SvcSearch {
         double budgetMo,
         String sortBy,
         boolean sortAsc
-    ) throws SQLException, IOException, InterruptedException {
+    ) throws SQLException, IOException, InterruptedException, ResponseStatusException {
         // Get user information from database and populate user entity with user info
         Map<String, Object> userEntry = this.tableUsers.getUserById(userId);
         EntUser user = new EntUser();

@@ -37,7 +37,7 @@ public class SvcUserLogin {
             TableUsersInterface tableUsers,
             BankApiInterface bankApi,
             String userId
-    ) throws SQLException, ClassNotFoundException {
+    ) throws SQLException, ClassNotFoundException, ResponseStatusException {
         if (userId.equals("")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "empty userId"

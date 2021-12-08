@@ -72,7 +72,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public Map<String, Object> getUserById(String userId) throws SQLException {
+    public Map<String, Object> getUserById(String userId) throws SQLException, ResponseStatusException {
         if (!checkUserExists(userId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "user not found"
@@ -96,7 +96,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public void removeUserById(String userId) throws SQLException {
+    public void removeUserById(String userId) throws SQLException, ResponseStatusException {
         if (!checkUserExists(userId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "user not found"

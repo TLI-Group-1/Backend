@@ -33,7 +33,7 @@ public class SvcClaimOffer {
             TableOffersInterface tableOffers,
             String userId,
             String offerId
-    ) throws SQLException {
+    ) throws SQLException, ResponseStatusException {
         if (userId.equals("") || offerId.equals("")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "empty userId or offerId"

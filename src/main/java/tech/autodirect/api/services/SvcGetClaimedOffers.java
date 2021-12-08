@@ -37,7 +37,7 @@ public class SvcGetClaimedOffers {
     public List<EntOffer> getClaimedOffers(
             TableOffersInterface tableOffers,
             String userId
-    ) throws SQLException {
+    ) throws SQLException, ResponseStatusException {
         if (userId.equals("")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "empty userId"

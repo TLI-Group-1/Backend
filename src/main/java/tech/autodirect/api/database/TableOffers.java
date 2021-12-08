@@ -122,7 +122,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         return offerId;
     }
 
-    public void removeOfferByOfferId(int offerId) throws SQLException {
+    public void removeOfferByOfferId(int offerId) throws SQLException, ResponseStatusException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "offer not found"
@@ -148,7 +148,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
-    public Map<String, Object> getOfferByOfferId(int offerId) throws SQLException {
+    public Map<String, Object> getOfferByOfferId(int offerId) throws SQLException, ResponseStatusException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "offer not found"
@@ -194,7 +194,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         return offers;
     }
 
-    public void markOfferClaimed(int offerId) throws SQLException {
+    public void markOfferClaimed(int offerId) throws SQLException, ResponseStatusException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "offer not found"
@@ -213,7 +213,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
-    public void markOfferUnclaimed(int offerId) throws SQLException {
+    public void markOfferUnclaimed(int offerId) throws SQLException, ResponseStatusException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "offer not found"
