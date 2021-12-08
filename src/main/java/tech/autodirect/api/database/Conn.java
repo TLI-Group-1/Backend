@@ -19,6 +19,7 @@ limitations under the License.
 import org.yaml.snakeyaml.error.MissingEnvironmentVariableException;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -34,7 +35,7 @@ public class Conn {
         "AUTODIRECT_DB_PASS"
     };
     // database parameters
-    private static final HashMap<String, String> dbParams = new HashMap<>();
+    private static final Map<String, String> dbParams = new HashMap<>();
 
     /**
      * Get a Connection object connecting to the database given by dbName.

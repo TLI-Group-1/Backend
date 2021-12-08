@@ -3,9 +3,8 @@ package tech.autodirect.api.upstream;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class SensoApiTest {
 
@@ -13,7 +12,7 @@ class SensoApiTest {
     void getLoanOffer() {
         try {
             SensoApi sensoApi = new SensoApi();
-            HashMap<String, Object> responseMap = sensoApi.getLoanOffer(
+            Map<String, Object> responseMap = sensoApi.getLoanOffer(
                 "10000",
                 "700",
                 "300",
