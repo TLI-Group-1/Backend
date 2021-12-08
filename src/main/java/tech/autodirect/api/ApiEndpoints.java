@@ -54,7 +54,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     private final String dbName = "autodirect";
 
     // Initialize Frameworks & Drivers
-    // TODO: Add explanation
+    // TODO: Add explanation, change to more specific?
     private TableCarsInterface tableCars;
     private TableUsersInterface tableUsers;
     private TableOffersInterface tableOffers;
