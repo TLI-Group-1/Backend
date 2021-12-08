@@ -24,7 +24,11 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * Responsible for getting the details for an offer.
+ */
 public class SvcGetOfferDetails {
+
     /**
      * Get details for an offer (as an EntOffer object).
      */

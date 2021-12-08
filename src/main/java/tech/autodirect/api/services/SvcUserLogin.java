@@ -22,7 +22,11 @@ import tech.autodirect.api.interfaces.TableUsersInterface;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * Responsible for handling user login.
+ */
 public class SvcUserLogin {
+
     /**
      * If the userid exists, retrieve the userId's information, if it does not exist, create a new userId.
      *
@@ -47,7 +51,8 @@ public class SvcUserLogin {
             return userMap;
         } else {
             // userId does not exist, create new user with default info
-            int creditScore = bankApi.getCreditScore(userId);
+            SvcMockBankApi svcMockBankApi = new SvcMockBankApi();
+            int creditScore = svcMockBankApi.getCreditScore(bankApi, userId);
             double defaultDownPayment = 1000;
             double defaultBudgetMo = 250;
             tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMo);

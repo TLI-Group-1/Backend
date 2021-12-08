@@ -23,6 +23,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This entity represents a car in our program.
+ */
 public class EntCar {
     private int id;
     private String brand;

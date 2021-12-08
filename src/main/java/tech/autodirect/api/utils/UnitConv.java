@@ -16,7 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * Responsible for converting between units.
+ */
 public class UnitConv {
+    /**
+     * Convert miles to Km.
+     */
     public static double mileToKm(double mileage) {
         return mileage / 0.62137;
     }

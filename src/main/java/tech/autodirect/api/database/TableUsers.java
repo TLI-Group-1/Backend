@@ -36,6 +36,11 @@ public class TableUsers extends Table implements TableUsersInterface {
     private final String schemaName = "public";
     private final String tableName = "users";
 
+    /**
+     * Create a new TableUsers object with a public database connection object.
+     *
+     * @param dbName : name of the database to connect to
+     */
     public TableUsers(String dbName) throws SQLException, ClassNotFoundException {
         this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);

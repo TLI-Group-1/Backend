@@ -18,7 +18,14 @@ limitations under the License.
 
 import tech.autodirect.api.interfaces.BankApiInterface;
 
+/**
+ * Responsible for calling the fictitious bank api to get a user's credit score.
+ */
 public class SvcMockBankApi {
+
+    /**
+     * Call the fictitious bank api to get a user's credit score.
+     */
     public int getCreditScore(BankApiInterface bankApi, String userId) {
         return bankApi.getCreditScore(userId);
     }

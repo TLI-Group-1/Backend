@@ -31,6 +31,11 @@ public class TableCars extends Table implements TableCarsInterface {
     private final String schemaName = "public";
     private final String tableName = "cars";
 
+    /**
+     * Create a new TableCars object with a public database connection object.
+     *
+     * @param dbName : name of the database to connect to
+     */
     public TableCars(String dbName) throws SQLException, ClassNotFoundException {
         this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);

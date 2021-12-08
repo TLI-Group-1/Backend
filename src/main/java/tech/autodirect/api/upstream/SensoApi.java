@@ -29,6 +29,7 @@ import java.net.http.HttpResponse;
 import com.google.gson.Gson;
 import tech.autodirect.api.interfaces.SensoApiInterface;
 
+
 public class SensoApi implements SensoApiInterface {
     // API connection parameters
     private static String sensoUrl;
@@ -75,6 +76,9 @@ public class SensoApi implements SensoApiInterface {
         }};
     }
 
+    /**
+     * Gets necessary environment variables.
+     */
     private static void getEnvVars() throws MissingEnvironmentVariableException {
         // attempt to obtain the relevant environment variables
         String url = System.getenv("SENSO_API_URL");
@@ -97,6 +101,9 @@ public class SensoApi implements SensoApiInterface {
         sensoKey = key;
     }
 
+    /**
+     * Make an httpRequest with to the Senso /rate api with the specified requestBody.
+     */
     private static HttpResponse<String> httpRequest(String requestBody)
             throws IOException, InterruptedException {
         // create an HTTP POST request

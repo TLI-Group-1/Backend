@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface TableCarsInterface {
+
     /**
      * Gets all cars from the cars table in the database, using full-text keyword search (TODO).
      *

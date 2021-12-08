@@ -20,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
+/**
+ * Responsible for claiming a specific offer for a specific user.
+ */
 import java.sql.SQLException;
 
 public class SvcClaimOffer {

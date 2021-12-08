@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public interface TableUsersInterface {
+
     /**
      * Add a user entry to the users table in the database.
      */
