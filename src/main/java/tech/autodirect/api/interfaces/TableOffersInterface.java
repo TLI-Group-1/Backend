@@ -72,7 +72,7 @@ public interface TableOffersInterface {
     void removeAllOffers() throws SQLException;
 
     /**
-     * Retrieve an offer in HashMap format given an offer ID.
+     * Retrieve an offer in Map format given an offer ID.
      *
      * @param offerId : ID of the offer to be retrieved
      * @return A Map representing an offer entry in the database.

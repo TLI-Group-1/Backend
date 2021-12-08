@@ -37,7 +37,7 @@ public class SensoApi implements SensoApiInterface {
     // Gson object for JSON/Map conversions
     private static final Gson gson = new Gson();
 
-    public HashMap<String, Object> getLoanOffer(
+    public Map<String, Object> getLoanOffer(
             String loanAmount,
             String creditScore,
             String budget,
@@ -70,7 +70,7 @@ public class SensoApi implements SensoApiInterface {
         HttpResponse<String> response = httpRequest(queryBody);
 
         // construct the return data as a HashMap
-        return new HashMap<String, Object>() {{
+        return new HashMap<>() {{
             put("status", response.statusCode());
             put("body", gson.fromJson(response.body(), Map.class));
         }};
