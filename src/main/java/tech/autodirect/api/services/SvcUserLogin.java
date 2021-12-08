@@ -42,7 +42,7 @@ public class SvcUserLogin {
 
         if (tableUsers.checkUserExists(userId)) {
             // userId exists, return existing user info
-            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            Map<String, Object> userMap = tableUsers.getUserById(userId);
             userMap.remove("offers_table");
             return userMap;
         } else {
@@ -53,7 +53,7 @@ public class SvcUserLogin {
             tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMo);
 
             // Return user info from database
-            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            Map<String, Object> userMap = tableUsers.getUserById(userId);
             userMap.remove("offers_table");
             return userMap;
         }

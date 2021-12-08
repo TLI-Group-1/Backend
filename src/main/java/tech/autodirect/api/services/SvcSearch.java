@@ -120,7 +120,7 @@ public class SvcSearch {
         boolean sortAsc
     ) throws SQLException, IOException, InterruptedException {
         // Get user information from database and populate user entity with user info
-        Map<String, Object> userEntry = this.tableUsers.getUserByID(userId);
+        Map<String, Object> userEntry = this.tableUsers.getUserById(userId);
         EntUser user = new EntUser();
         user.loadFromMap(userEntry);
 
