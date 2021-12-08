@@ -26,7 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Responsible for getting all claimed offers for a user.
+ */
 public class SvcGetClaimedOffers {
+
     /**
      * Get all claimed offers for the specified user.
      */

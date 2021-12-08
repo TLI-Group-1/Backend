@@ -16,5 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * Responsible for updating a user's principal value (if any add-ons were added).
+ */
 public class SvcUpdatePrincipal {
 }

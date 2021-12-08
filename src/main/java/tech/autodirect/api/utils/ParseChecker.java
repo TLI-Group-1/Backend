@@ -16,7 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/**
+ * Responsible for checking whether certain values are parsable to certain types.
+ */
 public class ParseChecker {
+    /**
+     * Return whether a String is parsable to a double.
+     */
     public static boolean isParsableToDouble(String input) {
         try {
             Double.parseDouble(input);

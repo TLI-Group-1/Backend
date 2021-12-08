@@ -26,6 +26,7 @@ import java.util.Map;
  * setUser() must be called before any other method.
  */
 public interface TableOffersInterface {
+
     /**
      * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
      *

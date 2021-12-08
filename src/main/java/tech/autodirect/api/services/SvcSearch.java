@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Responsible for searching through all cars given a user's ID and search settings.
+ */
 public class SvcSearch {
     private final TableCarsInterface tableCars;
     private final TableUsersInterface tableUsers;
@@ -48,10 +51,8 @@ public class SvcSearch {
     }
 
     /**
-     * Perform a car search. If userId is not null, only get cars which have offers for this user.
-     * Otherwise, get all cars.
-     *
-     * @return A list of car entities.
+     * Perform a car search. If userId is not empty string or "null", only get cars which have offers for this user
+     * (post-login search). Otherwise, get all cars (pre-login search).
      */
     public List<EntCar> searchCars(
         String userId,
@@ -88,8 +89,6 @@ public class SvcSearch {
 
     /**
      * Get a list of all cars from the database.
-     *
-     * @return A list of car entities.
      */
     private List<EntCar> searchCarsAll(
         String sortBy,
@@ -109,8 +108,6 @@ public class SvcSearch {
 
     /**
      * Get a list of cars from the database for which a loan offer is pre-approved by the Senso /rate Api.
-     *
-     * @return A list of car entities.
      */
     private List<EntCar> searchCarsWithOffer(
         String userId,
@@ -154,8 +151,6 @@ public class SvcSearch {
 
     /**
      * Sort list of EntCar objects according to params.
-     *
-     * @return A list of car entities.
      */
     private List<EntCar> sortCars(List<EntCar> carEnts, String sortBy, boolean sortAsc) {
         return carEnts; // TODO

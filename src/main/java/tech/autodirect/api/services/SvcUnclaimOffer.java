@@ -22,7 +22,11 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 
+/**
+ * Responsible for unclaiming a specific offer for a specific user.
+ */
 public class SvcUnclaimOffer {
+
     /**
      * Unclaim a specified offer for the specified user.
      */

@@ -24,9 +24,15 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
 
+/**
+ * Responsible for initializing the populating the databse with schemas, tables, and entries.
+ */
 public class InitDatabase {
     private static final String dbName = "autodirect";
 
+    /**
+     * Populate the database with the cars and users tables.
+     */
     public static void main(String[] args)
             throws SQLException, IOException, CsvValidationException, ClassNotFoundException {
         // parse command-line arguments and obtain the CSV file path
@@ -49,6 +55,10 @@ public class InitDatabase {
         dbConn.close();
     }
 
+    /**
+     * Parse command line args. Specifically, takes optional -h or --help for help and
+     * takes the required --csvfile <pathtofile>.
+     */
     private static String parseArgs(String[] args) {
         String csvPath = null;
 
@@ -89,6 +99,9 @@ public class InitDatabase {
         System.exit(exitCode);
     }
 
+    /**
+     * Create the cars table in the database.
+     */
     private static void createCarsTable(Connection conn) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS public.cars (" +
@@ -104,6 +117,9 @@ public class InitDatabase {
         stmt.close();
     }
 
+    /**
+     * Create the users table in the database.
+     */
     private static void createUsersTable(Connection conn) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS public.users (" +
@@ -118,6 +134,9 @@ public class InitDatabase {
         stmt.close();
     }
 
+    /**
+     * Populate the cars table with car entries for a csv.
+     */
     private static void ingestCarsCsv(Connection conn, String csvPath)
             throws IOException, CsvValidationException, SQLException {
         // read the CSV file

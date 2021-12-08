@@ -22,9 +22,7 @@ import tech.autodirect.api.interfaces.BankApiInterface;
 
 import java.util.Random;
 
-/**
- * This class represents a fictitious bank api that gets the credit score for a user.
- */
+
 public class BankApi implements BankApiInterface {
 
     /**
