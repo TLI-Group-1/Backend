@@ -66,7 +66,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests addOffer method and getOfferByOfferId when offer is claimed
+     * Tests addOffer() method and getOfferByOfferId() when offer is claimed
      */
     @Test
     void testAddOfferAndGetOfferClaimed() {
@@ -97,7 +97,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests addOffer method and getOfferByOfferId when offer is not claimed
+     * Tests addOffer() method and getOfferByOfferId() when offer is not claimed
      */
     @Test
     void testAddOfferAndGetOfferNotClaimed() {
@@ -128,7 +128,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests getOfferByOfferId when offer does not exist
+     * Tests getOfferByOfferId() when offer does not exist
      */
     @Test
     void testGetOfferWhenDoesNotExist() {
