@@ -41,6 +41,7 @@ public class SvcSearch {
     private final TableOffersInterface tableOffers;
     private final SensoApiInterface sensoApi;
     private final List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+
     public SvcSearch(
         TableCarsInterface tableCars,
         TableUsersInterface tableUsers,
