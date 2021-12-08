@@ -94,7 +94,7 @@ class SvcSearchTest {
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
             if (tableUsers.checkUserExists(testUserId)) {
-                tableUsers.removeUserByID(testUserId);
+                tableUsers.removeUserById(testUserId);
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -105,7 +105,7 @@ class SvcSearchTest {
     public void tearDownEach() {
         try {
             if (tableUsers.checkUserExists(testUserId)) {
-                tableUsers.removeUserByID(testUserId);
+                tableUsers.removeUserById(testUserId);
             }
         } catch (SQLException e) {
             e.printStackTrace();

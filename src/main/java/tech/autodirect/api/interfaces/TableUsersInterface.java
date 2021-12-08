@@ -35,12 +35,12 @@ public interface TableUsersInterface {
      *
      * @return A Map representing a user entry in the database.
      */
-    Map<String, Object> getUserByID(String userId) throws SQLException;
+    Map<String, Object> getUserById(String userId) throws SQLException;
 
     /**
      * Remove a specific user entry by the user ID.
      */
-    void removeUserByID(String userId) throws SQLException;
+    void removeUserById(String userId) throws SQLException;
 
     /**
      * Check if user exists in database.
