@@ -93,7 +93,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             svcGetClaimedOffers = new SvcGetClaimedOffers();
             svcGetOfferDetails = new SvcGetOfferDetails();
             svcMockBankApi = new SvcMockBankApi();
-            svcSearch = new SvcSearch(tableCars, tableUsers, sensoApi);
+            svcSearch = new SvcSearch(tableCars, tableUsers, tableOffers, sensoApi);
             svcUnclaimOffer = new SvcUnclaimOffer();
             svcUpdatePrincipal = new SvcUpdatePrincipal();
             svcUserLogin = new SvcUserLogin();

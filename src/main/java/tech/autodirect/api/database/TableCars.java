@@ -16,12 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +54,43 @@ public class TableCars extends Table implements TableCarsInterface {
         List<Map<String, Object>> carMaps = resultSetToList(rs);
         stmt.close();
         return carMaps;
+    }
+
+    @Override
+    public Map<String, Object> getCarById(String carId) throws SQLException, ResponseStatusException {
+        if (!checkCarExists(carId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "car not found"
+            );
+        }
+
+        // construct a prepared SQL statement selecting the specified car
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE car_id = ?;"
+        );
+        stmt.setString(1, carId);
+
+        ResultSet rs = stmt.executeQuery();
+        List<Map<String, Object>> rsList = resultSetToList(rs);
+        stmt.close();
+        if (rsList.size() == 0) {
+            return Collections.emptyMap();
+        } else {
+            return rsList.get(0);
+        }
+    }
+
+    public boolean checkCarExists(String carId) throws SQLException {
+        // construct a prepared SQL statement selecting the specified car
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE car_id = ?;"
+        );
+        stmt.setString(1, carId);
+
+        // execute the above SQL statement and check whether the car exists
+        ResultSet rs = stmt.executeQuery();
+        boolean carCount = resultSetToList(rs).size() > 0;
+        stmt.close();
+        return carCount;
     }
 }

@@ -3,16 +3,18 @@ package tech.autodirect.api.services;
 import org.junit.jupiter.api.*;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.database.TableCars;
+import tech.autodirect.api.database.TableOffers;
 import tech.autodirect.api.database.TableUsers;
-import tech.autodirect.api.entities.EntCar;
 import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableCarsInterface;
+import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.upstream.SensoApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,7 +27,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsInvalidAllNull() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("", "null", "null", "null", "null");
+            List<Map<String, Object>> carsResult = svcSearch.searchCars("", "null", "null", "null", "null");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -38,7 +40,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsInvalidAllEmpty() {
         try {
-            List<EntCar> carsResult = svcSearch.searchCars("", "", "", "", "");
+            List<Map<String, Object>> carsResult = svcSearch.searchCars("", "", "", "", "");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -52,7 +54,7 @@ class SvcSearchTest {
     void testSearchCarsPreLogin() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
-            List<EntCar> carsResult = svcSearch.searchCars("", "1000", "200", "price", "true");
+            List<Map<String, Object>> carsResult = svcSearch.searchCars("", "1000", "200", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -64,7 +66,7 @@ class SvcSearchTest {
     void testSearchCarsPostLogin() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
-            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
+            List<Map<String, Object>> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -76,7 +78,7 @@ class SvcSearchTest {
     void testSearchCarsPostLoginBadSortBy() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
-            List<EntCar> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
+            List<Map<String, Object>> carsResult = svcSearch.searchCars(testUserId, "1000", "200", "price", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -89,8 +91,9 @@ class SvcSearchTest {
         try {
             TableCarsInterface tableCars = new TableCars(dbName);
             this.tableUsers = new TableUsers(dbName);
+            TableOffersInterface tableOffers = new TableOffers(dbName);
             SensoApiInterface sensoApi = new SensoApi();
-            this.svcSearch = new SvcSearch(tableCars, tableUsers, sensoApi);
+            this.svcSearch = new SvcSearch(tableCars, tableUsers, tableOffers, sensoApi);
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
             if (tableUsers.checkUserExists(testUserId)) {
