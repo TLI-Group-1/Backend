@@ -41,6 +41,7 @@ public class SvcSearch {
     private final TableOffersInterface tableOffers;
     private final SensoApiInterface sensoApi;
     private final List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+    private final List<String> valuesOfSortAsc = Arrays.asList("true", "false");
 
     public SvcSearch(
         TableCarsInterface tableCars,
@@ -57,6 +58,9 @@ public class SvcSearch {
     /**
      * Perform a car search. If userId is not empty string or "null", only get cars which have offers for this user
      * (post-login search). Otherwise, get all cars (pre-login search).
+     *
+     * Note that default value for sortBy is "price" (used when sortBy is invalid format)
+     * and default value for sortAsc is "true" (used when sortAsc is invalid format).
      */
     public List<Map<String, Object>> searchCars(
         String userId,
@@ -65,26 +69,17 @@ public class SvcSearch {
         String sortBy,
         String sortAscString
     ) throws SQLException, IOException, InterruptedException, ResponseStatusException {
-        // Set sortBy and sortAsc search params to default values if not in correct format
-        if (!valuesOfSortBy.contains(sortBy)) { sortBy = valuesOfSortBy.get(0); }
-        if (!Objects.equals(sortAscString, "false")) { sortAscString = "true"; }
-
-        // Convert sortAscString to boolean sortAsc
+        // Check good sort params. If yes, convert sortAscString to boolean sortAsc.
+        checkGoodSortParams(sortBy, sortAscString);
         boolean sortAsc = Boolean.parseBoolean(sortAscString);
 
         if (userId.equals("") || userId.equals("null")) {
             // If no userId, run pre-login search (return all cars)
             return searchCarsAll(sortBy, sortAsc);
         } else {
-            // Check if other values are good, throw BAD_REQUEST 400 error if bad values
-            boolean goodDownPaymentString = ParseChecker.isParsableToDouble(downPaymentString);
-            boolean goodBudgetMoString = ParseChecker.isParsableToDouble(budgetMoString);
-            boolean goodSortBy = valuesOfSortBy.contains(sortBy);
-            if (!goodDownPaymentString || !goodBudgetMoString || !goodSortBy) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid search params");
-            }
-
             // User is logged in and search params are valid. So, only return cars which have offers for this user.
+            // However, check good downPaymentString and budgetMoString params beforehand.
+            checkGoodMoneyParams(downPaymentString, budgetMoString);
             double downPayment = Double.parseDouble(downPaymentString);
             double budgetMo = Double.parseDouble(budgetMoString);
             return searchCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc);
@@ -92,7 +87,46 @@ public class SvcSearch {
     }
 
     /**
-     * Get a list of all cars from the database.
+     * Check that sortBy and sortAsc search params are valid. Throw descriptive 400 ERROR if not.
+     */
+    public void checkGoodSortParams(
+            String sortBy,
+            String sortAsc
+    ) throws ResponseStatusException {
+        if (!valuesOfSortBy.contains(sortBy)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid sortBy value, must be one of " + valuesOfSortBy
+            );
+        }
+        if (!valuesOfSortAsc.contains(sortAsc)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid sortAsc value, must be one of " + valuesOfSortAsc
+            );
+        }
+    }
+
+    /**
+     * Check that sortBy and sortAsc search params are valud. Throw descriptive 400 ERROR if not.
+     */
+    public void checkGoodMoneyParams(
+            String downPaymentString,
+            String budgetMoString
+    ) throws ResponseStatusException {
+        if (ParseChecker.isParsableToDouble(downPaymentString)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid downPayment value, must parsable to double"
+            );
+        }
+        if (ParseChecker.isParsableToDouble(budgetMoString)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid budgetMo value, must parsable to double"
+            );
+        }
+    }
+
+    /**
+     * Get a list of all cars from the database. Can only sort by car "price"
+     * since user is not logged in (no user info).
      */
     private List<Map<String, Object>> searchCarsAll(
         String sortBy,
@@ -107,7 +141,7 @@ public class SvcSearch {
         List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
         // TODO: Tell Samm that pre-login should only have price filtering (hardcode "price" so not care about
         //  sortBy when pre-login?)
-        return sortCars(carsMapsAll, "price", sortAsc);
+        return sortCars(carsMapsAll, sortBy, sortAsc);
     }
 
     /**
