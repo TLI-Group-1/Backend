@@ -27,21 +27,16 @@ class SvcUpdateLoanAmountTest {
             // Add an offer to the offers table
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
 
-            // Verify the initial principal
+            // Verify the initial loan amount
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
             assert offer.getLoanAmount() == 2;
-
-            boolean claimedInit = (boolean) tableOffers.getOfferByOfferId(offerId).get("loan_offer");
-            assert claimedInit;
-
-//            // Claim the offer
-//            svcUpdatePrincipal.updatePrincipal(tableOffers, testUserId, "1000");
+            // Store initial loan amount and claimed
+//            double loanAmountInit = offer.getLoanAmount();
 //
-//            // Check that the offer is now unclaimed
-//            boolean claimedFinal = (boolean) tableOffers.getOfferByOfferId(offerId).get("claimed");
-//            assert !claimedFinal;
+//            boolean claimedInit = (boolean) tableOffers.getOfferByOfferId(offerId).get("loan_offer");
+//            assert claimedInit;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
