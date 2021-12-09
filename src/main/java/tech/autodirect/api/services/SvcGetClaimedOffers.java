@@ -18,8 +18,12 @@ limitations under the License.
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import tech.autodirect.api.database.TableCars;
+import tech.autodirect.api.entities.EntCar;
 import tech.autodirect.api.entities.EntOffer;
+import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
+import tech.autodirect.api.utils.MergeCarAndOffer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +38,8 @@ public class SvcGetClaimedOffers {
     /**
      * Get all claimed offers for the specified user.
      */
-    public List<EntOffer> getClaimedOffers(
+    public List<Map<String, Object>> getClaimedOffers(
+            TableCarsInterface tableCars,
             TableOffersInterface tableOffers,
             String userId
     ) throws SQLException, ResponseStatusException {
@@ -44,16 +49,25 @@ public class SvcGetClaimedOffers {
             );
         }
 
+        // Set user in offers table and get all offers
         tableOffers.setUser(userId);
         List<Map<String, Object>> offersList = tableOffers.getAllOffers();
 
-        List<EntOffer> offers = new ArrayList<>();
+        List<Map<String, Object>> carAndOfferInfoMaps = new ArrayList<>();
         for (Map<String, Object> offerMap : offersList) {
+            // Get offer entity
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
-            offers.add(offer);
-        }
 
-        return offers;
+            // Get car entity (TODO: why is carId string and not int?)
+            Map<String, Object> carMap = tableCars.getCarById(offer.getCarId());
+            EntCar car = new EntCar();
+            car.loadFromMap(carMap);
+
+            // Merge car and offer entities into a map that has both car and offer info to return to frontend
+            Map<String, Object> carAndOfferInfo = MergeCarAndOffer.mergeCarAndOffer(car, offer);
+            carAndOfferInfoMaps.add(carAndOfferInfo);
+        }
+        return carAndOfferInfoMaps;
     }
 }

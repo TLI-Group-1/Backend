@@ -4,11 +4,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableOffers;
 import tech.autodirect.api.entities.EntOffer;
+import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +26,7 @@ class SvcGetOfferDetailsTest {
     void getOfferDetails() {
         try {
             SvcGetOfferDetails svcGetOfferDetails = new SvcGetOfferDetails();
+            TableCarsInterface tableCars = new TableCars(dbName);
             TableOffersInterface tableOffers = new TableOffers(dbName);
             tableOffers.setUser(testUserId);
 
@@ -30,19 +34,20 @@ class SvcGetOfferDetailsTest {
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
 
             // Get offer details
-            EntOffer offer = svcGetOfferDetails.getOfferDetails(tableOffers, testUserId, Integer.toString(offerId));
+            Map<String, Object> carAndOfferInfo
+                    = svcGetOfferDetails.getOfferDetails(tableCars, tableOffers, testUserId, Integer.toString(offerId));
 
             // Checks
-            assert offer.getOfferId() == offerId;
-            assert offer.getCarId() == 1;
-            assert offer.getLoanAmount() == 2;
-            assert offer.getCapitalSum() == 3;
-            assert offer.getInterestSum() == 4;
-            assert offer.getTotalSum() == 5;
-            assert offer.getInterestRate() == 6;
-            assert offer.getTermMo() == 7;
-            assert Objects.equals(offer.getInstallments(), "TEST");
-            assert offer.isClaimed();
+            assert (int) carAndOfferInfo.get("offer_id") == offerId;
+            assert (int) carAndOfferInfo.get("car_id") == 1;
+            assert (double) carAndOfferInfo.get("loan_amount") == 2;
+            assert (double) carAndOfferInfo.get("capital_sum") == 3;
+            assert (double) carAndOfferInfo.get("interest_sum") == 4;
+            assert (double) carAndOfferInfo.get("total_sum") == 5;
+            assert (double) carAndOfferInfo.get("apr") == 6;
+            assert (double) carAndOfferInfo.get("term_mo") == 7;
+            assert Objects.equals(carAndOfferInfo.get("installments"), "TEST");
+            assert (boolean) carAndOfferInfo.get("claimed");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
