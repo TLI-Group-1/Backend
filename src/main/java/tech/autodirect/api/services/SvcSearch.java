@@ -41,7 +41,8 @@ public class SvcSearch {
     private final TableUsersInterface tableUsers;
     private final TableOffersInterface tableOffers;
     private final SensoApiInterface sensoApi;
-    private final List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+    private final List<String> valuesOfSortBy
+            = Arrays.asList("price", "payment_mo", "interest_rate", "total_sum", "term_mo");
     private final List<String> valuesOfSortAsc = Arrays.asList("true", "false");
 
     public SvcSearch(
@@ -140,8 +141,6 @@ public class SvcSearch {
         }
 
         List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
-        // TODO: Tell Samm that pre-login should only have price filtering (hardcode "price" so not care about
-        //  sortBy when pre-login?)
         return sortCars(carsMapsAll, sortBy, sortAsc);
     }
 
@@ -277,7 +276,7 @@ public class SvcSearch {
 
         // Query senso Api for this car and user information
         Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
-                Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
+                Double.toString(car.getPrice()), // loanAmount
                 Integer.toString(user.getCreditScore()), // creditScore
                 Double.toString(budgetMo), // budget
                 car.getBrand(), // vehicleMake

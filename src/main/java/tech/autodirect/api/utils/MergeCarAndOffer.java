@@ -25,8 +25,8 @@ public class MergeCarAndOffer {
             put("capital_sum", offer.getCapitalSum());
             put("interest_sum", offer.getInterestSum());
             put("total_sum", offer.getTotalSum());
-            put("apr", offer.getInterestRate()); // TODO: why "apr"
-            put("term_mo", offer.getTermMo()); // TODO: clean term_length/term_mo and all these terms
+            put("interest_rate", offer.getInterestRate());
+            put("term_mo", offer.getTermMo());
             put("installments", offer.getInstallments());
             put("claimed", offer.isClaimed());
             // Computed stuff

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcSearchTest {
     private static final String dbName = "testing";
@@ -58,7 +58,7 @@ class SvcSearchTest {
     void testSearchCarsPreLoginInvalidSortBy() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
-            List<Map<String, Object>> carsResult = svcSearch.search("", "1000", "200", "term_length", "true");
+            List<Map<String, Object>> carsResult = svcSearch.search("", "1000", "200", "term_mo", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLoginCheckSorting() {
         try {
-            List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+            List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "interest_rate", "total_sum", "term_mo");
             List<String> valuesOfSortAsc = Arrays.asList("true", "false");
             testSorting(testUserId, valuesOfSortBy, valuesOfSortAsc);
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {

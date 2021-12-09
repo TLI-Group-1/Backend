@@ -59,7 +59,7 @@ public class SvcGetClaimedOffers {
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
 
-            // Get car entity (TODO: why is carId string and not int?)
+            // Get car entity
             Map<String, Object> carMap = tableCars.getCarById(offer.getCarId());
             EntCar car = new EntCar();
             car.loadFromMap(carMap);

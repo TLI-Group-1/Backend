@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcGetOfferDetailsTest {
     private static final String dbName = "testing";
@@ -44,7 +44,7 @@ class SvcGetOfferDetailsTest {
             assert (double) carAndOfferInfo.get("capital_sum") == 3;
             assert (double) carAndOfferInfo.get("interest_sum") == 4;
             assert (double) carAndOfferInfo.get("total_sum") == 5;
-            assert (double) carAndOfferInfo.get("apr") == 6;
+            assert (double) carAndOfferInfo.get("interest_rate") == 6;
             assert (double) carAndOfferInfo.get("term_mo") == 7;
             assert Objects.equals(carAndOfferInfo.get("installments"), "TEST");
             assert (boolean) carAndOfferInfo.get("claimed");
