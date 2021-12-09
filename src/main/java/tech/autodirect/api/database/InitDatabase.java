@@ -105,7 +105,7 @@ public class InitDatabase {
     private static void createCarsTable(Connection conn) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS public.cars (" +
-                        "car_id     integer     NOT NULL PRIMARY KEY, " +
+                        "car_id     serial     NOT NULL PRIMARY KEY, " +
                         "brand      varchar(50) NOT NULL, " +
                         "model      varchar(50) NOT NULL, " +
                         "year       integer     NOT NULL, " +
