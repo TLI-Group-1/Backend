@@ -16,38 +16,95 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.support.SimpleTriggerContext;
+import org.springframework.web.server.ResponseStatusException;
+import tech.autodirect.api.entities.EntCar;
+import tech.autodirect.api.entities.EntOffer;
+import tech.autodirect.api.entities.EntUser;
 import tech.autodirect.api.interfaces.SensoApiInterface;
+import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
+import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.utils.ParseChecker;
 
+import javax.swing.undo.AbstractUndoableEdit;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * Responsible for updating a user's loan_amount value (if any add-ons were added).
  */
 public class SvcUpdateLoanAmount {
-    public void updateLoanAmount(
+    public Map<String, Object> updateLoanAmount(
+            TableCarsInterface tableCars,
+            TableUsersInterface tableUsers,
             TableOffersInterface tableOffers,
             SensoApiInterface sensoApi,
             String userId,
-            String offerId,
-            String newLoanAmount
-    ) throws SQLException {
-        //
+            String offerIdString,
+            String newLoanAmountString
+    ) throws SQLException, IOException, InterruptedException {
+        int offerId = Integer.parseInt(offerIdString);
 
+        // Verify that the new loan amount is valid
+        if (!ParseChecker.isParsableToInt(newLoanAmountString)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "loan amount must be parsable to int");
+        }
+
+        // Get the user referred to by userId
+        Map<String, Object> userMap = tableUsers.getUserById(userId);
+        EntUser user = new EntUser();
+        user.loadFromMap(userMap);
+
+        // Set tableOffer's user and get the offer referred to by offerId
         tableOffers.setUser(userId);
+        Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+        EntOffer offer = new EntOffer();
+        offer.loadFromMap(offerMap);
+
+        // Get the car referred to by the offer
+        Map<String, Object> carMap = tableCars.getCarById(offer.getCarId());
+        EntCar car = new EntCar();
+        car.loadFromMap(carMap);
 
         // Query senso api with the new loan_amount
-//        sensoApi.getLoanOffer(
-//                newLoanAmount,
-//
-//        )
-//        tableOffers.updateLoanAmount(Integer.parseInt(offerId), Double.parseDouble(newLoanAmount));
+        Map<String, Object> queryResult = sensoApi.getLoanOffer(
+                newLoanAmountString,
+                Integer.toString(user.getCreditScore()),
+                Double.toString(user.getBudgetMo()),
+                car.getBrand(),
+                car.getModel(),
+                Integer.toString(car.getYear()),
+                Double.toString(car.getKms()),
+                Double.toString(car.getPrice()),
+                Double.toString(user.getDownPayment())
+        );
 
-        // Check with Senso Api with updated loan amount
-        // If failure, throw 406 error with message "new loan amount did not results in a valid offer"
-        // If success, update loan offer in offers table for this user and return CarAndOfferInfo. (call svcGetOfferDetails)
-        // update with senso result, dont change offer id.
+        if ((int) queryResult.get("status") == 200) {
+            // Offer with new loan amount was successfully approved by the senso /rate api.
+            // So, update loan offer in offers table with the new loan offer from senso (for the same offer id)
+            // and return offer details (including car info) to the frontend.
 
-        //
+            // Update loan information
+            Map<String, Object> queryBody = (Map) queryResult.get("body");
+            tableOffers.updateOfferLoanAmount(offerId, (double) queryBody.get("amount"));
+            tableOffers.updateOfferCapitalSum(offerId, (double) queryBody.get("capitalSum"));
+            tableOffers.updateOfferInterestSum(offerId, (double) queryBody.get("interestSum"));
+            tableOffers.updateOfferTotalSum(offerId, (double) queryBody.get("sum"));
+            tableOffers.updateOfferInterestRate(offerId, (double) queryBody.get("interestRate"));
+            tableOffers.updateOfferTermMo(offerId, Double.parseDouble((String) queryBody.get("term")));
+            tableOffers.updateOfferInstallments(offerId, (queryBody.get("installments")).toString());
+
+            // Return offer details (including car info)
+            SvcGetOfferDetails svcGetOfferDetails = new SvcGetOfferDetails();
+            return svcGetOfferDetails.getOfferDetails(tableCars, tableOffers, userId, offerIdString);
+        } else {
+            // Loan offer request was not approved. Throw 406 error.
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE, "offer with the new loan amount was not approved"
+            );
+        }
     }
 }
