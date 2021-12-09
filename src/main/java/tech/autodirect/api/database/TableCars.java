@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TableCars extends Table implements TableCarsInterface {
-    private final String dbName;
     private final Connection dbConn;
     private final String schemaName = "public";
     private final String tableName = "cars";
@@ -37,7 +35,6 @@ public class TableCars extends Table implements TableCarsInterface {
      * @param dbName : name of the database to connect to
      */
     public TableCars(String dbName) throws SQLException, ClassNotFoundException {
-        this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
     }
 
@@ -47,11 +44,11 @@ public class TableCars extends Table implements TableCarsInterface {
     }
 
     @Override
-    public Map<String, Object> getCarById(String carId) throws SQLException, ResponseStatusException {
+    public Map<String, Object> getCarById(int carId) throws SQLException, ResponseStatusException {
         return getEntryById(carId, schemaName, tableName, dbConn, "car");
     }
 
-    public boolean checkCarExists(String carId) throws SQLException {
+    public boolean checkCarExists(int carId) throws SQLException {
         return checkEntryExists(carId, schemaName, tableName, dbConn, "car");
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcSearchTest {
     private static final String dbName = "testing";
@@ -55,10 +55,10 @@ class SvcSearchTest {
     }
 
     @Test
-    void testSearchCarsPreLoginNonPriceSortBy() {
+    void testSearchCarsPreLoginInvalidSortBy() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
-            List<Map<String, Object>> carsResult = svcSearch.search("", "1000", "200", "term_length", "true");
+            List<Map<String, Object>> carsResult = svcSearch.search("", "1000", "200", "term_mo", "true");
             assert carsResult.size() > 0;
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -66,7 +66,8 @@ class SvcSearchTest {
         } catch (ResponseStatusException e) {
             // pre-login search must take "price" sortBy
             assert Objects.requireNonNull(e.getMessage()).startsWith("400 BAD_REQUEST");
-        }    }
+        }
+    }
 
     @Test
     void testSearchCarsPreLoginCheckSorting() {
@@ -83,7 +84,7 @@ class SvcSearchTest {
     @Test
     void testSearchCarsPostLoginCheckSorting() {
         try {
-            List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+            List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "interest_rate", "total_sum", "term_mo");
             List<String> valuesOfSortAsc = Arrays.asList("true", "false");
             testSorting(testUserId, valuesOfSortBy, valuesOfSortAsc);
         } catch (IOException | InterruptedException | SQLException | ClassNotFoundException e) {
@@ -106,15 +107,15 @@ class SvcSearchTest {
                     tableUsers.addUser(userId, 700, 1000, 200);
                 }
 
-                List<Map<String, Object>> carsAndOffers = svcSearch.search(
+                List<Map<String, Object>> carAndOfferInfoMaps = svcSearch.search(
                         userId, "1000", "200", sortBy, sortAscString
                 );
-                assert carsAndOffers.size() > 0;
+                assert carAndOfferInfoMaps.size() > 0;
 
                 boolean sortAsc = Boolean.parseBoolean(sortAscString);
-                double prev = TypeConvert.toDouble(carsAndOffers.get(0).get(sortBy));
-                for (Map<String, Object> carAndOffer : carsAndOffers) {
-                    double valueDouble = TypeConvert.toDouble(carAndOffer.get(sortBy));
+                double prev = TypeConvert.toDouble(carAndOfferInfoMaps.get(0).get(sortBy));
+                for (Map<String, Object> carAndOfferInfo : carAndOfferInfoMaps) {
+                    double valueDouble = TypeConvert.toDouble(carAndOfferInfo.get(sortBy));
 
                     if (sortAsc) {
                         assert prev <= valueDouble;

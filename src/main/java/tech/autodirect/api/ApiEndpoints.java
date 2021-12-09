@@ -54,7 +54,6 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     private final String dbName = "autodirect";
 
     // Initialize Frameworks & Drivers
-    // TODO: Add explanation, change to more specific?
     private TableCarsInterface tableCars;
     private TableUsersInterface tableUsers;
     private TableOffersInterface tableOffers;
@@ -175,7 +174,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     @GetMapping("/getClaimedOffers")
     public Object getClaimedOffers(@RequestParam(name = "user_id") String userId) {
         try {
-            return svcGetClaimedOffers.getClaimedOffers(tableOffers, userId);
+            return svcGetClaimedOffers.getClaimedOffers(tableCars, tableOffers, userId);
         } catch (SQLException e) {
             e.printStackTrace();
             throw SERVER_ERROR;
@@ -188,7 +187,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             @RequestParam(name = "offer_id") String offerId
     ) {
         try {
-            return svcGetOfferDetails.getOfferDetails(tableOffers, userId, offerId);
+            return svcGetOfferDetails.getOfferDetails(tableCars, tableOffers, userId, offerId);
         } catch (SQLException e) {
             e.printStackTrace();
             throw SERVER_ERROR;

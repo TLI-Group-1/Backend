@@ -25,6 +25,7 @@ import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.utils.MergeCarAndOffer;
 import tech.autodirect.api.utils.ParseChecker;
 
 import java.io.IOException;
@@ -40,7 +41,8 @@ public class SvcSearch {
     private final TableUsersInterface tableUsers;
     private final TableOffersInterface tableOffers;
     private final SensoApiInterface sensoApi;
-    private final List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+    private final List<String> valuesOfSortBy
+            = Arrays.asList("price", "payment_mo", "interest_rate", "total_sum", "term_mo");
     private final List<String> valuesOfSortAsc = Arrays.asList("true", "false");
 
     public SvcSearch(
@@ -139,8 +141,6 @@ public class SvcSearch {
         }
 
         List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
-        // TODO: Tell Samm that pre-login should only have price filtering (hardcode "price" so not care about
-        //  sortBy when pre-login?)
         return sortCars(carsMapsAll, sortBy, sortAsc);
     }
 
@@ -176,7 +176,7 @@ public class SvcSearch {
     /**
      *  Resets user's offers table, queries Senso Api for new loan offer information using search params,
      *  adds approved offers to the user's offers table, and return maps that contain car and offers information
-     *  (made using mergeCarOffer()) using the approved offers that were added to the user's offers table.
+     *  (made using MergeCarAndOffer.mergeCarAndOffer()) using the approved offers that were added to the user's offers table.
      *
      *  Run this method if user's search params are different to previous search (what's currently in the database).
      *  Thus, we need to reset the offers table and check loan offer approval for each car with the senso /rate api
@@ -217,7 +217,7 @@ public class SvcSearch {
             // carMap in the loop.
             if (offer != null) {
                 // Merge car and offer to create a carAndOfferInfoMap
-                Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
+                Map<String, Object> carAndOfferInfoMap = MergeCarAndOffer.mergeCarAndOffer(car, offer);
                 carAndOfferInfoMaps.add(carAndOfferInfoMap);
             }
         }
@@ -226,10 +226,10 @@ public class SvcSearch {
     }
 
     /**
-     * Returns maps that contain car and offers information (made using mergeCarOffer()) using the offers that
-     * are currently in the user's offers table (does not reset the offers table or re-call senso Api to
-     * check whether loan offers are approved, since these are already assumed to be approved in a previous
-     * search query with the same search params).
+     * Returns maps that contain car and offers information (made using MergeCarAndOffer.mergeCarAndOffer())
+     * using the offers that are currently in the user's offers table (does not reset the offers table or re-call
+     * senso Api to check whether loan offers are approved, since these are already assumed to be approved
+     * in a previous search query with the same search params).
      */
     private List<Map<String, Object>> searchCarsWithOfferOldParams(
             EntUser user,
@@ -248,12 +248,12 @@ public class SvcSearch {
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
 
-            Map<String, Object> carMap = tableCars.getCarById(Integer.toString(offer.getCarId()));
+            Map<String, Object> carMap = tableCars.getCarById(offer.getCarId());
             EntCar car = new EntCar();
             car.loadFromMap(carMap);
 
             // Merge car and offer to create a carAndOfferInfoMap
-            Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
+            Map<String, Object> carAndOfferInfoMap = MergeCarAndOffer.mergeCarAndOffer(car, offer);
             carAndOfferInfoMaps.add(carAndOfferInfoMap);
         }
         // Return a sorted version of carAndOfferInfoMaps according to the sort settings
@@ -276,7 +276,7 @@ public class SvcSearch {
 
         // Query senso Api for this car and user information
         Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
-                Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
+                Double.toString(car.getPrice()), // loanAmount
                 Integer.toString(user.getCreditScore()), // creditScore
                 Double.toString(budgetMo), // budget
                 car.getBrand(), // vehicleMake
@@ -291,7 +291,7 @@ public class SvcSearch {
         // offer entity. Otherwise, there was no loan offer for this car and the current search params, so return null.
         if (queryResult.get("status").equals(200)) {
             Map queryBody = (Map) queryResult.get("body");
-            int carId = car.getId();
+            int carId = car.getCarId();
             double loanAmount = (double) queryBody.get("amount");
             double capitalSum = (double) queryBody.get("capitalSum");
             double interestSum = (double) queryBody.get("interestSum");
@@ -324,33 +324,6 @@ public class SvcSearch {
             // No loan offer not available with current settings, return null.
             return null;
         }
-    }
-
-    /**
-     * Merge car and offer entities into a single map.
-     */
-    private Map<String, Object> mergeCarAndOffer(EntCar car, EntOffer offer) {
-        return new HashMap<>() {{
-            // Car info
-            put("car_id", car.getId());
-            put("brand", car.getBrand());
-            put("model", car.getModel());
-            put("year", car.getYear());
-            put("price", car.getPrice());
-            put("kms", car.getKms());
-            // Offer info
-            put("offer_id", offer.getOfferId());
-            put("loan_amount", offer.getLoanAmount());
-            put("capital_sum", offer.getCapitalSum());
-            put("interest_sum", offer.getInterestSum());
-            put("total_sum", offer.getTotalSum());
-            put("apr", offer.getInterestRate()); // TODO: why "apr"
-            put("term_length", offer.getTermMo()); // TODO: clean term_length/term_mo and all these terms
-            put("installments", offer.getInstallments());
-            put("claimed", offer.isClaimed());
-            // Computed stuff
-            put("payment_mo", offer.getTotalSum() / offer.getTermMo());
-        }};
     }
 
     /**
