@@ -19,13 +19,16 @@ limitations under the License.
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntCar;
+import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.entities.EntUser;
 import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableCarsInterface;
+import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.utils.ParseChecker;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -35,81 +38,116 @@ import java.util.*;
 public class SvcSearch {
     private final TableCarsInterface tableCars;
     private final TableUsersInterface tableUsers;
+    private final TableOffersInterface tableOffers;
     private final SensoApiInterface sensoApi;
-    private final Set<String> valuesOfSortBy = new HashSet<>(
-        Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length")
-    );
+    private final List<String> valuesOfSortBy = Arrays.asList("price", "payment_mo", "apr", "total_sum", "term_length");
+    private final List<String> valuesOfSortAsc = Arrays.asList("true", "false");
 
     public SvcSearch(
         TableCarsInterface tableCars,
         TableUsersInterface tableUsers,
+        TableOffersInterface tableOffers,
         SensoApiInterface sensoApi
     ) {
         this.tableCars = tableCars;
-        this.sensoApi = sensoApi;
         this.tableUsers = tableUsers;
+        this.tableOffers = tableOffers;
+        this.sensoApi = sensoApi;
     }
 
     /**
      * Perform a car search. If userId is not empty string or "null", only get cars which have offers for this user
      * (post-login search). Otherwise, get all cars (pre-login search).
+     *
+     * Note that default value for sortBy is "price" (used when sortBy is invalid format)
+     * and default value for sortAsc is "true" (used when sortAsc is invalid format).
      */
-    public List<EntCar> searchCars(
+    public List<Map<String, Object>> search(
         String userId,
         String downPaymentString,
         String budgetMoString,
         String sortBy,
         String sortAscString
     ) throws SQLException, IOException, InterruptedException, ResponseStatusException {
-        // Set sortBy and sortAsc search params to default values if not in correct format
-        if (!valuesOfSortBy.contains(sortBy)) { sortBy = "apr"; }
-        if (!Objects.equals(sortAscString, "false")) { sortAscString = "true"; }
-
-        // Convert sortAscString to boolean sortAsc
+        // Check good sort params. If yes, convert sortAscString to boolean sortAsc.
+        checkGoodSortParams(sortBy, sortAscString);
         boolean sortAsc = Boolean.parseBoolean(sortAscString);
 
         if (userId.equals("") || userId.equals("null")) {
             // If no userId, run pre-login search (return all cars)
-            return searchCarsAll(sortBy, sortAsc);
+            return searchAllCars(sortBy, sortAsc);
         } else {
-            // Check if other values are good, throw BAD_REQUEST 400 error if bad values
-            boolean goodDownPaymentString = ParseChecker.isParsableToDouble(downPaymentString);
-            boolean goodBudgetMoString = ParseChecker.isParsableToDouble(budgetMoString);
-            boolean goodSortBy = valuesOfSortBy.contains(sortBy);
-            if (!goodDownPaymentString || !goodBudgetMoString || !goodSortBy) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid search params");
-            }
-
             // User is logged in and search params are valid. So, only return cars which have offers for this user.
+            // However, check good downPaymentString and budgetMoString params beforehand.
+            checkGoodMoneyParams(downPaymentString, budgetMoString);
             double downPayment = Double.parseDouble(downPaymentString);
             double budgetMo = Double.parseDouble(budgetMoString);
-            return searchCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc);
+            return searchOnlyCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc);
         }
     }
 
     /**
-     * Get a list of all cars from the database.
+     * Check that sortBy and sortAsc search params are valid. Throw descriptive 400 ERROR if not.
      */
-    private List<EntCar> searchCarsAll(
+    public void checkGoodSortParams(
+            String sortBy,
+            String sortAsc
+    ) throws ResponseStatusException {
+        if (!valuesOfSortBy.contains(sortBy)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid sortBy value, must be one of " + valuesOfSortBy
+            );
+        }
+        if (!valuesOfSortAsc.contains(sortAsc)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid sortAsc value, must be one of " + valuesOfSortAsc
+            );
+        }
+    }
+
+    /**
+     * Check that sortBy and sortAsc search params are valud. Throw descriptive 400 ERROR if not.
+     */
+    public void checkGoodMoneyParams(
+            String downPaymentString,
+            String budgetMoString
+    ) throws ResponseStatusException {
+        if (!ParseChecker.isParsableToDouble(downPaymentString)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid downPayment value, must parsable to double"
+            );
+        }
+        if (!ParseChecker.isParsableToDouble(budgetMoString)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid budgetMo value, must parsable to double"
+            );
+        }
+    }
+
+    /**
+     * Get a list of all cars from the database. Can only sort by car "price"
+     * since user is not logged in (no user info).
+     */
+    private List<Map<String, Object>> searchAllCars(
         String sortBy,
         boolean sortAsc
     ) throws SQLException {
-        List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
-
-        // Convert each entry of carsMapsAll to EntCar
-        List<EntCar> carEntsAll = new ArrayList<>();
-        for (Map<String, Object> carMap : carsMapsAll) {
-            EntCar car = new EntCar();
-            car.loadFromMap(carMap);
-            carEntsAll.add(car);
+        if (!sortBy.equals("price")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "invalid search params, sortBy must be \"price\" for pre-login search."
+            );
         }
-        return sortCars(carEntsAll, sortBy, sortAsc);
+
+        List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
+        // TODO: Tell Samm that pre-login should only have price filtering (hardcode "price" so not care about
+        //  sortBy when pre-login?)
+        return sortCars(carsMapsAll, sortBy, sortAsc);
     }
 
     /**
      * Get a list of cars from the database for which a loan offer is pre-approved by the Senso /rate Api.
      */
-    private List<EntCar> searchCarsWithOffer(
+    private List<Map<String, Object>> searchOnlyCarsWithOffer(
         String userId,
         double downPayment,
         double budgetMo,
@@ -121,15 +159,123 @@ public class SvcSearch {
         EntUser user = new EntUser();
         user.loadFromMap(userEntry);
 
-        // Get list of all cars and add all cars for which a Senso /rate Api loan offer is approved to carsWithOffer
+        // If user's search params are different to previous search (what's in the database), reset their offers table
+        // according to this information, compute all loan offers, add to offers table, and return maps that contain
+        // car and offers information.
+        // If user's params are the same as previous search, get all return maps that contain
+        // car and offers information, but just get the offers as they exist in the table (do not reset it
+        // or re-call senso Api to check whether loan offers are approved).
+        boolean newSearchParams = user.getDownPayment() == downPayment || user.getBudgetMo() == budgetMo;
+        if (newSearchParams) {
+            return searchCarsWithOfferNewParams(user, budgetMo, downPayment, sortBy, sortAsc);
+        } else {
+            return searchCarsWithOfferOldParams(user, sortBy, sortAsc);
+        }
+    }
+
+    /**
+     *  Resets user's offers table, queries Senso Api for new loan offer information using search params,
+     *  adds approved offers to the user's offers table, and return maps that contain car and offers information
+     *  (made using mergeCarOffer()) using the approved offers that were added to the user's offers table.
+     *
+     *  Run this method if user's search params are different to previous search (what's currently in the database).
+     *  Thus, we need to reset the offers table and check loan offer approval for each car with the senso /rate api
+     *  before repopulating.
+     *
+     *  As a result of this call, the user's loan offers 'cart' is emptied (their offers table) as it is no longer valid
+     *  given their new search params.
+     */
+    private List<Map<String, Object>> searchCarsWithOfferNewParams(
+            EntUser user,
+            double budgetMo,
+            double downPayment,
+            String sortBy,
+            boolean sortAsc
+    ) throws SQLException, IOException, InterruptedException {
+        // Set user in offers table object
+        tableOffers.setUser(user.getUserId());
+
+        // Clear the user's current loan offers table (new params means new loan offers)
+        tableOffers.removeAllOffers();
+
+        // Get list of all cars
         List<Map<String, Object>> carMapsAll = this.tableCars.getAllCars();
-        List<EntCar> carEntsWithOffer = new ArrayList<>();
+
+        // Fill carAndOfferInfoMaps with maps containing car-offer information for cars for which a loan offer
+        // was pre-approved by the senso /rate Api.
+        List<Map<String, Object>> carAndOfferInfoMaps = new ArrayList<>();
         for (Map<String, Object> carMap : carMapsAll) {
+            // Create a car entity for this carMap
             EntCar car = new EntCar();
             car.loadFromMap(carMap);
 
-            // Query senso Api for this car
-            Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
+            // Get the offer for this car (calls the senso /rate api to get offer info)
+            EntOffer offer = createOfferFromUserAndCar(user, car, budgetMo, downPayment);
+
+            // If offer is not null, an offer was approved, merge car and offer entities into a single map
+            // and add to carAndOfferInfoMaps. Otherwise, if null, no offer was approved and move on to the next
+            // carMap in the loop.
+            if (offer != null) {
+                // Merge car and offer to create a carAndOfferInfoMap
+                Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
+                carAndOfferInfoMaps.add(carAndOfferInfoMap);
+            }
+        }
+        // Return a sorted version of carAndOfferInfoMaps according to the sort settings
+        return sortCars(carAndOfferInfoMaps, sortBy, sortAsc);
+    }
+
+    /**
+     * Returns maps that contain car and offers information (made using mergeCarOffer()) using the offers that
+     * are currently in the user's offers table (does not reset the offers table or re-call senso Api to
+     * check whether loan offers are approved, since these are already assumed to be approved in a previous
+     * search query with the same search params).
+     */
+    private List<Map<String, Object>> searchCarsWithOfferOldParams(
+            EntUser user,
+            String sortBy,
+            boolean sortAsc
+    ) throws SQLException {
+        // Set user in offers table object
+        tableOffers.setUser(user.getUserId());
+
+        // Get list of all offers in offers table
+        List<Map<String, Object>> offerMapsAll = tableOffers.getAllOffers();
+
+        // Fill carAndOfferInfoMaps with maps containing car-offer information for offers in the offers table
+        List<Map<String, Object>> carAndOfferInfoMaps = new ArrayList<>();
+        for (Map<String, Object> offerMap : offerMapsAll) {
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            Map<String, Object> carMap = tableCars.getCarById(Integer.toString(offer.getCarId()));
+            EntCar car = new EntCar();
+            car.loadFromMap(carMap);
+
+            // Merge car and offer to create a carAndOfferInfoMap
+            Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
+            carAndOfferInfoMaps.add(carAndOfferInfoMap);
+        }
+        // Return a sorted version of carAndOfferInfoMaps according to the sort settings
+        return sortCars(carAndOfferInfoMaps, sortBy, sortAsc);
+    }
+
+    /**
+     * Creates an offer in the users offers table if loan was approved by the senso /rate api and
+     * returns the corresponding offer entity.  If no loan offer was approved by the senso api,
+     * returns null (and nothing is added to the loan offers table).
+     */
+    private EntOffer createOfferFromUserAndCar (
+            EntUser user,
+            EntCar car,
+            double budgetMo,
+            double downPayment
+    ) throws IOException, InterruptedException, SQLException {
+        // Set the tableOffers user (just in case it was not set before)
+        tableOffers.setUser(user.getUserId());
+
+        // Query senso Api for this car and user information
+        Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
                 Double.toString(car.getPrice()), // loanAmount (TODO: verify correct)
                 Integer.toString(user.getCreditScore()), // creditScore
                 Double.toString(budgetMo), // budget
@@ -139,20 +285,142 @@ public class SvcSearch {
                 Double.toString(car.getKms()), // vehicleKms
                 Double.toString(car.getPrice()), // listPrice
                 Double.toString(downPayment) // downpayment
+        );
+
+        // If api gave successful loan preapproval, add offer to user's offers table and return the corresponding
+        // offer entity. Otherwise, there was no loan offer for this car and the current search params, so return null.
+        if (queryResult.get("status").equals(200)) {
+            Map queryBody = (Map) queryResult.get("body");
+            int carId = car.getId();
+            double loanAmount = (double) queryBody.get("amount");
+            double capitalSum = (double) queryBody.get("capitalSum");
+            double interestSum = (double) queryBody.get("interestSum");
+            double totalSum = (double) queryBody.get("sum");
+            double interestRate = (double) queryBody.get("interestRate");
+            double termMo = Double.parseDouble((String) queryBody.get("term"));
+            String installments = (queryBody.get("installments")).toString();
+            boolean claimed = false;
+
+            // Add offer information to offers table
+            int offerId = tableOffers.addOffer(
+                    carId,
+                    loanAmount,
+                    capitalSum,
+                    interestSum,
+                    totalSum,
+                    interestRate,
+                    termMo,
+                    installments,
+                    claimed
             );
 
-            // If successfully called api, add car to carsWithOffer
-            if (queryResult.get("status").equals(200)) {
-                carEntsWithOffer.add(car);
-            }
+            // Create an offer entity
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            return offer;
+        } else {
+            // No loan offer not available with current settings, return null.
+            return null;
         }
-        return sortCars(carEntsWithOffer, sortBy, sortAsc);
     }
 
     /**
-     * Sort list of EntCar objects according to params.
+     * Merge car and offer entities into a single map.
      */
-    private List<EntCar> sortCars(List<EntCar> carEnts, String sortBy, boolean sortAsc) {
-        return carEnts; // TODO
+    private Map<String, Object> mergeCarAndOffer(EntCar car, EntOffer offer) {
+        return new HashMap<>() {{
+            // Car info
+            put("car_id", car.getId());
+            put("brand", car.getBrand());
+            put("model", car.getModel());
+            put("year", car.getYear());
+            put("price", car.getPrice());
+            put("kms", car.getKms());
+            // Offer info
+            put("offer_id", offer.getOfferId());
+            put("loan_amount", offer.getLoanAmount());
+            put("capital_sum", offer.getCapitalSum());
+            put("interest_sum", offer.getInterestSum());
+            put("total_sum", offer.getTotalSum());
+            put("apr", offer.getInterestRate()); // TODO: why "apr"
+            put("term_length", offer.getTermMo()); // TODO: clean term_length/term_mo and all these terms
+            put("installments", offer.getInstallments());
+            put("claimed", offer.isClaimed());
+            // Computed stuff
+            put("payment_mo", offer.getTotalSum() / offer.getTermMo());
+        }};
+    }
+
+    /**
+     * Sort a list of maps according to key and sortAsc. We use the corresponding value of key for each map
+     * (which is assumed to be castable to double) to sort the list of maps. sortAsc defines whether we sort
+     * by ascending order or not.
+     */
+    private List<Map<String, Object>> sortCars(
+            List<Map<String, Object>> maps,
+            String key,
+            boolean sortAsc
+    ) {
+        List<Map<String, Object>> sorted = new ArrayList<>();
+
+        // Place all maps from carAndOfferInfoMaps in sortedCarAndOfferInfoMaps (in sorted order).
+        Map<String, Object> map;
+        for (int i = 0; i < maps.size(); i++) {
+            List<Map<String, Object>> subList = maps.subList(i, maps.size());
+
+            // Get the map which we will remove from carAndOfferInfoMaps and add to sorted
+            if (sortAsc) {
+                map = getSmallest(subList, key);
+            } else {
+                map = getBiggest(subList, key);
+            }
+
+            maps.remove(map);
+            sorted.add(map);
+        }
+
+        return sorted;
+    }
+
+    /**
+     * Return the 'smallest' map in maps, where smallest is defined as the map which has the lowest value
+     * corresponding to the key.
+     *
+     * The value corresponding to key must be castable to double.
+     */
+    private Map<String, Object> getSmallest(List<Map<String, Object>> maps, String key) {
+        Map<String, Object> smallestMapSoFar = maps.get(0);
+        for (Map<String, Object> map : maps) {
+            if (toDouble(map.get(key)) < toDouble(smallestMapSoFar.get(key))) {
+                smallestMapSoFar = map;
+            }
+        }
+        return smallestMapSoFar;
+    }
+
+    /**
+     * Return the 'biggest' map in maps, where biggest is defined as the map which has the highest value
+     * corresponding to the key.
+     *
+     * The value corresponding to key must be castable to double.
+     */
+    private Map<String, Object> getBiggest(List<Map<String, Object>> maps, String key) {
+        Map<String, Object> biggestMapSoFar = maps.get(0);
+        for (Map<String, Object> map : maps) {
+            if (toDouble(map.get(key)) > toDouble(biggestMapSoFar.get(key))) {
+                biggestMapSoFar = map;
+            }
+        }
+        return biggestMapSoFar;
+    }
+
+    private double toDouble(Object num) {
+        if (num instanceof BigDecimal) {
+            return ((BigDecimal) num).doubleValue();
+        } else {
+            return (double) num;
+        }
     }
 }
