@@ -217,7 +217,7 @@ public class SvcSearch {
             // carMap in the loop.
             if (offer != null) {
                 // Merge car and offer to create a carAndOfferInfoMap
-                Map<String, Object> carAndOfferInfoMap = mergeCarOffer(car, offer);
+                Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
                 carAndOfferInfoMaps.add(carAndOfferInfoMap);
             }
         }
@@ -253,7 +253,7 @@ public class SvcSearch {
             car.loadFromMap(carMap);
 
             // Merge car and offer to create a carAndOfferInfoMap
-            Map<String, Object> carAndOfferInfoMap = mergeCarOffer(car, offer);
+            Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
             carAndOfferInfoMaps.add(carAndOfferInfoMap);
         }
         // Return a sorted version of carAndOfferInfoMaps according to the sort settings
@@ -330,7 +330,7 @@ public class SvcSearch {
     /**
      * Merge car and offer entities into a single map.
      */
-    private Map<String, Object> mergeCarOffer(EntCar car, EntOffer offer) {
+    private Map<String, Object> mergeCarAndOffer(EntCar car, EntOffer offer) {
         return new HashMap<>() {{
             // Car info
             put("car_id", car.getId());
@@ -345,10 +345,12 @@ public class SvcSearch {
             put("capital_sum", offer.getCapitalSum());
             put("interest_sum", offer.getInterestSum());
             put("total_sum", offer.getTotalSum());
-            put("interest_rate", offer.getInterestRate());
-            put("term_mo", offer.getTermMo());
+            put("apr", offer.getInterestRate()); // TODO: why "apr"
+            put("term_length", offer.getTermMo()); // TODO: clean term_length/term_mo and all these terms
             put("installments", offer.getInstallments());
             put("claimed", offer.isClaimed());
+            // Computed stuff
+            put("payment_mo", offer.getTotalSum() / offer.getTermMo());
         }};
     }
 
