@@ -25,6 +25,7 @@ import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
+import tech.autodirect.api.utils.MergeCarAndOffer;
 import tech.autodirect.api.utils.ParseChecker;
 
 import java.io.IOException;
@@ -217,7 +218,7 @@ public class SvcSearch {
             // carMap in the loop.
             if (offer != null) {
                 // Merge car and offer to create a carAndOfferInfoMap
-                Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
+                Map<String, Object> carAndOfferInfoMap = MergeCarAndOffer.mergeCarAndOffer(car, offer);
                 carAndOfferInfoMaps.add(carAndOfferInfoMap);
             }
         }
@@ -248,12 +249,12 @@ public class SvcSearch {
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
 
-            Map<String, Object> carMap = tableCars.getCarById(Integer.toString(offer.getCarId()));
+            Map<String, Object> carMap = tableCars.getCarById(offer.getCarId());
             EntCar car = new EntCar();
             car.loadFromMap(carMap);
 
             // Merge car and offer to create a carAndOfferInfoMap
-            Map<String, Object> carAndOfferInfoMap = mergeCarAndOffer(car, offer);
+            Map<String, Object> carAndOfferInfoMap = MergeCarAndOffer.mergeCarAndOffer(car, offer);
             carAndOfferInfoMaps.add(carAndOfferInfoMap);
         }
         // Return a sorted version of carAndOfferInfoMaps according to the sort settings
@@ -291,7 +292,7 @@ public class SvcSearch {
         // offer entity. Otherwise, there was no loan offer for this car and the current search params, so return null.
         if (queryResult.get("status").equals(200)) {
             Map queryBody = (Map) queryResult.get("body");
-            int carId = car.getId();
+            int carId = car.getCarId();
             double loanAmount = (double) queryBody.get("amount");
             double capitalSum = (double) queryBody.get("capitalSum");
             double interestSum = (double) queryBody.get("interestSum");
@@ -324,33 +325,6 @@ public class SvcSearch {
             // No loan offer not available with current settings, return null.
             return null;
         }
-    }
-
-    /**
-     * Merge car and offer entities into a single map.
-     */
-    private Map<String, Object> mergeCarAndOffer(EntCar car, EntOffer offer) {
-        return new HashMap<>() {{
-            // Car info
-            put("car_id", car.getId());
-            put("brand", car.getBrand());
-            put("model", car.getModel());
-            put("year", car.getYear());
-            put("price", car.getPrice());
-            put("kms", car.getKms());
-            // Offer info
-            put("offer_id", offer.getOfferId());
-            put("loan_amount", offer.getLoanAmount());
-            put("capital_sum", offer.getCapitalSum());
-            put("interest_sum", offer.getInterestSum());
-            put("total_sum", offer.getTotalSum());
-            put("apr", offer.getInterestRate()); // TODO: why "apr"
-            put("term_length", offer.getTermMo()); // TODO: clean term_length/term_mo and all these terms
-            put("installments", offer.getInstallments());
-            put("claimed", offer.isClaimed());
-            // Computed stuff
-            put("payment_mo", offer.getTotalSum() / offer.getTermMo());
-        }};
     }
 
     /**

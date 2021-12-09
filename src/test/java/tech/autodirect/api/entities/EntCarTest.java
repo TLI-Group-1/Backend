@@ -28,7 +28,7 @@ class EntCarTest {
             EntCar car = new EntCar();
             car.loadFromMap(carMap);
 
-            assert car.getId() == 1;
+            assert car.getCarId() == 1;
             assert car.getBrand().equals("nissan");
             assert car.getModel().equals("sedan");
             assert car.getYear() == 2017;
