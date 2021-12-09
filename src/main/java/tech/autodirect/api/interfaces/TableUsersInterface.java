@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public interface TableUsersInterface {
+
     /**
      * Add a user entry to the users table in the database.
      */
@@ -35,15 +36,25 @@ public interface TableUsersInterface {
      *
      * @return A Map representing a user entry in the database.
      */
-    Map<String, Object> getUserByID(String userId) throws SQLException;
+    Map<String, Object> getUserById(String userId) throws SQLException;
 
     /**
      * Remove a specific user entry by the user ID.
      */
-    void removeUserByID(String userId) throws SQLException;
+    void removeUserById(String userId) throws SQLException;
 
     /**
      * Check if user exists in database.
      */
     boolean checkUserExists(String userId) throws SQLException;
+
+    /**
+     * Update the budgetMo value for this user.
+     */
+    void updateUserBudgetMo(String userId, double budgetMo) throws SQLException;
+
+    /**
+     * Update the downPayment value for this user.
+     */
+    void updateUserDownPayment(String userId, double downPayment) throws SQLException;
 }

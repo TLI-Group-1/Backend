@@ -19,8 +19,12 @@ limitations under the License.
 import org.yaml.snakeyaml.error.MissingEnvironmentVariableException;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Responsible for connecting to the database give the database name.
+ */
 public class Conn {
     // list of environment variables to fetch
     private static final String[] environmentVariables = {
@@ -31,8 +35,11 @@ public class Conn {
         "AUTODIRECT_DB_PASS"
     };
     // database parameters
-    private static final HashMap<String, String> dbParams = new HashMap<>();
+    private static final Map<String, String> dbParams = new HashMap<>();
 
+    /**
+     * Get a Connection object connecting to the database given by dbName.
+     */
     public static Connection getConn(String dbName)
             throws MissingEnvironmentVariableException, SQLException, ClassNotFoundException {
         // get the database configuration parameters from environment variables
@@ -63,6 +70,9 @@ public class Conn {
         return conn;
     }
 
+    /**
+     * Get necessary environment variables.
+     */
     private static void getEnvVars() throws MissingEnvironmentVariableException {
         // attempt to obtain the relevant environment variables
         for (String varName : environmentVariables) {

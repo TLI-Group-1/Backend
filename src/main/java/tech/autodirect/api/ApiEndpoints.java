@@ -54,7 +54,6 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     private final String dbName = "autodirect";
 
     // Initialize Frameworks & Drivers
-    // TODO: Add explanation
     private TableCarsInterface tableCars;
     private TableUsersInterface tableUsers;
     private TableOffersInterface tableOffers;
@@ -93,7 +92,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             svcGetClaimedOffers = new SvcGetClaimedOffers();
             svcGetOfferDetails = new SvcGetOfferDetails();
             svcMockBankApi = new SvcMockBankApi();
-            svcSearch = new SvcSearch(tableCars, tableUsers, sensoApi);
+            svcSearch = new SvcSearch(tableCars, tableUsers, tableOffers, sensoApi);
             svcUnclaimOffer = new SvcUnclaimOffer();
             svcUpdatePrincipal = new SvcUpdatePrincipal();
             svcUserLogin = new SvcUserLogin();
@@ -127,7 +126,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             @RequestParam(name = "sort_asc") String sortAsc
     ) {
         try {
-            return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc);
+            return svcSearch.search(userId, downPayment, budgetMo, sortBy, sortAsc);
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
             throw SERVER_ERROR;
@@ -175,7 +174,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     @GetMapping("/getClaimedOffers")
     public Object getClaimedOffers(@RequestParam(name = "user_id") String userId) {
         try {
-            return svcGetClaimedOffers.getClaimedOffers(tableOffers, userId);
+            return svcGetClaimedOffers.getClaimedOffers(tableCars, tableOffers, userId);
         } catch (SQLException e) {
             e.printStackTrace();
             throw SERVER_ERROR;
@@ -188,7 +187,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             @RequestParam(name = "offer_id") String offerId
     ) {
         try {
-            return svcGetOfferDetails.getOfferDetails(tableOffers, userId, offerId);
+            return svcGetOfferDetails.getOfferDetails(tableCars, tableOffers, userId, offerId);
         } catch (SQLException e) {
             e.printStackTrace();
             throw SERVER_ERROR;

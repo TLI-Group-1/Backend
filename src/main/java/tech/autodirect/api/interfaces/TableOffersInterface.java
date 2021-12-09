@@ -26,6 +26,7 @@ import java.util.Map;
  * setUser() must be called before any other method.
  */
 public interface TableOffersInterface {
+
     /**
      * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
      *
@@ -71,7 +72,7 @@ public interface TableOffersInterface {
     void removeAllOffers() throws SQLException;
 
     /**
-     * Retrieve an offer in HashMap format given an offer ID.
+     * Retrieve an offer in Map format given an offer ID.
      *
      * @param offerId : ID of the offer to be retrieved
      * @return A Map representing an offer entry in the database.

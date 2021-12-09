@@ -20,6 +20,9 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 
+/**
+ * Responsible for updating a user's principal value (if any add-ons were added).
+ */
 public class SvcUpdatePrincipal {
     public void updatePrincipal(
             TableOffersInterface tableOffers,

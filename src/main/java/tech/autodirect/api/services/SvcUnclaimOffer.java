@@ -22,7 +22,11 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 
+/**
+ * Responsible for unclaiming a specific offer for a specific user.
+ */
 public class SvcUnclaimOffer {
+
     /**
      * Unclaim a specified offer for the specified user.
      */
@@ -30,7 +34,7 @@ public class SvcUnclaimOffer {
             TableOffersInterface tableOffers,
             String userId,
             String offerId
-    ) throws SQLException {
+    ) throws SQLException, ResponseStatusException {
         if (userId.equals("") || offerId.equals("")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "empty userId or offerId"

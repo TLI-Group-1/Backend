@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 
-// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SvcUserLoginTest {
     private static final String dbName = "testing";
@@ -58,7 +58,7 @@ public class SvcUserLoginTest {
 
             // testUserId user will be created in tests, ensure it doesn't exist yet
             if (tableUser.checkUserExists(testUserId)) {
-                tableUser.removeUserByID(testUserId);
+                tableUser.removeUserById(testUserId);
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class SvcUserLoginTest {
     public void tearDownEach() {
         try {
             if (tableUser.checkUserExists(testUserId)) {
-                tableUser.removeUserByID(testUserId);
+                tableUser.removeUserById(testUserId);
             }
         } catch (SQLException e) {
             e.printStackTrace();

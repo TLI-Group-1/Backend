@@ -18,11 +18,13 @@ limitations under the License.
 
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Defines behaviour of a fictitious bank api that gets the credit score for a user.
+ */
 public interface BankApiInterface {
+
     /**
-     * Query the Bank Api to get the credit score for a specific user.
-     *
-     * @param userId
+     * Get the credit score for userId.
      */
     int getCreditScore(String userId) throws ResponseStatusException;
 }

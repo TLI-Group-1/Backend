@@ -20,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
+/**
+ * Responsible for claiming a specific offer for a specific user.
+ */
 import java.sql.SQLException;
 
 public class SvcClaimOffer {
@@ -30,7 +33,7 @@ public class SvcClaimOffer {
             TableOffersInterface tableOffers,
             String userId,
             String offerId
-    ) throws SQLException {
+    ) throws SQLException, ResponseStatusException {
         if (userId.equals("") || offerId.equals("")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "empty userId or offerId"

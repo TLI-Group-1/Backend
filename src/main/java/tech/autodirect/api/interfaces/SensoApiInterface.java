@@ -3,7 +3,11 @@ package tech.autodirect.api.interfaces;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Defines the behaviour of class that connect to and queries the SensoApi.
+ */
 public interface SensoApiInterface {
+
     /**
      * Query the Senso /rate Api to get a loan offer.
      *

@@ -36,6 +36,11 @@ public class TableUsers extends Table implements TableUsersInterface {
     private final String schemaName = "public";
     private final String tableName = "users";
 
+    /**
+     * Create a new TableUsers object with a public database connection object.
+     *
+     * @param dbName : name of the database to connect to
+     */
     public TableUsers(String dbName) throws SQLException, ClassNotFoundException {
         this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
@@ -67,60 +72,33 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public Map<String, Object> getUserByID(String userId) throws SQLException {
-        if (!checkUserExists(userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "user not found"
-            );
-        }
-
-        // construct a prepared SQL statement selecting the specified user
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
-        );
-        stmt.setString(1, userId);
-
-        ResultSet rs = stmt.executeQuery();
-        List<Map<String, Object>> rsList = resultSetToList(rs);
-        stmt.close();
-        if (rsList.size() == 0) {
-            return Collections.emptyMap();
-        } else {
-            return rsList.get(0);
-        }
+    public void updateUserBudgetMo(
+            String userId,
+            double budgetMo
+    ) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "budget_mo", budgetMo);
     }
 
     @Override
-    public void removeUserByID(String userId) throws SQLException {
-        if (!checkUserExists(userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "user not found"
-            );
-        }
+    public void updateUserDownPayment(
+            String userId,
+            double downPayment
+    ) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "down_payment", downPayment);
+    }
 
-        // construct a prepared SQL statement selecting the specified user
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
-        );
-        stmt.setString(1, userId);
+    @Override
+    public Map<String, Object> getUserById(String userId) throws SQLException, ResponseStatusException {
+        return getEntryById(userId, schemaName, tableName, dbConn, "user");
+    }
 
-        // execute the above SQL statement
-        stmt.executeUpdate();
-        stmt.close();
+    @Override
+    public void removeUserById(String userId) throws SQLException, ResponseStatusException {
+        removeEntryById(userId, schemaName, tableName, dbConn, "user");
     }
 
     @Override
     public boolean checkUserExists(String userId) throws SQLException {
-        // construct a prepared SQL statement selecting the specified user
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE user_id = ?;"
-        );
-        stmt.setString(1, userId);
-
-        // execute the above SQL statement and check whether the user exists
-        ResultSet rs = stmt.executeQuery();
-        boolean userCount = resultSetToList(rs).size() > 0; // TODO: cant be more than 1, right? Check?
-        stmt.close();
-        return userCount;
+        return checkEntryExists(userId, schemaName, tableName, dbConn, "user");
     }
 }

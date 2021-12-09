@@ -23,8 +23,11 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This entity represents a car in our program.
+ */
 public class EntCar {
-    private int id;
+    private int carId;
     private String brand;
     private String model;
     private int year;
@@ -37,7 +40,7 @@ public class EntCar {
      * @param entry : A Map containing representing a car entry in the database.
      */
     public void loadFromMap(Map<String, Object> entry) throws SQLException {
-        id = (int) entry.get("id");
+        carId = (int) entry.get("car_id");
         brand = (String) entry.get("brand");
         model = (String) entry.get("model");
         year = (int) entry.get("year");
@@ -45,8 +48,8 @@ public class EntCar {
         kms = UnitConv.mileToKm(((Float) entry.get("mileage")).doubleValue());
     }
 
-    public int getId() {
-        return id;
+    public int getCarId() {
+        return carId;
     }
 
     public String getBrand() {
@@ -74,7 +77,7 @@ public class EntCar {
         if (o instanceof EntCar) {
             EntCar car = (EntCar) o;
 
-            return getId() == car.getId() &&
+            return getCarId() == car.getCarId() &&
                     Objects.equals(getBrand(), car.getBrand()) &&
                     getKms() == car.getKms() &&
                     Objects.equals(getModel(), car.getModel()) &&

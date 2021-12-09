@@ -21,10 +21,23 @@ import java.util.List;
 import java.util.Map;
 
 public interface TableCarsInterface {
+
     /**
-     * Gets all cars from the cars table in the database, using full-text keyword search (TODO).
+     * Gets all cars from the cars table in the database.
      *
      * @return A List of Maps where each Map is a single entry in the JDBC query result.
      */
     List<Map<String, Object>> getAllCars() throws SQLException;
+
+    /**
+     * Get a specific car entry by the car ID.
+     *
+     * @return A Map representing a car entry in the database.
+     */
+    Map<String, Object> getCarById(int carId) throws SQLException;
+
+    /**
+     * Check if car exists in database.
+     */
+    boolean checkCarExists(int carId) throws SQLException;
 }

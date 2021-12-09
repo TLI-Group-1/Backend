@@ -22,7 +22,11 @@ import tech.autodirect.api.interfaces.TableUsersInterface;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * Responsible for handling user login.
+ */
 public class SvcUserLogin {
+
     /**
      * If the userid exists, retrieve the userId's information, if it does not exist, create a new userId.
      *
@@ -33,7 +37,7 @@ public class SvcUserLogin {
             TableUsersInterface tableUsers,
             BankApiInterface bankApi,
             String userId
-    ) throws SQLException, ClassNotFoundException {
+    ) throws SQLException, ClassNotFoundException, ResponseStatusException {
         if (userId.equals("")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "empty userId"
@@ -42,18 +46,19 @@ public class SvcUserLogin {
 
         if (tableUsers.checkUserExists(userId)) {
             // userId exists, return existing user info
-            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            Map<String, Object> userMap = tableUsers.getUserById(userId);
             userMap.remove("offers_table");
             return userMap;
         } else {
             // userId does not exist, create new user with default info
-            int creditScore = bankApi.getCreditScore(userId);
+            SvcMockBankApi svcMockBankApi = new SvcMockBankApi();
+            int creditScore = svcMockBankApi.getCreditScore(bankApi, userId);
             double defaultDownPayment = 1000;
             double defaultBudgetMo = 250;
             tableUsers.addUser(userId, creditScore, defaultDownPayment, defaultBudgetMo);
 
             // Return user info from database
-            Map<String, Object> userMap = tableUsers.getUserByID(userId);
+            Map<String, Object> userMap = tableUsers.getUserById(userId);
             userMap.remove("offers_table");
             return userMap;
         }

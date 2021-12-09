@@ -16,35 +16,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public class TableCars extends Table implements TableCarsInterface {
-    private final String dbName;
     private final Connection dbConn;
     private final String schemaName = "public";
     private final String tableName = "cars";
 
+    /**
+     * Create a new TableCars object with a public database connection object.
+     *
+     * @param dbName : name of the database to connect to
+     */
     public TableCars(String dbName) throws SQLException, ClassNotFoundException {
-        this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
     }
 
     @Override
     public List<Map<String, Object>> getAllCars() throws SQLException {
-        // Construct and execute a prepared SQL statement selecting all cars
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT * FROM " + this.schemaName + "." + this.tableName
-        );
-        ResultSet rs = stmt.executeQuery();
-        List<Map<String, Object>> carMaps = resultSetToList(rs);
-        stmt.close();
-        return carMaps;
+        return getAllEntries(schemaName, tableName, dbConn);
+    }
+
+    @Override
+    public Map<String, Object> getCarById(int carId) throws SQLException, ResponseStatusException {
+        return getEntryById(carId, schemaName, tableName, dbConn, "car");
+    }
+
+    public boolean checkCarExists(int carId) throws SQLException {
+        return checkEntryExists(carId, schemaName, tableName, dbConn, "car");
     }
 }

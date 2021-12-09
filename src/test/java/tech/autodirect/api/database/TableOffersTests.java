@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TableOffersTests {
     private static final String dbName = "testing";
@@ -29,12 +29,12 @@ public class TableOffersTests {
 
 
     /**
-     * Create a new offers table, then verify it exists. Tests newTable method
+     * Use setUser() to create an offers table for a user that does not have one, then verify it exists.
      */
     @Test
-    void testSetUser() {
+    void testSetUserAndCheckTableExists() {
         try {
-            // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
+            // Creates new offers table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
             String tableName = table.setUser(testUserId);
 
@@ -48,7 +48,25 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests addOffer method and getOfferByOfferId when offer is claimed
+     * Test that getTableName() gives a tableName corresponding to TableOffersInterface.createTableName().
+     */
+    @Test
+    void testGetTableName() {
+        try {
+            // Creates new offers table for testUserId. setUpEach() ensures table doesn't already exist.
+            TableOffers table = new TableOffers(dbName);
+            table.setUser(testUserId);
+
+            // Check that getTableName() gives a tableName corresponding to TableOffersInterface.createTableName()
+            assert table.getTableName().equals(TableOffersInterface.createTableName(testUserId));
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests addOffer() method and getOfferByOfferId() when offer is claimed
      */
     @Test
     void testAddOfferAndGetOfferClaimed() {
@@ -79,7 +97,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests addOffer method and getOfferByOfferId when offer is not claimed
+     * Tests addOffer() method and getOfferByOfferId() when offer is not claimed
      */
     @Test
     void testAddOfferAndGetOfferNotClaimed() {
@@ -110,7 +128,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests getOfferByOfferId when offer does not exist
+     * Tests getOfferByOfferId() when offer does not exist
      */
     @Test
     void testGetOfferWhenDoesNotExist() {
@@ -132,7 +150,40 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests removeOfferByOfferId
+     * Tests checkOfferExists() method when offer exists.
+     */
+    @Test
+    void testCheckOfferExistsWhenExists() {
+        try {
+            // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
+            TableOffers table = new TableOffers(dbName);
+            table.setUser(testUserId);
+            int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            assert table.checkOfferExists(offerId);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests checkOfferExists() method when offer does not exists.
+     */
+    @Test
+    void testCheckOfferExistsWhenNotExists() {
+        try {
+            // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
+            TableOffers table = new TableOffers(dbName);
+            table.setUser(testUserId);
+            assert !table.checkOfferExists(1);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests removeOfferByOfferId().
      */
     @Test
     void testRemoveOfferByOfferId() {
@@ -144,7 +195,7 @@ public class TableOffersTests {
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             table.removeOfferByOfferId(offerId);
 
-            table.getOfferByOfferId(offerId);
+            table.getOfferByOfferId(offerId); // Should throw 404 error
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
@@ -155,7 +206,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests removeAllOffers()
+     * Tests removeAllOffers().
      */
     @Test
     void testRemoveAllOffers() {
@@ -164,11 +215,14 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(dbName);
             table.setUser(testUserId);
 
-            int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
-            table.removeAllOffers();
 
-            table.getOfferByOfferId(offerId);
+            assert table.getAllOffers().size() > 0;
+            table.removeAllOffers();
+            assert table.getAllOffers().size() == 0;
+
+            table.getOfferByOfferId(offerId1); // Should throw 404 error
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
@@ -179,7 +233,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests getAllOffers()
+     * Tests getAllOffers() with more than one offer being returned.
      */
     @Test
     void testGetAllOffers() {
@@ -187,11 +241,13 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(dbName);
             table.setUser(testUserId);
 
+            // Add offers and get all offers as maps in a list
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
             List<Map<String, Object>> offersList = table.getAllOffers();
             assert offersList.size() == 2;
 
+            // Check whether offers referred to by offerId1 and offerId2 are in offersList
             boolean offerId1InOffersList = false;
             boolean offerId2InOffersList = false;
             for (Map<String, Object> offerMap : offersList) {
@@ -206,7 +262,6 @@ public class TableOffersTests {
                 }
 
             }
-
             assert offerId1InOffersList && offerId2InOffersList;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -239,10 +294,10 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests getClaimedOffers() when there are no claimed offers
+     * Tests getClaimedOffers() when there are some claimed and some unclaimed offers.
      */
     @Test
-    void testGetClaimedOffers() {
+    void testGetClaimedOffersWhenSomeClaimed() {
         try {
             // Create new table for testUserId
             TableOffers table = new TableOffers(dbName);
@@ -251,12 +306,10 @@ public class TableOffersTests {
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
             int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
 
+            // Check that get claimedOffers only contains the offer referred to by offerId1
             List<Map<String, Object>> claimedOffers = table.getClaimedOffers();
-
             Map<String, Object> offer = table.getOfferByOfferId(offerId1);
-
-            assert claimedOffers.contains(offer);
-
+            assert claimedOffers.size() == 1 && claimedOffers.contains(offer);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
@@ -281,8 +334,6 @@ public class TableOffersTests {
             offer.loadFromMap(offerMap);
 
             assert offer.isClaimed();
-
-
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
@@ -307,14 +358,44 @@ public class TableOffersTests {
             offer.loadFromMap(offerMap);
 
             assert !offer.isClaimed();
-
-
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
     }
 
+    /**
+     * Tests dropTable() and CheckTableExists() methods.
+     */
+    @Test
+    void testDropTableAndCheckTableExists() {
+        try {
+            // Create new table for testUserId and then drop it. Verify that it is dropped.
+            TableOffers table = new TableOffers(dbName);
+            table.setUser(testUserId);
+            assert table.checkTableExists();
+            table.dropTable();
+            assert !table.checkTableExists();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests checkTableExists() method when table does not exist.
+     */
+    @Test
+    void testCheckTableExistsWhenNotExists() {
+        try {
+            // Create new table for testUserId, then create a new offer and check it exists.
+            TableOffers table = new TableOffers(dbName);
+            assert !table.checkTableExists("fake table");
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
 
     @BeforeEach
     public void setUpEach() {
