@@ -155,19 +155,26 @@ public class SvcSearch {
         boolean sortAsc
     ) throws SQLException, IOException, InterruptedException, ResponseStatusException {
         // Get user information from database and populate user entity with user info
-        Map<String, Object> userEntry = this.tableUsers.getUserById(userId);
+        Map<String, Object> userEntry = tableUsers.getUserById(userId);
         EntUser user = new EntUser();
         user.loadFromMap(userEntry);
 
-        // If user's search params are different to previous search (what's in the database), reset their offers table
-        // according to this information, compute all loan offers, add to offers table, and return maps that contain
-        // car and offers information.
+        // If user's search params are different to previous search (what's in the database), update user info,
+        // reset their offers table according to this information, compute all loan offers,
+        // add to offers table, and return maps that contain car and offers information.
         // If user's params are the same as previous search, get all return maps that contain
         // car and offers information, but just get the offers as they exist in the table (do not reset it
         // or re-call senso Api to check whether loan offers are approved).
         boolean newSearchParams = user.getDownPayment() == downPayment || user.getBudgetMo() == budgetMo;
         if (newSearchParams) {
-            return searchCarsWithOfferNewParams(user, budgetMo, downPayment, sortBy, sortAsc);
+            // New search params, so update user information in users table
+            tableUsers.updateUserBudgetMo(userId, budgetMo);
+            tableUsers.updateUserDownPayment(userId, downPayment);
+
+            // User info has been updated, reload into user, so you use updated version
+            user.loadFromMap(userEntry);
+
+            return searchCarsWithOfferNewParams(user, sortBy, sortAsc);
         } else {
             return searchCarsWithOfferOldParams(user, sortBy, sortAsc);
         }
@@ -187,8 +194,6 @@ public class SvcSearch {
      */
     private List<Map<String, Object>> searchCarsWithOfferNewParams(
             EntUser user,
-            double budgetMo,
-            double downPayment,
             String sortBy,
             boolean sortAsc
     ) throws SQLException, IOException, InterruptedException {
@@ -210,7 +215,7 @@ public class SvcSearch {
             car.loadFromMap(carMap);
 
             // Get the offer for this car (calls the senso /rate api to get offer info)
-            EntOffer offer = createOfferFromUserAndCar(user, car, budgetMo, downPayment);
+            EntOffer offer = createOfferFromUserAndCar(user, car);
 
             // If offer is not null, an offer was approved, merge car and offer entities into a single map
             // and add to carAndOfferInfoMaps. Otherwise, if null, no offer was approved and move on to the next
@@ -267,9 +272,7 @@ public class SvcSearch {
      */
     private EntOffer createOfferFromUserAndCar (
             EntUser user,
-            EntCar car,
-            double budgetMo,
-            double downPayment
+            EntCar car
     ) throws IOException, InterruptedException, SQLException {
         // Set the tableOffers user (just in case it was not set before)
         tableOffers.setUser(user.getUserId());
@@ -278,13 +281,13 @@ public class SvcSearch {
         Map<String, Object> queryResult = this.sensoApi.getLoanOffer(
                 Double.toString(car.getPrice()), // loanAmount
                 Integer.toString(user.getCreditScore()), // creditScore
-                Double.toString(budgetMo), // budget
+                Double.toString(user.getBudgetMo()), // budget
                 car.getBrand(), // vehicleMake
                 car.getModel(), // vehicleModel
                 Integer.toString(car.getYear()), // vehicleYear
                 Double.toString(car.getKms()), // vehicleKms
                 Double.toString(car.getPrice()), // listPrice
-                Double.toString(downPayment) // downpayment
+                Double.toString(user.getDownPayment()) // downpayment
         );
 
         // If api gave successful loan preapproval, add offer to user's offers table and return the corresponding

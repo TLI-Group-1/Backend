@@ -47,4 +47,14 @@ public interface TableUsersInterface {
      * Check if user exists in database.
      */
     boolean checkUserExists(String userId) throws SQLException;
+
+    /**
+     * Update the budgetMo value for this user.
+     */
+    void updateUserBudgetMo(String userId, double budgetMo) throws SQLException;
+
+    /**
+     * Update the downPayment value for this user.
+     */
+    void updateUserDownPayment(String userId, double downPayment) throws SQLException;
 }
