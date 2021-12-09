@@ -127,7 +127,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             @RequestParam(name = "sort_asc") String sortAsc
     ) {
         try {
-            return svcSearch.searchCars(userId, downPayment, budgetMo, sortBy, sortAsc);
+            return svcSearch.search(userId, downPayment, budgetMo, sortBy, sortAsc);
         } catch (IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
             throw SERVER_ERROR;
