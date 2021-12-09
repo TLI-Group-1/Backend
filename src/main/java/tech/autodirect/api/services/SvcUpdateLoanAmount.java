@@ -46,12 +46,11 @@ public class SvcUpdateLoanAmount {
             String offerIdString,
             String newLoanAmountString
     ) throws SQLException, IOException, InterruptedException {
-        int offerId = Integer.parseInt(offerIdString);
-
         // Verify that the new loan amount is valid
         if (!ParseChecker.isParsableToInt(newLoanAmountString)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "loan amount must be parsable to int");
         }
+        int offerId = Integer.parseInt(offerIdString);
 
         // Get the user referred to by userId
         Map<String, Object> userMap = tableUsers.getUserById(userId);
