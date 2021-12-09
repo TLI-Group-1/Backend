@@ -176,7 +176,7 @@ public class SvcSearch {
     /**
      *  Resets user's offers table, queries Senso Api for new loan offer information using search params,
      *  adds approved offers to the user's offers table, and return maps that contain car and offers information
-     *  (made using mergeCarOffer()) using the approved offers that were added to the user's offers table.
+     *  (made using MergeCarAndOffer.mergeCarAndOffer()) using the approved offers that were added to the user's offers table.
      *
      *  Run this method if user's search params are different to previous search (what's currently in the database).
      *  Thus, we need to reset the offers table and check loan offer approval for each car with the senso /rate api
@@ -226,10 +226,10 @@ public class SvcSearch {
     }
 
     /**
-     * Returns maps that contain car and offers information (made using mergeCarOffer()) using the offers that
-     * are currently in the user's offers table (does not reset the offers table or re-call senso Api to
-     * check whether loan offers are approved, since these are already assumed to be approved in a previous
-     * search query with the same search params).
+     * Returns maps that contain car and offers information (made using MergeCarAndOffer.mergeCarAndOffer())
+     * using the offers that are currently in the user's offers table (does not reset the offers table or re-call
+     * senso Api to check whether loan offers are approved, since these are already assumed to be approved
+     * in a previous search query with the same search params).
      */
     private List<Map<String, Object>> searchCarsWithOfferOldParams(
             EntUser user,
