@@ -151,4 +151,30 @@ public class Table {
         stmt.close();
         return userCount;
     }
+
+    /**
+     * Update the column of an entry given by the params.
+     *
+     * entName is the name of the entity (like "user" or "car").
+     */
+    public void updateEntryColumn(
+            Object id,
+            String schemaName,
+            String tableName,
+            Connection dbConn,
+            String entName,
+            String columnName,
+            Object newValue
+    ) throws SQLException {
+        // construct a prepared SQL statement selecting the specified entry
+        PreparedStatement stmt = dbConn.prepareStatement(
+                "UPDATE " + schemaName + "." + tableName +
+                " SET " + columnName + " = ?" +
+                " WHERE " + entName + "_id = ?;"
+        );
+        stmt.setObject(1, newValue);
+        stmt.setObject(2, id);
+        stmt.executeUpdate();
+        stmt.close();
+    }
 }
