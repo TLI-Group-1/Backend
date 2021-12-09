@@ -1,12 +1,10 @@
 package tech.autodirect.api.database;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.sql.*;
+import java.util.*;
 
 public class Table {
     /**
@@ -29,5 +27,128 @@ public class Table {
             list.add(row);
         }
         return list;
+    }
+
+    /**
+     * Get an entry with id from the database using dbConn, schemaName, and tableName.
+     *
+     * entName is the name of the entity (like "user" or "car").
+     */
+    public List<Map<String, Object>> getAllEntries(
+            String schemaName,
+            String tableName,
+            Connection dbConn
+    ) throws SQLException {
+        // Construct and execute a prepared SQL statement selecting all entries
+        PreparedStatement stmt = dbConn.prepareStatement(
+                "SELECT * FROM " + schemaName + "." + tableName
+        );
+        ResultSet rs = stmt.executeQuery();
+        List<Map<String, Object>> maps = resultSetToList(rs);
+        stmt.close();
+        return maps;
+    }
+
+    /**
+     * Get an entry with id from the database using dbConn, schemaName, and tableName.
+     *
+     * entName is the name of the entity (like "user" or "car").
+     */
+    public Map<String, Object> getEntryById(
+            Object id,
+            String schemaName,
+            String tableName,
+            Connection dbConn,
+            String entName
+    ) throws SQLException, ResponseStatusException {
+        if (!checkEntryExists(id, schemaName, tableName, dbConn, entName)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, entName + " not found"
+            );
+        }
+
+        // construct a prepared SQL statement selecting the specified entry
+        PreparedStatement stmt = dbConn.prepareStatement(
+                "SELECT * FROM " + schemaName + "." + tableName + " WHERE " + entName + "_id = ?;"
+        );
+        stmt.setObject(1, id);
+
+        ResultSet rs = stmt.executeQuery();
+        List<Map<String, Object>> rsList = resultSetToList(rs);
+        stmt.close();
+        if (rsList.size() == 0) {
+            return Collections.emptyMap();
+        } else {
+            return rsList.get(0);
+        }
+    }
+
+    /**
+     * Remove an entry with id from the database using dbConn, schemaName, and tableName.
+     *
+     * entName is the name of the entity (like "user" or "car").
+     */
+    public void removeEntryById(
+            Object id,
+            String schemaName,
+            String tableName,
+            Connection dbConn,
+            String entName
+    ) throws SQLException, ResponseStatusException {
+        if (!checkEntryExists(id, schemaName, tableName, dbConn, entName)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "user not found"
+            );
+        }
+
+        // construct a prepared SQL statement selecting the specified entry
+        PreparedStatement stmt = dbConn.prepareStatement(
+                "DELETE FROM " + schemaName + "." + tableName + " WHERE " + entName + "_id = ?;"
+        );
+        stmt.setObject(1, id);
+
+        // execute the above SQL statement
+        stmt.executeUpdate();
+        stmt.close();
+    }
+
+    /**
+     * Remove all entries in the database table given by dbConn, schemaName, and tableName.
+     */
+    public void removeAllEntries(
+            String schemaName,
+            String tableName,
+            Connection dbConn
+    ) throws SQLException {
+        PreparedStatement stmt = dbConn.prepareStatement(
+                "DELETE FROM " + schemaName + "." + tableName + ";"
+        );
+        stmt.executeUpdate();
+        stmt.close();
+    }
+
+    /**
+     * Check an entry with id exists in the database using dbConn, schemaName, and tableName.
+     *
+     * entName is the name of the entity (like "user" or "car").
+     */
+    public boolean checkEntryExists(
+            Object id,
+            String schemaName,
+            String tableName,
+            Connection dbConn,
+            String entName
+    ) throws SQLException {
+        // construct a prepared SQL statement selecting the specified entry
+        PreparedStatement stmt = dbConn.prepareStatement(
+                "SELECT 1 FROM " + schemaName + "." + tableName + " WHERE " + entName + "_id = ?;"
+        );
+        stmt.setObject(1, id);
+
+        // execute the above SQL statement and check whether the entry exists
+        ResultSet rs = stmt.executeQuery();
+        boolean userCount = resultSetToList(rs).size() > 0;
+        stmt.close();
+        return userCount;
     }
 }

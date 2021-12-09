@@ -124,63 +124,19 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public void removeOfferByOfferId(int offerId) throws SQLException, ResponseStatusException {
-        if (!checkOfferExists(offerId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "offer not found"
-            );
-        }
-
-        // construct a prepared SQL statement deleting the specified offer
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "DELETE FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
-        );
-        stmt.setInt(1, offerId);
-
-        // execute and close the above SQL statement
-        stmt.executeUpdate();
-        stmt.close();
+        removeEntryById(offerId, schemaName, tableName, dbConn, "offer");
     }
 
     public void removeAllOffers() throws SQLException {
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "DELETE FROM " + this.schemaName + "." + this.tableName + ";"
-        );
-        stmt.executeUpdate();
-        stmt.close();
+        removeAllEntries(schemaName, tableName, dbConn);
     }
 
     public Map<String, Object> getOfferByOfferId(int offerId) throws SQLException, ResponseStatusException {
-        if (!checkOfferExists(offerId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "offer not found"
-            );
-        }
-
-        // construct a prepared SQL statement selecting the specified offer
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT * FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
-        );
-        stmt.setInt(1, offerId);
-
-        ResultSet rs = stmt.executeQuery();
-        List<Map<String, Object>> rsList = resultSetToList(rs);
-        stmt.close();
-        if (rsList.size() == 0) {
-            return Collections.emptyMap();
-        } else {
-            return rsList.get(0);
-        }
+        return getEntryById(offerId, schemaName, tableName, dbConn, "offer");
     }
 
     public List<Map<String, Object>> getAllOffers() throws SQLException {
-        // construct a SQL statement selecting all offers
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT * FROM " + this.schemaName + "." + this.tableName + ";"
-        );
-        ResultSet rs = stmt.executeQuery();
-        List<Map<String, Object>> offers = resultSetToList(rs);
-        stmt.close();
-        return offers;
+        return getAllEntries(schemaName, tableName, dbConn);
     }
 
     public List<Map<String, Object>> getClaimedOffers() throws SQLException {
@@ -273,17 +229,7 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public boolean checkOfferExists(int offerId) throws SQLException {
-        // construct a prepared SQL statement selecting the specified offer
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "SELECT 1 FROM " + this.schemaName + "." + this.tableName + " WHERE offer_id = ?;"
-        );
-        stmt.setInt(1, offerId);
-
-        // execute the above SQL statement and check whether the offer exists
-        ResultSet rs = stmt.executeQuery();
-        boolean offerCount = resultSetToList(rs).size() > 0;
-        stmt.close();
-        return offerCount;
+        return checkEntryExists(offerId, schemaName, tableName, dbConn, "offer");
     }
 
 }
