@@ -60,7 +60,8 @@ class SvcGetClaimedOffersTest {
                 if ((int) carAndOfferInfo.get("offer_id") == offerId4) { offerId4InOffers = true; }
             }
 
-            assert offerId1InOffers && offerId2InOffers && offerId3InOffers && offerId4InOffers;
+            // Check that only claimed offers were retrieved
+            assert !offerId1InOffers && offerId2InOffers && !offerId3InOffers && offerId4InOffers;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;

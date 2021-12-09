@@ -51,7 +51,7 @@ public class SvcGetClaimedOffers {
 
         // Set user in offers table and get all offers
         tableOffers.setUser(userId);
-        List<Map<String, Object>> offersList = tableOffers.getAllOffers();
+        List<Map<String, Object>> offersList = tableOffers.getClaimedOffers();
 
         List<Map<String, Object>> carAndOfferInfoMaps = new ArrayList<>();
         for (Map<String, Object> offerMap : offersList) {
