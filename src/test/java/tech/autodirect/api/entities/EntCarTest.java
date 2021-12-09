@@ -16,7 +16,7 @@ class EntCarTest {
         try {
             Map<String, Object> carMap = new HashMap<>() {
                 {
-                    put("id", 1);
+                    put("car_id", 1);
                     put("brand", "nissan");
                     put("model", "sedan");
                     put("year", 2017);
@@ -44,7 +44,7 @@ class EntCarTest {
         try {
             Map<String, Object> carMap1 = new HashMap<>() {
                 {
-                    put("id", 1);
+                    put("car_id", 1);
                     put("brand", "nissan");
                     put("model", "sedan");
                     put("year", 2017);
@@ -70,7 +70,7 @@ class EntCarTest {
         try {
             Map<String, Object> carMap1 = new HashMap<>() {
                 {
-                    put("id", 1);
+                    put("car_id", 1);
                     put("brand", "nissan");
                     put("model", "sedan");
                     put("year", 2017);
@@ -80,7 +80,7 @@ class EntCarTest {
             };
             Map<String, Object> carMap2 = new HashMap<>() {
                 {
-                    put("id", 7);
+                    put("car_id", 7);
                     put("brand", "ford");
                     put("model", "mustang");
                     put("year", 2019);

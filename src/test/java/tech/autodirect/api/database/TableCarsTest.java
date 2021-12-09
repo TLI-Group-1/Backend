@@ -21,7 +21,7 @@ class TableCarsTest {
             EntCar car1 = new EntCar();
             car1.loadFromMap(new HashMap<>() {
                 {
-                    put("id", 1);
+                    put("car_id", 1);
                     put("brand", "nissan");
                     put("model", "sedan");
                     put("year", 2017);
@@ -33,7 +33,7 @@ class TableCarsTest {
             EntCar car2 = new EntCar();
             car2.loadFromMap(new HashMap<>() {
                 {
-                    put("id", 7);
+                    put("car_id", 7);
                     put("brand", "ford");
                     put("model", "mustang");
                     put("year", 2019);

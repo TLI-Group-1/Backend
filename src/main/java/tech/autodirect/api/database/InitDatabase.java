@@ -28,7 +28,7 @@ import java.sql.*;
  * Responsible for initializing the populating the databse with schemas, tables, and entries.
  */
 public class InitDatabase {
-    private static final String dbName = "autodirect";
+    private static final String dbName = "testing";
 
     /**
      * Populate the database with the cars and users tables.
