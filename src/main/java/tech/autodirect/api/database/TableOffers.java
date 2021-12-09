@@ -54,6 +54,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         PreparedStatement stmtCreateSchema = this.dbConn.prepareStatement(
                 "CREATE SCHEMA IF NOT EXISTS " + this.schemaName + " AUTHORIZATION tli;"
         );
+        stmtCreateSchema.executeUpdate();
         stmtCreateSchema.close();
 
         // create and execute the SQL statement that will create an offer table
