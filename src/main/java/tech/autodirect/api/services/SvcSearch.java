@@ -62,7 +62,7 @@ public class SvcSearch {
      * Note that default value for sortBy is "price" (used when sortBy is invalid format)
      * and default value for sortAsc is "true" (used when sortAsc is invalid format).
      */
-    public List<Map<String, Object>> searchCars(
+    public List<Map<String, Object>> search(
         String userId,
         String downPaymentString,
         String budgetMoString,
@@ -75,14 +75,14 @@ public class SvcSearch {
 
         if (userId.equals("") || userId.equals("null")) {
             // If no userId, run pre-login search (return all cars)
-            return searchCarsAll(sortBy, sortAsc);
+            return searchAllCars(sortBy, sortAsc);
         } else {
             // User is logged in and search params are valid. So, only return cars which have offers for this user.
             // However, check good downPaymentString and budgetMoString params beforehand.
             checkGoodMoneyParams(downPaymentString, budgetMoString);
             double downPayment = Double.parseDouble(downPaymentString);
             double budgetMo = Double.parseDouble(budgetMoString);
-            return searchCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc);
+            return searchOnlyCarsWithOffer(userId, downPayment, budgetMo, sortBy, sortAsc);
         }
     }
 
@@ -112,12 +112,12 @@ public class SvcSearch {
             String downPaymentString,
             String budgetMoString
     ) throws ResponseStatusException {
-        if (ParseChecker.isParsableToDouble(downPaymentString)) {
+        if (!ParseChecker.isParsableToDouble(downPaymentString)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "invalid downPayment value, must parsable to double"
             );
         }
-        if (ParseChecker.isParsableToDouble(budgetMoString)) {
+        if (!ParseChecker.isParsableToDouble(budgetMoString)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "invalid budgetMo value, must parsable to double"
             );
@@ -128,7 +128,7 @@ public class SvcSearch {
      * Get a list of all cars from the database. Can only sort by car "price"
      * since user is not logged in (no user info).
      */
-    private List<Map<String, Object>> searchCarsAll(
+    private List<Map<String, Object>> searchAllCars(
         String sortBy,
         boolean sortAsc
     ) throws SQLException {
@@ -147,7 +147,7 @@ public class SvcSearch {
     /**
      * Get a list of cars from the database for which a loan offer is pre-approved by the Senso /rate Api.
      */
-    private List<Map<String, Object>> searchCarsWithOffer(
+    private List<Map<String, Object>> searchOnlyCarsWithOffer(
         String userId,
         double downPayment,
         double budgetMo,
@@ -298,8 +298,7 @@ public class SvcSearch {
             double totalSum = (double) queryBody.get("sum");
             double interestRate = (double) queryBody.get("interestRate");
             double termMo = Double.parseDouble((String) queryBody.get("term"));
-//            String installments = (String) queryBody.get("installment"); // TODO: do we need?
-            String installments = "DOES NOT MATTER?";
+            String installments = (queryBody.get("installments")).toString();
             boolean claimed = false;
 
             // Add offer information to offers table
