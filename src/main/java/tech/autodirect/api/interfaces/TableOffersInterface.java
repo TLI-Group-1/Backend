@@ -109,12 +109,12 @@ public interface TableOffersInterface {
     void markOfferUnclaimed(int offer_id) throws SQLException;
 
     /**
-     * Sets the principal of offer_id offer to newPrincipal.
+     * Sets the loan_amount of offer_id offer to newLoanAmount.
      *
-     * @param offer_id : ID of the offer whose principal will be marked as unclaimed.
-     * @return double : The new principal.
+     * @param offer_id : ID of the offer whose loan_amount will be marked as unclaimed.
+     * @return double : The new loan_amount.
      */
-    public void updatePrincipal(int offer_id, double newPrincipal) throws SQLException;
+    public void updateLoanAmount(int offer_id, double newLoanAmount) throws SQLException;
 
     /**
      * Delete the current offers table given by the "tableName" property.

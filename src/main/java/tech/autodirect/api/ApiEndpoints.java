@@ -67,7 +67,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
     private SvcMockBankApi svcMockBankApi;
     private SvcSearch svcSearch;
     private SvcUnclaimOffer svcUnclaimOffer;
-    private SvcUpdatePrincipal svcUpdatePrincipal;
+    private SvcUpdateLoanAmount svcUpdateLoanAmount;
     private SvcUserLogin svcUserLogin;
 
     // server error that gets thrown to the frontend upon catching other errors
@@ -94,7 +94,7 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             svcMockBankApi = new SvcMockBankApi();
             svcSearch = new SvcSearch(tableCars, tableUsers, tableOffers, sensoApi);
             svcUnclaimOffer = new SvcUnclaimOffer();
-            svcUpdatePrincipal = new SvcUpdatePrincipal();
+            svcUpdateLoanAmount = new SvcUpdateLoanAmount();
             svcUserLogin = new SvcUserLogin();
 
             // Instantiate Server Error

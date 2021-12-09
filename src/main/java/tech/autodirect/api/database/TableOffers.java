@@ -189,7 +189,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
-    public void updatePrincipal(int offerId, double newPrincipal) throws SQLException {
+    public void updateLoanAmount(int offerId, double newLoanAmount) throws SQLException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "offer not found"
@@ -201,7 +201,7 @@ public class TableOffers extends Table implements TableOffersInterface {
             "UPDATE " + this.schemaName + "." + this.tableName +
             " SET loan_amount = ? WHERE offer_id = ?;"
         );
-        stmt.setDouble(1, newPrincipal);
+        stmt.setDouble(1, newLoanAmount);
         stmt.setInt(2, offerId);
 
         // execute and close the above SQL statement

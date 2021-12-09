@@ -11,18 +11,16 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SvcUpdatePrincipalTest {
+class SvcUpdateLoanAmountTest {
     private static final String dbName = "testing";
-    private final String testUserId = "SvcUpdatePrincipalTest_test_user";
+    private final String testUserId = "SvcUpdateLoanAmountTest_test_user";
 
     @Test
-    void testUpdatePrincipal() {
+    void testUpdateLoanAmount() {
         try {
-            SvcUpdatePrincipal svcUpdatePrincipal = new SvcUpdatePrincipal();
+            SvcUpdateLoanAmount svcUpdateLoanAmount = new SvcUpdateLoanAmount();
             TableOffersInterface tableOffers = new TableOffers(dbName);
             tableOffers.setUser(testUserId);
 

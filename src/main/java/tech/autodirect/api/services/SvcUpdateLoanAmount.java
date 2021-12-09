@@ -16,21 +16,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import tech.autodirect.api.interfaces.SensoApiInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.sql.SQLException;
 
 /**
- * Responsible for updating a user's principal value (if any add-ons were added).
+ * Responsible for updating a user's loan_amount value (if any add-ons were added).
  */
-public class SvcUpdatePrincipal {
-    public void updatePrincipal(
+public class SvcUpdateLoanAmount {
+    public void updateLoanAmount(
             TableOffersInterface tableOffers,
+            SensoApiInterface sensoApi,
             String userId,
             String offerId,
-            String newPrincipal
+            String newLoanAmount
     ) throws SQLException {
+        //
+
         tableOffers.setUser(userId);
-        tableOffers.updatePrincipal(Integer.parseInt(offerId), Double.parseDouble(newPrincipal));
+
+        // Query senso api with the new loan_amount
+//        sensoApi.getLoanOffer(
+//                newLoanAmount,
+//
+//        )
+//        tableOffers.updateLoanAmount(Integer.parseInt(offerId), Double.parseDouble(newLoanAmount));
+
+        // Check with Senso Api with updated loan amount
+        // If failure, throw 406 error with message "new loan amount did not results in a valid offer"
+        // If success, update loan offer in offers table for this user and return CarAndOfferInfo. (call svcGetOfferDetails)
+        // update with senso result, dont change offer id.
+
+        //
     }
 }
