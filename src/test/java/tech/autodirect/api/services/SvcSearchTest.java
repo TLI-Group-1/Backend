@@ -107,15 +107,15 @@ class SvcSearchTest {
                     tableUsers.addUser(userId, 700, 1000, 200);
                 }
 
-                List<Map<String, Object>> carsAndOffers = svcSearch.search(
+                List<Map<String, Object>> carAndOfferInfoMaps = svcSearch.search(
                         userId, "1000", "200", sortBy, sortAscString
                 );
-                assert carsAndOffers.size() > 0;
+                assert carAndOfferInfoMaps.size() > 0;
 
                 boolean sortAsc = Boolean.parseBoolean(sortAscString);
-                double prev = TypeConvert.toDouble(carsAndOffers.get(0).get(sortBy));
-                for (Map<String, Object> carAndOffer : carsAndOffers) {
-                    double valueDouble = TypeConvert.toDouble(carAndOffer.get(sortBy));
+                double prev = TypeConvert.toDouble(carAndOfferInfoMaps.get(0).get(sortBy));
+                for (Map<String, Object> carAndOfferInfo : carAndOfferInfoMaps) {
+                    double valueDouble = TypeConvert.toDouble(carAndOfferInfo.get(sortBy));
 
                     if (sortAsc) {
                         assert prev <= valueDouble;
