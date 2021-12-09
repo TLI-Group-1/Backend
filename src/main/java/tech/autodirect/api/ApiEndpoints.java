@@ -193,4 +193,26 @@ public class ApiEndpoints extends SpringBootServletInitializer {
             throw SERVER_ERROR;
         }
     }
+
+    @GetMapping("/updateLoanAmount")
+    public Object updateLoanAmount(
+            @RequestParam(name = "user_id") String userId,
+            @RequestParam(name = "offer_id") String offerId,
+            @RequestParam(name = "loan_amount") String newLoanAmount
+    ) {
+        try {
+            return svcUpdateLoanAmount.updateLoanAmount(
+                    tableCars,
+                    tableUsers,
+                    tableOffers,
+                    sensoApi,
+                    userId,
+                    offerId,
+                    newLoanAmount
+            );
+        } catch (SQLException | IOException | InterruptedException e) {
+            e.printStackTrace();
+            throw SERVER_ERROR;
+        }
+    }
 }
