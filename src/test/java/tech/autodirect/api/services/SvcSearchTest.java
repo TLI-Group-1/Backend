@@ -55,7 +55,7 @@ class SvcSearchTest {
     }
 
     @Test
-    void testSearchCarsPreLoginNonPriceSortBy() {
+    void testSearchCarsPreLoginInvalidSortBy() {
         try {
             tableUsers.addUser(testUserId, 700, 1000, 200);
             List<Map<String, Object>> carsResult = svcSearch.search("", "1000", "200", "term_length", "true");
@@ -66,7 +66,8 @@ class SvcSearchTest {
         } catch (ResponseStatusException e) {
             // pre-login search must take "price" sortBy
             assert Objects.requireNonNull(e.getMessage()).startsWith("400 BAD_REQUEST");
-        }    }
+        }
+    }
 
     @Test
     void testSearchCarsPreLoginCheckSorting() {
