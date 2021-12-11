@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.BankApiInterface;
 
-import java.util.Random;
 
 
 public class BankApi implements BankApiInterface {

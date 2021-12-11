@@ -111,16 +111,14 @@ public interface TableOffersInterface {
     /**
      * Delete the current offers table given by the "tableName" property.
      *
-     * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
      */
-    boolean dropTable() throws SQLException;
+    void dropTable() throws SQLException;
 
     /**
      * Delete the offers table given by tableName.
      *
-     * @return Whether the table existed before being 'dropped'. If it didn't exist, nothing was dropped (logically).
      */
-    boolean dropTable(String tableName) throws SQLException;
+    void dropTable(String tableName) throws SQLException;
 
     /**
      * Create and return the offers table name for the given userId.

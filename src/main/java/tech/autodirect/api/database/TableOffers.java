@@ -22,7 +22,6 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -189,20 +188,18 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
-    public boolean dropTable() throws SQLException {
-        return dropTable(this.tableName);
+    public void dropTable() throws SQLException {
+        dropTable(this.tableName);
     }
 
-    public boolean dropTable(String tableName) throws SQLException {
+    public void dropTable(String tableName) throws SQLException {
         if (checkTableExists(tableName)) {
             PreparedStatement stmt = this.dbConn.prepareStatement(
                     "DROP TABLE " + this.schemaName + "." + tableName + ";"
             );
             stmt.executeUpdate();
             stmt.close();
-            return true;
         } else {
-            return false;
         }
     }
 
@@ -232,4 +229,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         return checkEntryExists(offerId, schemaName, tableName, dbConn, "offer");
     }
 
+    public String getDbName() {
+        return dbName;
+    }
 }

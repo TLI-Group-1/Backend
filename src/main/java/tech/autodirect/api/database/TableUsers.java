@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
@@ -24,10 +23,7 @@ import tech.autodirect.api.interfaces.TableUsersInterface;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class TableUsers extends Table implements TableUsersInterface {

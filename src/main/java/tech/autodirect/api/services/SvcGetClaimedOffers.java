@@ -18,7 +18,6 @@ limitations under the License.
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.entities.EntCar;
 import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableCarsInterface;
