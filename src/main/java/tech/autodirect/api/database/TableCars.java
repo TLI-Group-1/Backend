@@ -47,8 +47,4 @@ public class TableCars extends Table implements TableCarsInterface {
     public Map<String, Object> getCarById(int carId) throws SQLException, ResponseStatusException {
         return getEntryById(carId, schemaName, tableName, dbConn, "car");
     }
-
-    public boolean checkCarExists(int carId) throws SQLException {
-        return checkEntryExists(carId, schemaName, tableName, dbConn, "car");
-    }
 }
