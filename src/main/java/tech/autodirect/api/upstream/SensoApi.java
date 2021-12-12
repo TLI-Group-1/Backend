@@ -122,5 +122,4 @@ public class SensoApi implements SensoApiInterface {
 
         return response;
     }
-
 }
