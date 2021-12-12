@@ -103,7 +103,7 @@ class TableUsersTest {
     void testUpdateUserBudgetMo() {
         try {
             tableUsers.addUser(testUserId, 1, 2, 3);
-            tableUsers.updateUserBudgetMo(testUserId, 4);
+            tableUsers.updateUserColumn(testUserId, TableUsersInterface.UserColumns.BUDGET_MO, 4);
 
             // Get user entry and convert to use entity
             Map<String, Object> userMap = tableUsers.getUserById(testUserId);
@@ -128,7 +128,7 @@ class TableUsersTest {
     void testUpdateUserDownPayment() {
         try {
             tableUsers.addUser(testUserId, 1, 2, 3);
-            tableUsers.updateUserDownPayment(testUserId, 4);
+            tableUsers.updateUserColumn(testUserId, TableUsersInterface.UserColumns.DOWN_PAYMENT, 4);
 
             // Get user entry and convert to use entity
             Map<String, Object> userMap = tableUsers.getUserById(testUserId);
