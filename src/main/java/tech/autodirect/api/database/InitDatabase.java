@@ -143,7 +143,8 @@ public class InitDatabase {
         CSVReader reader = new CSVReader(new FileReader(csvPath));
 
         // iterate through the CSV file
-        String[] line = reader.readNext(); // skip header
+        reader.readNext();  // skip header
+        String[] line;
         while ((line = reader.readNext()) != null) {
             System.out.println(
                     line[0] + "\t" +  // id
@@ -154,6 +155,7 @@ public class InitDatabase {
                             line[6] + "\t"    // mileage
             );
 
+            @SuppressWarnings("SqlResolve")
             PreparedStatement stmt = conn.prepareStatement(
                     "INSERT INTO public.cars (brand, model, year, price, mileage)" +
                             "VALUES (?, ?, ?, ?, ?)"

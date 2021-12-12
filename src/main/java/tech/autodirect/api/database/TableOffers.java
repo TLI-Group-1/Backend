@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("SqlResolve")  // no need to connect to database in IDE
 public class TableOffers extends Table implements TableOffersInterface {
-    private final String dbName;
     public Connection dbConn;
     private String tableName = null;
     private final String schemaName = "offers";
@@ -42,7 +42,6 @@ public class TableOffers extends Table implements TableOffersInterface {
      * @param dbName : name of the database to connect to
      */
     public TableOffers(String dbName) throws SQLException, ClassNotFoundException {
-        this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
     }
 
@@ -93,6 +92,7 @@ public class TableOffers extends Table implements TableOffersInterface {
             boolean claimed
     ) throws SQLException {
         // construct a prepared SQL statement inserting the specified values
+        @SuppressWarnings("SqlInsertValues")  // inspector fails to recognize String.join
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "INSERT INTO " + this.schemaName + "." + this.tableName + " (" +
                         String.join(", ", tableColumns) +
@@ -193,14 +193,11 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     public void dropTable(String tableName) throws SQLException {
-        if (checkTableExists(tableName)) {
-            PreparedStatement stmt = this.dbConn.prepareStatement(
-                    "DROP TABLE " + this.schemaName + "." + tableName + ";"
-            );
-            stmt.executeUpdate();
-            stmt.close();
-        } else {
-        }
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "DROP TABLE " + this.schemaName + "." + tableName + ";"
+        );
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     public boolean checkTableExists() throws SQLException {
@@ -262,10 +259,5 @@ public class TableOffers extends Table implements TableOffersInterface {
     @Override
     public void updateOfferInstallments(int userId, String installments) throws SQLException {
         updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "installments", installments);
-    }
-
-    @Override
-    public void updateOfferClaimed(int userId, boolean claimed) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "claimed", claimed);
     }
 }

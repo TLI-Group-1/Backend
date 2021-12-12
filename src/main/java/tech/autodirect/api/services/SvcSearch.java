@@ -293,7 +293,8 @@ public class SvcSearch {
         // If api gave successful loan preapproval, add offer to user's offers table and return the corresponding
         // offer entity. Otherwise, there was no loan offer for this car and the current search params, so return null.
         if (queryResult.get("status").equals(200)) {
-            Map queryBody = (Map) queryResult.get("body");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> queryBody = (Map<String, Object>) queryResult.get("body");
             int carId = car.getCarId();
             double loanAmount = (double) queryBody.get("amount");
             double capitalSum = (double) queryBody.get("capitalSum");
@@ -302,7 +303,8 @@ public class SvcSearch {
             double interestRate = (double) queryBody.get("interestRate");
             double termMo = Double.parseDouble((String) queryBody.get("term"));
             String installments = (queryBody.get("installments")).toString();
-            boolean claimed = false;
+            boolean claimed = false;  // TODO: need to peserve claimed status for existing
+                                      // offers
 
             // Add offer information to offers table
             int offerId = tableOffers.addOffer(

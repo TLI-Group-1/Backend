@@ -17,7 +17,6 @@ limitations under the License.
 */
 
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntCar;
 import tech.autodirect.api.entities.EntOffer;
@@ -28,7 +27,6 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.utils.ParseChecker;
 
-import javax.swing.undo.AbstractUndoableEdit;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
@@ -87,7 +85,8 @@ public class SvcUpdateLoanAmount {
             // and return offer details (including car info) to the frontend.
 
             // Update loan information
-            Map<String, Object> queryBody = (Map) queryResult.get("body");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> queryBody = (Map<String, Object>) queryResult.get("body");
             tableOffers.updateOfferLoanAmount(offerId, (double) queryBody.get("amount"));
             tableOffers.updateOfferCapitalSum(offerId, (double) queryBody.get("capitalSum"));
             tableOffers.updateOfferInterestSum(offerId, (double) queryBody.get("interestSum"));

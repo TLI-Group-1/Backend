@@ -109,14 +109,6 @@ public interface TableOffersInterface {
     void markOfferUnclaimed(int offer_id) throws SQLException;
 
     /**
-     * Sets the loan_amount of offer_id offer to newLoanAmount.
-     *
-     * @param offer_id : ID of the offer whose loan_amount will be marked as unclaimed.
-     * @return double : The new loan_amount.
-     */
-    public void updateLoanAmount(int offer_id, double newLoanAmount) throws SQLException;
-
-    /**
      * Delete the current offers table given by the "tableName" property.
      *
      */
@@ -189,10 +181,4 @@ public interface TableOffersInterface {
      * Update the installments column for the offer corresponding to offerId.
      */
     void updateOfferInstallments(int offerId, String installments) throws SQLException;
-
-    /**
-     * Update the claimed for the offer corresponding to offerId.
-     */
-    void updateOfferClaimed(int offerId, boolean claimed) throws SQLException;
-
 }
