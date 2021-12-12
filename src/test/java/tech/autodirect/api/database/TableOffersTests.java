@@ -387,7 +387,7 @@ public class TableOffersTests {
     void testCheckTableExistsWhenNotExists() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
             assert !table.checkTableExists("fake table");
         } catch (SQLException | ClassNotFoundException e) {
@@ -403,7 +403,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenLoanAmountUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 1000, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.LOAN_AMOUNT;
@@ -435,7 +435,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenCapitalSumUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.CAPITAL_SUM;
@@ -467,7 +467,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenInterestSumUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INTEREST_SUM;
@@ -499,7 +499,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenTotalSumUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.TOTAL_SUM;
@@ -531,7 +531,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenInterestRateUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INTEREST_RATE;
@@ -563,7 +563,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenTermMoUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.TERM_MO;
@@ -595,7 +595,7 @@ public class TableOffersTests {
     void testUpdateOfferColumnWhenInstallmentsUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers tableOffers = new TableOffers(dbName);
+            TableOffers tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INSTALLMENTS;
