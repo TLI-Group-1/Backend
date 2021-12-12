@@ -205,11 +205,13 @@ public class TableOffers extends Table implements TableOffersInterface {
 
     @Override
     public void dropTable(String tableName) throws SQLException {
-        PreparedStatement stmt = this.dbConn.prepareStatement(
-                "DROP TABLE " + this.schemaName + "." + tableName + ";"
-        );
-        stmt.executeUpdate();
-        stmt.close();
+        if (checkTableExists(tableName)) {
+            PreparedStatement stmt = this.dbConn.prepareStatement(
+                    "DROP TABLE " + this.schemaName + "." + tableName + ";"
+            );
+            stmt.executeUpdate();
+            stmt.close();
+        }
     }
 
     @Override
