@@ -166,15 +166,15 @@ public class SvcSearch {
         // Note that we also need to check that the offers table is non-empty since upon first search for the user,
         // search params are the same (so !newSearchParams) but offers table is empty. This is bad since
         // searchCarsWithOfferOldParams() gets existing offers, but none would exist in this case.
-        // So, for the first search for a user, we need to call searchCarsWithOfferNewParams, and so we do this
-        // additional check.
+        // So, for the first search for a user, we need to call searchCarsWithOfferNewParams, and so we do an
+        // additional tableOffers.getAllOffers().size() == 0 check.
         //
         //
         // If user's params are the same as previous search, get all return maps that contain
         // car and offers information, but just get the offers as they exist in the table (do not reset it
         // or re-call senso Api to check whether loan offers are approved).
         boolean newSearchParams = user.getDownPayment() != downPayment || user.getBudgetMo() != budgetMo;
-        if (newSearchParams && tableOffers.getAllOffers().size() > 0) {
+        if (newSearchParams || tableOffers.getAllOffers().size() == 0) {
             // New search params, so update user information in users table
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.BUDGET_MO, budgetMo);
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.DOWN_PAYMENT, downPayment);
