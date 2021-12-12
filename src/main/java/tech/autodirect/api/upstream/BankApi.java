@@ -27,6 +27,7 @@ public class BankApi implements BankApiInterface {
     /**
      * Get the credit score for userId (uses last 3 digits of userId as credit score).
      */
+    @Override
     public int getCreditScore(String userId) throws ResponseStatusException {
         try {
             return Integer.parseInt(userId.substring(userId.length() - 3));

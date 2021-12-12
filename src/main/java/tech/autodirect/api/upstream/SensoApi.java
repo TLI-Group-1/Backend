@@ -37,6 +37,7 @@ public class SensoApi implements SensoApiInterface {
     // Gson object for JSON/Map conversions
     private static final Gson GSON = new Gson();
 
+    @Override
     public Map<String, Object> getLoanOffer(
             String loanAmount,
             String creditScore,
