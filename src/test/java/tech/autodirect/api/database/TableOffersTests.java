@@ -213,8 +213,9 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
+
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
-            int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
+            @SuppressWarnings("unused") int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
 
             assert table.getAllOffers().size() > 0;
             table.removeAllOffers();
@@ -277,11 +278,10 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
-            int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
-            int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
+            @SuppressWarnings("unused") int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            @SuppressWarnings("unused") int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
 
             List<Map<String, Object>> claimedOffers = table.getClaimedOffers();
-
 
             assert Objects.equals(claimedOffers, Collections.emptyList());
 
@@ -302,7 +302,7 @@ public class TableOffersTests {
             table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
-            int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
+            @SuppressWarnings("unused") int offerId2 = table.addOffer(8, 9, 10, 11, 12, 13, 7, "TEST", false);
 
             // Check that get claimedOffers only contains the offer referred to by offerId1
             List<Map<String, Object>> claimedOffers = table.getClaimedOffers();
