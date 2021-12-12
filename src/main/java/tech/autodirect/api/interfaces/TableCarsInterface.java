@@ -36,4 +36,19 @@ public interface TableCarsInterface {
      */
     Map<String, Object> getCarById(int carId) throws SQLException;
 
+    /**
+     * Add a car to the database and return the id.
+     */
+    int addCar(
+            String brand,
+            String model,
+            int year,
+            double price,
+            double kms
+    ) throws SQLException;
+
+    /**
+     * Return whether car exists in database.
+     */
+    boolean checkCarExists(int carId) throws SQLException;
 }
