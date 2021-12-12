@@ -168,8 +168,8 @@ public class SvcSearch {
         boolean newSearchParams = user.getDownPayment() == downPayment || user.getBudgetMo() == budgetMo;
         if (newSearchParams) {
             // New search params, so update user information in users table
-            tableUsers.updateUserBudgetMo(userId, budgetMo);
-            tableUsers.updateUserDownPayment(userId, downPayment);
+            tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.BUDGET_MO, budgetMo);
+            tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.DOWN_PAYMENT, downPayment);
 
             // User info has been updated, reload into user, so you use updated version
             user.loadFromMap(userEntry);

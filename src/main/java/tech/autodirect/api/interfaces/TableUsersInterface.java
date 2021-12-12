@@ -20,6 +20,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public interface TableUsersInterface {
+    enum UserColumns {
+        BUDGET_MO, DOWN_PAYMENT
+    }
 
     /**
      * Add a user entry to the users table in the database.
@@ -49,12 +52,7 @@ public interface TableUsersInterface {
     boolean checkUserExists(String userId) throws SQLException;
 
     /**
-     * Update the budgetMo value for this user.
+     * Update the column value for this user.
      */
-    void updateUserBudgetMo(String userId, double budgetMo) throws SQLException;
-
-    /**
-     * Update the downPayment value for this user.
-     */
-    void updateUserDownPayment(String userId, double downPayment) throws SQLException;
+    void updateUserColumn(String userId, UserColumns column, Object newValue) throws SQLException;
 }

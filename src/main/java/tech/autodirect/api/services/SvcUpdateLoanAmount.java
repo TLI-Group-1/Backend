@@ -87,13 +87,13 @@ public class SvcUpdateLoanAmount {
             // Update loan information
             @SuppressWarnings("unchecked")
             Map<String, Object> queryBody = (Map<String, Object>) queryResult.get("body");
-            tableOffers.updateOfferLoanAmount(offerId, (double) queryBody.get("amount"));
-            tableOffers.updateOfferCapitalSum(offerId, (double) queryBody.get("capitalSum"));
-            tableOffers.updateOfferInterestSum(offerId, (double) queryBody.get("interestSum"));
-            tableOffers.updateOfferTotalSum(offerId, (double) queryBody.get("sum"));
-            tableOffers.updateOfferInterestRate(offerId, (double) queryBody.get("interestRate"));
-            tableOffers.updateOfferTermMo(offerId, Double.parseDouble((String) queryBody.get("term")));
-            tableOffers.updateOfferInstallments(offerId, (queryBody.get("installments")).toString());
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.LOAN_AMOUNT, (double) queryBody.get("amount"));
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.CAPITAL_SUM, (double) queryBody.get("capitalSum"));
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.INTEREST_RATE, (double) queryBody.get("interestSum"));
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.TOTAL_SUM, (double) queryBody.get("sum"));
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.INTEREST_RATE, (double) queryBody.get("interestRate"));
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.TERM_MO, Double.parseDouble((String) queryBody.get("term")));
+            tableOffers.updateOfferColumn(offerId, TableOffersInterface.OfferColumns.INSTALLMENTS, (queryBody.get("installments")).toString());
 
             // Return offer details (including car info)
             SvcGetOfferDetails svcGetOfferDetails = new SvcGetOfferDetails();

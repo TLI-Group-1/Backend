@@ -45,6 +45,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         this.dbConn = Conn.getConn(dbName);
     }
 
+    @Override
     public String setUser(String userId) throws SQLException {
         this.tableName = TableOffersInterface.createTableName(userId);
 
@@ -76,10 +77,12 @@ public class TableOffers extends Table implements TableOffersInterface {
         return this.getTableName();
     }
 
+    @Override
     public String getTableName() {
         return this.tableName;
     }
 
+    @Override
     public int addOffer(
             int carId,
             double loanAmount,
@@ -122,22 +125,27 @@ public class TableOffers extends Table implements TableOffersInterface {
         return offerId;
     }
 
+    @Override
     public void removeOfferByOfferId(int offerId) throws SQLException, ResponseStatusException {
         removeEntryById(offerId, schemaName, tableName, dbConn, "offer");
     }
 
+    @Override
     public void removeAllOffers() throws SQLException {
         removeAllEntries(schemaName, tableName, dbConn);
     }
 
+    @Override
     public Map<String, Object> getOfferByOfferId(int offerId) throws SQLException, ResponseStatusException {
         return getEntryById(offerId, schemaName, tableName, dbConn, "offer");
     }
 
+    @Override
     public List<Map<String, Object>> getAllOffers() throws SQLException {
         return getAllEntries(schemaName, tableName, dbConn);
     }
 
+    @Override
     public List<Map<String, Object>> getClaimedOffers() throws SQLException {
         // construct a prepared SQL statement selecting all offers
         // where "claimed" is true
@@ -150,6 +158,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         return offers;
     }
 
+    @Override
     public void markOfferClaimed(int offerId) throws SQLException, ResponseStatusException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
@@ -169,6 +178,7 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
+    @Override
     public void markOfferUnclaimed(int offerId) throws SQLException, ResponseStatusException {
         if (!checkOfferExists(offerId)) {
             throw new ResponseStatusException(
@@ -188,10 +198,12 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
+    @Override
     public void dropTable() throws SQLException {
         dropTable(this.tableName);
     }
 
+    @Override
     public void dropTable(String tableName) throws SQLException {
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "DROP TABLE " + this.schemaName + "." + tableName + ";"
@@ -200,10 +212,12 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
+    @Override
     public boolean checkTableExists() throws SQLException {
         return checkTableExists(this.tableName);
     }
 
+    @Override
     public boolean checkTableExists(String tableName) throws SQLException {
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "SELECT EXISTS (" +
@@ -222,42 +236,27 @@ public class TableOffers extends Table implements TableOffersInterface {
         return exists;
     }
 
+    @Override
     public boolean checkOfferExists(int offerId) throws SQLException {
         return checkEntryExists(offerId, schemaName, tableName, dbConn, "offer");
     }
 
     @Override
-    public void updateOfferLoanAmount(int userId, double loanAmount) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "loan_amount", loanAmount);
-    }
-
-    @Override
-    public void updateOfferCapitalSum(int userId, double capitalSum) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "capital_sum", capitalSum);
-    }
-
-    @Override
-    public void updateOfferInterestSum(int userId, double interestSum) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "interest_sum", interestSum);
-    }
-
-    @Override
-    public void updateOfferTotalSum(int userId, double totalSum) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "total_sum", totalSum);
-    }
-
-    @Override
-    public void updateOfferInterestRate(int userId, double interestRate) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "interest_rate", interestRate);
-    }
-
-    @Override
-    public void updateOfferTermMo(int userId, double termMo) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "term_mo", termMo);
-    }
-
-    @Override
-    public void updateOfferInstallments(int userId, String installments) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "installments", installments);
+    public void updateOfferColumn(int userId, OfferColumns column, Object newValue) throws SQLException {
+        if (column == OfferColumns.LOAN_AMOUNT) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "loan_amount", newValue);
+        } else if (column == OfferColumns.CAPITAL_SUM) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "capital_sum", newValue);
+        } else if (column == OfferColumns.INTEREST_SUM) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "interest_sum", newValue);
+        } else if (column == OfferColumns.TOTAL_SUM) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "total_sum", newValue);
+        } else if (column == OfferColumns.INTEREST_RATE) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "interest_rate", newValue);
+        } else if (column == OfferColumns.TERM_MO) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "term_mo", newValue);
+        } else if (column == OfferColumns.INSTALLMENTS) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "installments", newValue);
+        }
     }
 }
