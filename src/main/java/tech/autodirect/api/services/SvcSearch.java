@@ -165,7 +165,7 @@ public class SvcSearch {
         // If user's params are the same as previous search, get all return maps that contain
         // car and offers information, but just get the offers as they exist in the table (do not reset it
         // or re-call senso Api to check whether loan offers are approved).
-        boolean newSearchParams = user.getDownPayment() == downPayment || user.getBudgetMo() == budgetMo;
+        boolean newSearchParams = user.getDownPayment() != downPayment || user.getBudgetMo() != budgetMo;
         if (newSearchParams) {
             // New search params, so update user information in users table
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.BUDGET_MO, budgetMo);
