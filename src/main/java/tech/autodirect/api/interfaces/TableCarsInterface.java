@@ -36,8 +36,4 @@ public interface TableCarsInterface {
      */
     Map<String, Object> getCarById(int carId) throws SQLException;
 
-    /**
-     * Check if car exists in database.
-     */
-    boolean checkCarExists(int carId) throws SQLException;
 }

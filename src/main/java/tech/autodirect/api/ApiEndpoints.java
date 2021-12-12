@@ -37,7 +37,8 @@ import tech.autodirect.api.upstream.SensoApi;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
+// Some class attributes make sense for flexibility
+@SuppressWarnings("FieldCanBeLocal")
 // Mark the class as a Spring.io REST application
 @SpringBootApplication
 // specify hosts allowed to access the AutoDirect API

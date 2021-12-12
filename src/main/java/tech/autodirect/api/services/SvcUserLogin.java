@@ -1,4 +1,6 @@
-package tech.autodirect.api.services;/*
+package tech.autodirect.api.services;
+
+/*
 Copyright (c) 2021 Ruofan Chen, Samm Du, Nada Eldin, Shalev Lifshitz
 
 Licensed under the Apache License, Version 2.0 (the "License");

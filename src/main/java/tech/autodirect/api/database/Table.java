@@ -6,6 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.sql.*;
 import java.util.*;
 
+@SuppressWarnings("SqlResolve")  // no need to connect to database in IDE
 public class Table {
     /**
      * Convert a JDBC ResultSet to a List of Maps (where each Map is a single entry in the ResultSet).
@@ -120,6 +121,7 @@ public class Table {
             String tableName,
             Connection dbConn
     ) throws SQLException {
+        @SuppressWarnings("SqlWithoutWhere")
         PreparedStatement stmt = dbConn.prepareStatement(
                 "DELETE FROM " + schemaName + "." + tableName + ";"
         );

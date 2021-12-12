@@ -22,13 +22,12 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("SqlResolve")  // no need to connect to database in IDE
 public class TableOffers extends Table implements TableOffersInterface {
-    private final String dbName;
     public Connection dbConn;
     private String tableName = null;
     private final String schemaName = "offers";
@@ -43,7 +42,6 @@ public class TableOffers extends Table implements TableOffersInterface {
      * @param dbName : name of the database to connect to
      */
     public TableOffers(String dbName) throws SQLException, ClassNotFoundException {
-        this.dbName = dbName;
         this.dbConn = Conn.getConn(dbName);
     }
 
@@ -94,6 +92,7 @@ public class TableOffers extends Table implements TableOffersInterface {
             boolean claimed
     ) throws SQLException {
         // construct a prepared SQL statement inserting the specified values
+        @SuppressWarnings("SqlInsertValues")  // inspector fails to recognize String.join
         PreparedStatement stmt = this.dbConn.prepareStatement(
                 "INSERT INTO " + this.schemaName + "." + this.tableName + " (" +
                         String.join(", ", tableColumns) +
@@ -189,41 +188,16 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
     }
 
-    public void updateLoanAmount(int offerId, double newLoanAmount) throws SQLException {
-        if (!checkOfferExists(offerId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "offer not found"
-            );
-        }
+    public void dropTable() throws SQLException {
+        dropTable(this.tableName);
+    }
 
-        // construct a prepared SQL marking the specified offer unclaimed
+    public void dropTable(String tableName) throws SQLException {
         PreparedStatement stmt = this.dbConn.prepareStatement(
-            "UPDATE " + this.schemaName + "." + this.tableName +
-            " SET loan_amount = ? WHERE offer_id = ?;"
+                "DROP TABLE " + this.schemaName + "." + tableName + ";"
         );
-        stmt.setDouble(1, newLoanAmount);
-        stmt.setInt(2, offerId);
-
-        // execute and close the above SQL statement
         stmt.executeUpdate();
         stmt.close();
-    }
-
-    public boolean dropTable() throws SQLException {
-        return dropTable(this.tableName);
-    }
-
-    public boolean dropTable(String tableName) throws SQLException {
-        if (checkTableExists(tableName)) {
-            PreparedStatement stmt = this.dbConn.prepareStatement(
-                    "DROP TABLE " + this.schemaName + "." + tableName + ";"
-            );
-            stmt.executeUpdate();
-            stmt.close();
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public boolean checkTableExists() throws SQLException {
@@ -285,10 +259,5 @@ public class TableOffers extends Table implements TableOffersInterface {
     @Override
     public void updateOfferInstallments(int userId, String installments) throws SQLException {
         updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "installments", installments);
-    }
-
-    @Override
-    public void updateOfferClaimed(int userId, boolean claimed) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "claimed", claimed);
     }
 }
