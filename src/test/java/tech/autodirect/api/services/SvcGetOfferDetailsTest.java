@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableOffers;
-import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
@@ -14,20 +13,18 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcGetOfferDetailsTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "SvcGetOfferDetailsTest_test_user";
 
     @Test
     void getOfferDetails() {
         try {
             SvcGetOfferDetails svcGetOfferDetails = new SvcGetOfferDetails();
-            TableCarsInterface tableCars = new TableCars(dbName);
-            TableOffersInterface tableOffers = new TableOffers(dbName);
+            TableCarsInterface tableCars = new TableCars(DB_NAME);
+            TableOffersInterface tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
 
             // Add an offer
@@ -60,7 +57,7 @@ class SvcGetOfferDetailsTest {
             // Drop testUserId's offers table before each test.
             // This is especially important for tests which test the creation new tables
             // (no point in testing the creation of a new table if it already exists).
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {
@@ -71,7 +68,7 @@ class SvcGetOfferDetailsTest {
     @AfterAll
     public void tearDownAll() {
         try {
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {

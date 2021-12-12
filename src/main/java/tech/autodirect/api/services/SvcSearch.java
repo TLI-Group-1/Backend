@@ -27,6 +27,7 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.utils.MergeCarAndOffer;
 import tech.autodirect.api.utils.ParseChecker;
+import tech.autodirect.api.utils.UnitConv;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -141,6 +142,16 @@ public class SvcSearch {
         }
 
         List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
+
+        // Loop over maps replacing mileage with kms
+        for (Map<String, Object> carMap : carsMapsAll) {
+            double mileage = ((Float) carMap.get("mileage")).doubleValue();
+            double kms = UnitConv.mileToKm(mileage);
+            carMap.remove("mileage");
+            carMap.put("kms", kms);
+        }
+
+
         return sortCars(carsMapsAll, sortBy, sortAsc);
     }
 
@@ -159,14 +170,26 @@ public class SvcSearch {
         EntUser user = new EntUser();
         user.loadFromMap(userEntry);
 
+        // Set offers table to user
+        tableOffers.setUser(userId);
+
         // If user's search params are different to previous search (what's in the database), update user info,
         // reset their offers table according to this information, compute all loan offers,
-        // add to offers table, and return maps that contain car and offers information.
+        // add to offer table, and return maps that contain car and offers information.
+        //
+        // Note that we also need to check that the offers table is non-empty since upon first search for the user,
+        // search params are the same (so !newSearchParams) but offers table is empty. This is bad since
+        // searchCarsWithOfferOldParams() gets existing offers, but none would exist in this case.
+        // So, for the first search for a user, we need to call searchCarsWithOfferNewParams, and so we do an
+        // additional OR emptyOffers check.
+        //
+        //
         // If user's params are the same as previous search, get all return maps that contain
         // car and offers information, but just get the offers as they exist in the table (do not reset it
         // or re-call senso Api to check whether loan offers are approved).
         boolean newSearchParams = user.getDownPayment() != downPayment || user.getBudgetMo() != budgetMo;
-        if (newSearchParams) {
+        boolean emptyOffers = tableOffers.getAllOffers().size() == 0;
+        if (newSearchParams || emptyOffers) {
             // New search params, so update user information in users table
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.BUDGET_MO, budgetMo);
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.DOWN_PAYMENT, downPayment);
@@ -245,6 +268,7 @@ public class SvcSearch {
         tableOffers.setUser(user.getUserId());
 
         // Get list of all offers in offers table
+        // (assumes existence of offers since params have been previously searched)
         List<Map<String, Object>> offerMapsAll = tableOffers.getAllOffers();
 
         // Fill carAndOfferInfoMaps with maps containing car-offer information for offers in the offers table
@@ -303,8 +327,7 @@ public class SvcSearch {
             double interestRate = (double) queryBody.get("interestRate");
             double termMo = Double.parseDouble((String) queryBody.get("term"));
             String installments = (queryBody.get("installments")).toString();
-            boolean claimed = false;  // TODO: need to peserve claimed status for existing
-                                      // offers
+            boolean claimed = false;
 
             // Add offer information to offers table
             int offerId = tableOffers.addOffer(

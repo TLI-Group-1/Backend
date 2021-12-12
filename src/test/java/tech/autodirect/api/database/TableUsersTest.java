@@ -16,7 +16,7 @@ import java.util.Objects;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TableUsersTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "TableUsersTests_test_user";
     private TableUsersInterface tableUsers;
 
@@ -166,7 +166,7 @@ class TableUsersTest {
     @BeforeEach
     public void setUpEach() {
         try {
-            tableUsers = new TableUsers(dbName);
+            tableUsers = new TableUsers(DB_NAME);
             if (tableUsers.checkUserExists(testUserId)) {
                 tableUsers.removeUserById(testUserId);
             }
@@ -178,7 +178,7 @@ class TableUsersTest {
     @AfterAll
     public void tearDownAll() {
         try {
-            tableUsers = new TableUsers(dbName);
+            tableUsers = new TableUsers(DB_NAME);
             if (tableUsers.checkUserExists(testUserId)) {
                 tableUsers.removeUserById(testUserId);
             }
@@ -186,4 +186,3 @@ class TableUsersTest {
             e.printStackTrace();
         }
     }
-}
