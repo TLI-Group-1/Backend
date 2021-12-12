@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableOffersInterface;
+
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -385,23 +386,42 @@ public class TableOffersTests {
     @Test
     void testCheckTableExistsWhenNotExists() {
         try {
-            // Create new table for testUserId, then create a new offer and check it exists.
+            // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
             TableOffers table = new TableOffers(dbName);
+            table.setUser(testUserId);
             assert !table.checkTableExists("fake table");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }
     }
-/**
- * Tests getDbName()
- */
+
+    /**
+     * Tests updateOfferColumn().
+     */
     @Test
-    void testGetDbName(){
-        try{
+    void testUpdateOfferColumnWhenLoanAmountUpdated() {
+        try {
+            // Create new table for testUserId
             TableOffers table = new TableOffers(dbName);
-            assert Objects.equals(table.getDbName(), "testing");
-        } catch(SQLException | ClassNotFoundException e){
+            int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.LOAN_AMOUNT;
+            table.updateOfferColumn(1, loanAmount, 4 );
+            Map<String, Object> offerMap = table.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 4;
+            assert offer.getCapitalSum() == 3;
+            assert offer.getInterestSum() == 4;
+            assert offer.getTotalSum() == 5;
+            assert offer.getInterestRate() == 6;
+            assert offer.getTermMo() == 7;
+            assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
         }

@@ -97,13 +97,14 @@ class TableUsersTest {
     }
 
     /**
-     * Tests updateUserBudgetMo().
+     * Tests updateUserColumn() when monthly budget is being updated
      */
     @Test
-    void testUpdateUserBudgetMo() {
+    void testUpdateUserColumnWhenUpdatingBudgetMo() {
         try {
             tableUsers.addUser(testUserId, 1, 2, 3);
-            tableUsers.updateUserBudgetMo(testUserId, 4);
+            TableUsersInterface.UserColumns monthlyBudget = TableUsersInterface.UserColumns.BUDGET_MO;
+            tableUsers.updateUserColumn(testUserId, monthlyBudget, 5);
 
             // Get user entry and convert to use entity
             Map<String, Object> userMap = tableUsers.getUserById(testUserId);
@@ -114,7 +115,7 @@ class TableUsersTest {
             assert user.getUserId().equals(testUserId);
             assert user.getCreditScore() == 1;
             assert user.getDownPayment() == 2;
-            assert user.getBudgetMo() == 4;
+            assert user.getBudgetMo() == 5;
             assert user.getOffersTable().equals(TableOffersInterface.createTableName(testUserId));
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -122,13 +123,14 @@ class TableUsersTest {
     }
 
     /**
-     * Tests updateUserDownPayment().
+     * Tests updateUserColumn() when down payment is being updated
      */
     @Test
-    void testUpdateUserDownPayment() {
+    void testUpdateUserColumnWhenUpdatingDownPayment() {
         try {
             tableUsers.addUser(testUserId, 1, 2, 3);
-            tableUsers.updateUserDownPayment(testUserId, 4);
+            TableUsersInterface.UserColumns downPayment = TableUsersInterface.UserColumns.DOWN_PAYMENT;
+            tableUsers.updateUserColumn(testUserId, downPayment, 5);
 
             // Get user entry and convert to use entity
             Map<String, Object> userMap = tableUsers.getUserById(testUserId);
@@ -138,7 +140,7 @@ class TableUsersTest {
 
             assert user.getUserId().equals(testUserId);
             assert user.getCreditScore() == 1;
-            assert user.getDownPayment() == 4;
+            assert user.getDownPayment() == 5;
             assert user.getBudgetMo() == 3;
             assert user.getOffersTable().equals(TableOffersInterface.createTableName(testUserId));
         } catch (SQLException | ClassNotFoundException e) {

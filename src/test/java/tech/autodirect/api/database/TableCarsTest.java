@@ -63,5 +63,80 @@ class TableCarsTest {
             assert false;
         }
     }
+    /**
+     * Tests getCarById().
+     */
+    @Test
+    void testGetCarById() {
+        try {
+            TableCars cars = new TableCars(dbName);
+            cars.addCar("nissan", "sedan", 2017, 6700, 62280);
+
+            EntCar car1 = new EntCar();
+            car1.loadFromMap(new HashMap<>() {
+                {
+                    put("car_id", 1);
+                    put("brand", "nissan");
+                    put("model", "sedan");
+                    put("year", 2017);
+                    put("price", BigDecimal.valueOf(6700));
+                    put("mileage", ((Integer) 62280).floatValue());
+                }
+            });
+            assert car1.getCarId() == 1;
+            assert car1.getYear() == 2017;
+            assert car1.getModel().equals("sedan");
+            assert car1.getBrand().equals("nissan");
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+    /**
+     * Tests addCar().
+     */
+    @Test
+    void testAddCar() {
+        try {
+            TableCars cars = new TableCars(dbName);
+            cars.addCar("nissan", "sedan", 2017, 6700, 62280);
+
+            assert cars.checkCarExists(1);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests checkCarExists() when it exists
+     */
+    @Test
+    void testCheckCarExitsWhenExists() {
+        try {
+            TableCars cars = new TableCars(dbName);
+            cars.addCar("nissan", "sedan", 2017, 6700, 62280);
+
+            assert cars.checkCarExists(1);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+    /**
+     * Tests checkCarExists() when it exists
+     */
+    @Test
+    void testCheckCarExitsWhenNotExists() {
+        try {
+            TableCars cars = new TableCars(dbName);
+            cars.addCar("nissan", "sedan", 2017, 6700, 62280);
+
+            assert !cars.checkCarExists(70);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
 }
 

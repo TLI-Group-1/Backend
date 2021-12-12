@@ -116,8 +116,8 @@ public class TableOffers extends Table implements TableOffersInterface {
         stmt.close();
 
         // retrieve the offer ID and save it to "offer_id"
-        PreparedStatement stmt_lastval = this.dbConn.prepareStatement("SELECT LASTVAL();");
-        ResultSet rs = stmt_lastval.executeQuery();
+        PreparedStatement stmtLastVal = this.dbConn.prepareStatement("SELECT LASTVAL();");
+        ResultSet rs = stmtLastVal.executeQuery();
         rs.next();
         int offerId = rs.getInt("lastval");
         stmt.close();
