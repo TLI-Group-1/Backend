@@ -7,21 +7,20 @@ import org.junit.jupiter.api.TestInstance;
 import tech.autodirect.api.database.TableOffers;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 
 
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcClaimOfferTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "SvcClaimOfferTest_test_user";
 
     @Test
     void testClaimOffer() {
         try {
             SvcClaimOffer svcClaimOffer = new SvcClaimOffer();
-            TableOffersInterface tableOffers = new TableOffers(dbName);
+            TableOffersInterface tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
 
             // Add an unclaimed offerId to the offers table
@@ -49,7 +48,7 @@ class SvcClaimOfferTest {
             // Drop testUserId's offers table before each test.
             // This is especially important for tests which test the creation new tables
             // (no point in testing the creation of a new table if it already exists).
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {
@@ -60,7 +59,7 @@ class SvcClaimOfferTest {
     @AfterAll
     public void tearDownAll() {
         try {
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {

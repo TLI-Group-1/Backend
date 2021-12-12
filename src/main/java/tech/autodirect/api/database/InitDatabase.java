@@ -21,14 +21,13 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.*;
 
 /**
  * Responsible for initializing the populating the databse with schemas, tables, and entries.
  */
 public class InitDatabase {
-    private static final String dbName = "autodirect";
+    private static final String DB_NAME = "autodirect";
 
     /**
      * Populate the database with the cars and users tables.
@@ -39,7 +38,7 @@ public class InitDatabase {
         String csvPath = parseArgs(args);
 
         // obtain a database connection
-        Connection dbConn = Conn.getConn(dbName);
+        Connection dbConn = Conn.getConn(DB_NAME);
 
         // create a cars table in the database given by dbConn
         createCarsTable(dbConn);
@@ -143,7 +142,7 @@ public class InitDatabase {
         CSVReader reader = new CSVReader(new FileReader(csvPath));
 
         // Create tableCars object
-        TableCars tableCars = new TableCars(dbName);
+        TableCars tableCars = new TableCars(DB_NAME);
 
         // iterate through the CSV file
         reader.readNext();  // skip header

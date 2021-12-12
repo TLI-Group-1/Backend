@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import tech.autodirect.api.database.TableCars;
 import tech.autodirect.api.database.TableOffers;
-import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +18,15 @@ import java.util.Map;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcGetClaimedOffersTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "SvcGetClaimedOffersTest_test_user";
 
     @Test
     void testGetClaimedOffers() {
         try {
             SvcGetClaimedOffers svcGetClaimedOffers = new SvcGetClaimedOffers();
-            TableCarsInterface tableCars = new TableCars(dbName);
-            TableOffersInterface tableOffers = new TableOffers(dbName);
+            TableCarsInterface tableCars = new TableCars(DB_NAME);
+            TableOffersInterface tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
 
             // Add carIds for 4 cars from the database
@@ -74,7 +72,7 @@ class SvcGetClaimedOffersTest {
             // Drop testUserId's offers table before each test.
             // This is especially important for tests which test the creation new tables
             // (no point in testing the creation of a new table if it already exists).
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {
@@ -85,7 +83,7 @@ class SvcGetClaimedOffersTest {
     @AfterAll
     public void tearDownAll() {
         try {
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {

@@ -22,7 +22,7 @@ import java.util.Objects;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcSearchTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "SvcSearchTest_test_user";
     private TableUsersInterface tableUsers;
     private SvcSearch svcSearch;
@@ -130,9 +130,9 @@ class SvcSearchTest {
     @BeforeAll
     public void setUpAll() {
         try {
-            TableCarsInterface tableCars = new TableCars(dbName);
-            this.tableUsers = new TableUsers(dbName);
-            TableOffersInterface tableOffers = new TableOffers(dbName);
+            TableCarsInterface tableCars = new TableCars(DB_NAME);
+            this.tableUsers = new TableUsers(DB_NAME);
+            TableOffersInterface tableOffers = new TableOffers(DB_NAME);
             SensoApiInterface sensoApi = new SensoApi();
             this.svcSearch = new SvcSearch(tableCars, tableUsers, tableOffers, sensoApi);
 

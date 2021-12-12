@@ -16,7 +16,7 @@ import java.util.Map;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SvcUserLoginTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "SvcUserLoginTest_test_user_700";
     private TableUsersInterface tableUser;
     private BankApiInterface bankApi;
@@ -52,7 +52,7 @@ public class SvcUserLoginTest {
     @BeforeAll
     public void setUpAll() {
         try {
-            this.tableUser = new TableUsers(dbName);
+            this.tableUser = new TableUsers(DB_NAME);
             this.bankApi = new BankApi();
             this.svcUserLogin = new SvcUserLogin();
 

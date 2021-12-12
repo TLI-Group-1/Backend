@@ -14,14 +14,14 @@ import java.util.Map;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcUpdateLoanAmountTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
     private final String testUserId = "SvcUpdateLoanAmountTest_test_user";
 
     @Test
     void testUpdateLoanAmount() {
         try {
             SvcUpdateLoanAmount svcUpdateLoanAmount = new SvcUpdateLoanAmount();
-            TableOffersInterface tableOffers = new TableOffers(dbName);
+            TableOffersInterface tableOffers = new TableOffers(DB_NAME);
             tableOffers.setUser(testUserId);
 
             // Add an offer to the offers table
@@ -49,7 +49,7 @@ class SvcUpdateLoanAmountTest {
             // Drop testUserId's offers table before each test.
             // This is especially important for tests which test the creation new tables
             // (no point in testing the creation of a new table if it already exists).
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {
@@ -60,7 +60,7 @@ class SvcUpdateLoanAmountTest {
     @AfterAll
     public void tearDownAll() {
         try {
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {

@@ -35,7 +35,7 @@ public class SensoApi implements SensoApiInterface {
     private static String sensoUrl;
     private static String sensoKey;
     // Gson object for JSON/Map conversions
-    private static final Gson gson = new Gson();
+    private static final Gson GSON = new Gson();
 
     public Map<String, Object> getLoanOffer(
             String loanAmount,
@@ -61,7 +61,7 @@ public class SensoApi implements SensoApiInterface {
             put("downpayment", downPayment);
         }};
         // convert request body to JSON string
-        String queryBody = gson.toJson(queryMap, Map.class);
+        String queryBody = GSON.toJson(queryMap, Map.class);
 
         // get the Senso API URL and KEY from environment variables
         getEnvVars();
@@ -72,7 +72,7 @@ public class SensoApi implements SensoApiInterface {
         // construct the return data as a HashMap
         return new HashMap<>() {{
             put("status", response.statusCode());
-            put("body", gson.fromJson(response.body(), Map.class));
+            put("body", GSON.fromJson(response.body(), Map.class));
         }};
     }
 
