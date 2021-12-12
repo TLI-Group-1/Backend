@@ -407,7 +407,7 @@ public class TableOffersTests {
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 1000, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.LOAN_AMOUNT;
-            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500);
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
@@ -439,7 +439,7 @@ public class TableOffersTests {
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.CAPITAL_SUM;
-            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500);
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
@@ -471,7 +471,7 @@ public class TableOffersTests {
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INTEREST_SUM;
-            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500);
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
@@ -503,7 +503,7 @@ public class TableOffersTests {
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.TOTAL_SUM;
-            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500);
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
@@ -535,7 +535,7 @@ public class TableOffersTests {
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INTEREST_RATE;
-            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500);
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
@@ -567,7 +567,7 @@ public class TableOffersTests {
             tableOffers.setUser(testUserId);
             int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.TERM_MO;
-            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500);
             Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
@@ -589,7 +589,7 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests updateOfferColumn() when term mon is updated.
+     * Tests updateOfferColumn() when installments are updated.
      */
     @Test
     void testUpdateOfferColumnWhenInstallmentsUpdated() {
