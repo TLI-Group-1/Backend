@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 class TableCarsTest {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
 
     @Test
     void testGetAllCars() {
         try {
-            TableCars table = new TableCars(dbName);
+            TableCars table = new TableCars(DB_NAME);
             List<Map<String, Object>> carMapsList = table.getAllCars();
 
             EntCar car1 = new EntCar();

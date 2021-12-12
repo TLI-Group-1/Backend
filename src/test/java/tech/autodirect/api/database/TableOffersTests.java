@@ -4,12 +4,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.*;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableOffersInterface;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.Objects;
 // This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TableOffersTests {
-    private static final String dbName = "testing";
+    private static final String DB_NAME = "testing";
 
     // Note: throughout this test class, we don't assume that testUserId exists in the users table.
     // We don't need to assume this since we never actually access this user in the users table.
@@ -35,7 +33,7 @@ public class TableOffersTests {
     void testSetUserAndCheckTableExists() {
         try {
             // Creates new offers table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = table.setUser(testUserId);
 
             // check if the created table exists under the correct name (both should work)
@@ -54,7 +52,7 @@ public class TableOffersTests {
     void testGetTableName() {
         try {
             // Creates new offers table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             // Check that getTableName() gives a tableName corresponding to TableOffersInterface.createTableName()
@@ -72,7 +70,7 @@ public class TableOffersTests {
     void testAddOfferAndGetOfferClaimed() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
@@ -103,7 +101,7 @@ public class TableOffersTests {
     void testAddOfferAndGetOfferNotClaimed() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
@@ -134,7 +132,7 @@ public class TableOffersTests {
     void testGetOfferWhenDoesNotExist() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             // We know that this offerId does not exist in this offers table,
@@ -156,7 +154,7 @@ public class TableOffersTests {
     void testCheckOfferExistsWhenExists() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
             assert table.checkOfferExists(offerId);
@@ -173,7 +171,7 @@ public class TableOffersTests {
     void testCheckOfferExistsWhenNotExists() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
             assert !table.checkOfferExists(1);
         } catch (SQLException | ClassNotFoundException e) {
@@ -189,7 +187,7 @@ public class TableOffersTests {
     void testRemoveOfferByOfferId() {
         try {
             // Create new table for testUserId
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
@@ -212,7 +210,7 @@ public class TableOffersTests {
     void testRemoveAllOffers() {
         try {
             // Create new table for testUserId
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
@@ -238,7 +236,7 @@ public class TableOffersTests {
     @Test
     void testGetAllOffers() {
         try {
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             // Add offers and get all offers as maps in a list
@@ -276,7 +274,7 @@ public class TableOffersTests {
     void testGetClaimedOffersWhenNoClaimedOffers() {
         try {
             // Create new table for testUserId
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
@@ -300,7 +298,7 @@ public class TableOffersTests {
     void testGetClaimedOffersWhenSomeClaimed() {
         try {
             // Create new table for testUserId
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId1 = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
@@ -323,7 +321,7 @@ public class TableOffersTests {
     void testMarkOfferClaimed() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
@@ -347,7 +345,7 @@ public class TableOffersTests {
     void testMarkOfferUnclaimed() {
         try {
             // Create new table for testUserId. setUpEach() ensures table doesn't already exist.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
 
             int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", true);
@@ -371,7 +369,7 @@ public class TableOffersTests {
     void testDropTableAndCheckTableExists() {
         try {
             // Create new table for testUserId and then drop it. Verify that it is dropped.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             table.setUser(testUserId);
             assert table.checkTableExists();
             table.dropTable();
@@ -389,7 +387,7 @@ public class TableOffersTests {
     void testCheckTableExistsWhenNotExists() {
         try {
             // Create new table for testUserId, then create a new offer and check it exists.
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             assert !table.checkTableExists("fake table");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -403,7 +401,7 @@ public class TableOffersTests {
             // Drop testUserId's offers table before each test.
             // This is especially important for tests which test the creation new tables
             // (no point in testing the creation of a new table if it already exists).
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {
@@ -414,7 +412,7 @@ public class TableOffersTests {
     @AfterAll
     public void tearDownAll() {
         try {
-            TableOffers table = new TableOffers(dbName);
+            TableOffers table = new TableOffers(DB_NAME);
             String tableName = TableOffersInterface.createTableName(testUserId);
             table.dropTable(tableName); // drop table if already exists
         } catch (SQLException | ClassNotFoundException e) {

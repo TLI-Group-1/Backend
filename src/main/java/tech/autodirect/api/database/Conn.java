@@ -27,7 +27,7 @@ import java.util.Properties;
  */
 public class Conn {
     // list of environment variables to fetch
-    private static final String[] environmentVariables = {
+    private static final String[] ENVIRONMENT_VARIABLES = {
         "AUTODIRECT_DB_HOST",
         "AUTODIRECT_DB_PORT",
         "AUTODIRECT_DB_SSL",
@@ -35,7 +35,7 @@ public class Conn {
         "AUTODIRECT_DB_PASS"
     };
     // database parameters
-    private static final Map<String, String> dbParams = new HashMap<>();
+    private static final Map<String, String> DB_PARAMS = new HashMap<>();
 
     /**
      * Get a Connection object connecting to the database given by dbName.
@@ -47,16 +47,16 @@ public class Conn {
 
         // construct the DB URL according to "jdbc:postgresql://host:port/database"
         String dbUrl = "jdbc:postgresql://" +
-            dbParams.get("AUTODIRECT_DB_HOST") + ":" +
-            dbParams.get("AUTODIRECT_DB_PORT") + "/" +
+            DB_PARAMS.get("AUTODIRECT_DB_HOST") + ":" +
+            DB_PARAMS.get("AUTODIRECT_DB_PORT") + "/" +
             dbName;
 
         // supply the remaining DB parameters as properties
         Properties props = new Properties();
-        props.setProperty("ssl", dbParams.get("AUTODIRECT_DB_SSL"));
+        props.setProperty("ssl", DB_PARAMS.get("AUTODIRECT_DB_SSL"));
         props.setProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
-        props.setProperty("user", dbParams.get("AUTODIRECT_DB_USER"));
-        props.setProperty("password", dbParams.get("AUTODIRECT_DB_PASS"));
+        props.setProperty("user", DB_PARAMS.get("AUTODIRECT_DB_USER"));
+        props.setProperty("password", DB_PARAMS.get("AUTODIRECT_DB_PASS"));
 
         // ensure PostgreSQL driver is present
         Class.forName("org.postgresql.Driver");
@@ -75,7 +75,7 @@ public class Conn {
      */
     private static void getEnvVars() throws MissingEnvironmentVariableException {
         // attempt to obtain the relevant environment variables
-        for (String varName : environmentVariables) {
+        for (String varName : ENVIRONMENT_VARIABLES) {
             String varValue = System.getenv(varName);
             if (varValue == null) {
                 throw new MissingEnvironmentVariableException(
@@ -84,7 +84,7 @@ public class Conn {
                 );
             }
             else {
-                dbParams.put(varName, varValue);
+                DB_PARAMS.put(varName, varValue);
             }
         }
     }
