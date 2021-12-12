@@ -122,6 +122,8 @@ class SvcSearchTest {
                     } else {
                         assert prev >= valueDouble;
                     }
+
+                    assert !carAndOfferInfo.containsKey("mileage") && carAndOfferInfo.containsKey("kms");
                 }
             }
         }

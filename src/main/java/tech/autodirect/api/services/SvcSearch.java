@@ -27,6 +27,7 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import tech.autodirect.api.interfaces.TableUsersInterface;
 import tech.autodirect.api.utils.MergeCarAndOffer;
 import tech.autodirect.api.utils.ParseChecker;
+import tech.autodirect.api.utils.UnitConv;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -141,6 +142,16 @@ public class SvcSearch {
         }
 
         List<Map<String, Object>> carsMapsAll = this.tableCars.getAllCars();
+
+        // Loop over maps replacing mileage with kms
+        for (Map<String, Object> carMap : carsMapsAll) {
+            double mileage = ((Float) carMap.get("mileage")).doubleValue();
+            double kms = UnitConv.mileToKm(mileage);
+            carMap.remove("mileage");
+            carMap.put("kms", kms);
+        }
+
+
         return sortCars(carsMapsAll, sortBy, sortAsc);
     }
 
