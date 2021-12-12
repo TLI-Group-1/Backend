@@ -186,3 +186,4 @@ class TableUsersTest {
             e.printStackTrace();
         }
     }
+}

@@ -644,3 +644,4 @@ public class TableOffersTests {
             e.printStackTrace();
         }
     }
+}

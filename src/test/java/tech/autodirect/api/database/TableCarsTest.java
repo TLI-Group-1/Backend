@@ -70,7 +70,7 @@ class TableCarsTest {
     @Test
     void testGetCarById() {
         try {
-            TableCars cars = new TableCars(dbName);
+            TableCars cars = new TableCars(DB_NAME);
             cars.addCar("nissan", "sedan", 2017, 6700, 62280);
 
             EntCar car1 = new EntCar();
@@ -101,7 +101,7 @@ class TableCarsTest {
     @Test
     void testAddCar() {
         try {
-            TableCars cars = new TableCars(dbName);
+            TableCars cars = new TableCars(DB_NAME);
             cars.addCar("nissan", "sedan", 2017, 6700, 62280);
 
             assert cars.checkCarExists(1);
@@ -117,7 +117,7 @@ class TableCarsTest {
     @Test
     void testCheckCarExitsWhenExists() {
         try {
-            TableCars cars = new TableCars(dbName);
+            TableCars cars = new TableCars(DB_NAME);
             cars.addCar("nissan", "sedan", 2017, 6700, 62280);
 
             assert cars.checkCarExists(1);
@@ -132,7 +132,7 @@ class TableCarsTest {
     @Test
     void testCheckCarExitsWhenNotExists() {
         try {
-            TableCars cars = new TableCars(dbName);
+            TableCars cars = new TableCars(DB_NAME);
             cars.addCar("nissan", "sedan", 2017, 6700, 62280);
 
             assert !cars.checkCarExists(70);
