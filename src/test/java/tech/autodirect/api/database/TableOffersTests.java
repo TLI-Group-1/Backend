@@ -397,29 +397,222 @@ public class TableOffersTests {
     }
 
     /**
-     * Tests updateOfferColumn().
+     * Tests updateOfferColumn() when loan amount is updated
      */
     @Test
     void testUpdateOfferColumnWhenLoanAmountUpdated() {
         try {
             // Create new table for testUserId
-            TableOffers table = new TableOffers(dbName);
-            int offerId = table.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 1000, 3, 4, 5, 6, 7, "TEST", false);
             TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.LOAN_AMOUNT;
-            table.updateOfferColumn(1, loanAmount, 4 );
-            Map<String, Object> offerMap = table.getOfferByOfferId(offerId);
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
             EntOffer offer = new EntOffer();
             offer.loadFromMap(offerMap);
 
             assert offer.getOfferId() == offerId;
             assert offer.getCarId() == 1;
-            assert offer.getLoanAmount() == 4;
+            assert offer.getLoanAmount() == 1500;
             assert offer.getCapitalSum() == 3;
             assert offer.getInterestSum() == 4;
             assert offer.getTotalSum() == 5;
             assert offer.getInterestRate() == 6;
             assert offer.getTermMo() == 7;
             assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests updateOfferColumn() when capital sum is updated.
+     */
+    @Test
+    void testUpdateOfferColumnWhenCapitalSumUpdated() {
+        try {
+            // Create new table for testUserId
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.CAPITAL_SUM;
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 2;
+            assert offer.getCapitalSum() == 1500;
+            assert offer.getInterestSum() == 4;
+            assert offer.getTotalSum() == 5;
+            assert offer.getInterestRate() == 6;
+            assert offer.getTermMo() == 7;
+            assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests updateOfferColumn() when interest sum is updated.
+     */
+    @Test
+    void testUpdateOfferColumnWhenInterestSumUpdated() {
+        try {
+            // Create new table for testUserId
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INTEREST_SUM;
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 2;
+            assert offer.getCapitalSum() == 3;
+            assert offer.getInterestSum() == 1500;
+            assert offer.getTotalSum() == 5;
+            assert offer.getInterestRate() == 6;
+            assert offer.getTermMo() == 7;
+            assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests updateOfferColumn() when total sum is updated.
+     */
+    @Test
+    void testUpdateOfferColumnWhenTotalSumUpdated() {
+        try {
+            // Create new table for testUserId
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.TOTAL_SUM;
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 2;
+            assert offer.getCapitalSum() == 3;
+            assert offer.getInterestSum() == 4;
+            assert offer.getTotalSum() == 1500;
+            assert offer.getInterestRate() == 6;
+            assert offer.getTermMo() == 7;
+            assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests updateOfferColumn() when interest rate is updated.
+     */
+    @Test
+    void testUpdateOfferColumnWhenInterestRateUpdated() {
+        try {
+            // Create new table for testUserId
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INTEREST_RATE;
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 2;
+            assert offer.getCapitalSum() == 3;
+            assert offer.getInterestSum() == 4;
+            assert offer.getTotalSum() == 5;
+            assert offer.getInterestRate() == 1500;
+            assert offer.getTermMo() == 7;
+            assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests updateOfferColumn() when term mon is updated.
+     */
+    @Test
+    void testUpdateOfferColumnWhenTermMoUpdated() {
+        try {
+            // Create new table for testUserId
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.TERM_MO;
+            tableOffers.updateOfferColumn(offerId, loanAmount, 1500 );
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 2;
+            assert offer.getCapitalSum() == 3;
+            assert offer.getInterestSum() == 4;
+            assert offer.getTotalSum() == 5;
+            assert offer.getInterestRate() == 6;
+            assert offer.getTermMo() == 1500;
+            assert Objects.equals(offer.getInstallments(), "TEST");
+            assert !offer.isClaimed();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    /**
+     * Tests updateOfferColumn() when term mon is updated.
+     */
+    @Test
+    void testUpdateOfferColumnWhenInstallmentsUpdated() {
+        try {
+            // Create new table for testUserId
+            TableOffers tableOffers = new TableOffers(dbName);
+            tableOffers.setUser(testUserId);
+            int offerId = tableOffers.addOffer(1, 2, 3, 4, 5, 6, 7, "TEST", false);
+            TableOffersInterface.OfferColumns loanAmount = TableOffersInterface.OfferColumns.INSTALLMENTS;
+            tableOffers.updateOfferColumn(offerId, loanAmount, "Pass");
+            Map<String, Object> offerMap = tableOffers.getOfferByOfferId(offerId);
+            EntOffer offer = new EntOffer();
+            offer.loadFromMap(offerMap);
+
+            assert offer.getOfferId() == offerId;
+            assert offer.getCarId() == 1;
+            assert offer.getLoanAmount() == 2;
+            assert offer.getCapitalSum() == 3;
+            assert offer.getInterestSum() == 4;
+            assert offer.getTotalSum() == 5;
+            assert offer.getInterestRate() == 6;
+            assert offer.getTermMo() == 7;
+            assert Objects.equals(offer.getInstallments(), "Pass");
             assert !offer.isClaimed();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

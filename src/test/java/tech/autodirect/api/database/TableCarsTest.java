@@ -2,6 +2,7 @@ package tech.autodirect.api.database;
 
 import org.junit.jupiter.api.Test;
 import tech.autodirect.api.entities.EntCar;
+import tech.autodirect.api.utils.UnitConv;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -87,6 +88,8 @@ class TableCarsTest {
             assert car1.getYear() == 2017;
             assert car1.getModel().equals("sedan");
             assert car1.getBrand().equals("nissan");
+            assert car1.getPrice() == 6700;
+            assert car1.getKms() == UnitConv.mileToKm(62280);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;

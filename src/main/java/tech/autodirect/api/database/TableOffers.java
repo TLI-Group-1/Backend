@@ -244,22 +244,22 @@ public class TableOffers extends Table implements TableOffersInterface {
     }
 
     @Override
-    public void updateOfferColumn(int userId, OfferColumns column, Object newValue) throws SQLException {
+    public void updateOfferColumn(int offerId, OfferColumns column, Object newValue) throws SQLException {
         String offerString = "offer";
         if (column == OfferColumns.LOAN_AMOUNT) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "loan_amount", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "loan_amount", newValue);
         } else if (column == OfferColumns.CAPITAL_SUM) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "capital_sum", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "capital_sum", newValue);
         } else if (column == OfferColumns.INTEREST_SUM) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "interest_sum", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "interest_sum", newValue);
         } else if (column == OfferColumns.TOTAL_SUM) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "total_sum", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "total_sum", newValue);
         } else if (column == OfferColumns.INTEREST_RATE) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "interest_rate", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "interest_rate", newValue);
         } else if (column == OfferColumns.TERM_MO) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "term_mo", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "term_mo", newValue);
         } else if (column == OfferColumns.INSTALLMENTS) {
-            updateEntryColumn(userId, schemaName, tableName, dbConn, offerString, "installments", newValue);
+            updateEntryColumn(offerId, schemaName, tableName, dbConn, offerString, "installments", newValue);
         }
     }
 }
