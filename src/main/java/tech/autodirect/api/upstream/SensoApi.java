@@ -118,7 +118,6 @@ public class SensoApi implements SensoApiInterface {
         var client = HttpClient.newHttpClient();
 
         // use the HTTP client to send the request
-        // TODO: Add exception catching for actual SensoApi query
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         return response;

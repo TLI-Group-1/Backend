@@ -11,7 +11,7 @@ import tech.autodirect.api.interfaces.TableOffersInterface;
 import java.sql.SQLException;
 import java.util.Map;
 
-// This annotation allows us to use a non-static BeforeAll/AfterAll methods (TODO: check if ok)
+// This annotation allows us to use a non-static BeforeAll/AfterAll methods
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SvcUpdateLoanAmountTest {
     private static final String DB_NAME = "testing";

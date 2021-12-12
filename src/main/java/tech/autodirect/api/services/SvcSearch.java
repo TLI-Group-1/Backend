@@ -303,8 +303,7 @@ public class SvcSearch {
             double interestRate = (double) queryBody.get("interestRate");
             double termMo = Double.parseDouble((String) queryBody.get("term"));
             String installments = (queryBody.get("installments")).toString();
-            boolean claimed = false;  // TODO: need to peserve claimed status for existing
-                                      // offers
+            boolean claimed = false;
 
             // Add offer information to offers table
             int offerId = tableOffers.addOffer(
