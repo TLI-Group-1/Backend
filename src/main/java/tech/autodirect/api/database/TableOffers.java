@@ -199,7 +199,6 @@ public class TableOffers extends Table implements TableOffersInterface {
             );
             stmt.executeUpdate();
             stmt.close();
-        } else {
         }
     }
 
