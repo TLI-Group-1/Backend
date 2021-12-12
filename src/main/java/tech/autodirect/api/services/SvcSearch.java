@@ -165,11 +165,11 @@ public class SvcSearch {
         // If user's params are the same as previous search, get all return maps that contain
         // car and offers information, but just get the offers as they exist in the table (do not reset it
         // or re-call senso Api to check whether loan offers are approved).
-        boolean newSearchParams = user.getDownPayment() == downPayment || user.getBudgetMo() == budgetMo;
+        boolean newSearchParams = user.getDownPayment() != downPayment || user.getBudgetMo() != budgetMo;
         if (newSearchParams) {
             // New search params, so update user information in users table
-            tableUsers.updateUserBudgetMo(userId, budgetMo);
-            tableUsers.updateUserDownPayment(userId, downPayment);
+            tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.BUDGET_MO, budgetMo);
+            tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.DOWN_PAYMENT, downPayment);
 
             // User info has been updated, reload into user, so you use updated version
             user.loadFromMap(userEntry);
@@ -293,7 +293,8 @@ public class SvcSearch {
         // If api gave successful loan preapproval, add offer to user's offers table and return the corresponding
         // offer entity. Otherwise, there was no loan offer for this car and the current search params, so return null.
         if (queryResult.get("status").equals(200)) {
-            Map queryBody = (Map) queryResult.get("body");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> queryBody = (Map<String, Object>) queryResult.get("body");
             int carId = car.getCarId();
             double loanAmount = (double) queryBody.get("amount");
             double capitalSum = (double) queryBody.get("capitalSum");
@@ -302,7 +303,8 @@ public class SvcSearch {
             double interestRate = (double) queryBody.get("interestRate");
             double termMo = Double.parseDouble((String) queryBody.get("term"));
             String installments = (queryBody.get("installments")).toString();
-            boolean claimed = false;
+            boolean claimed = false;  // TODO: need to peserve claimed status for existing
+                                      // offers
 
             // Add offer information to offers table
             int offerId = tableOffers.addOffer(

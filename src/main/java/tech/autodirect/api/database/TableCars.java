@@ -19,7 +19,10 @@ limitations under the License.
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.interfaces.TableCarsInterface;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,39 @@ public class TableCars extends Table implements TableCarsInterface {
         return getEntryById(carId, schemaName, tableName, dbConn, "car");
     }
 
+    @Override
+    public int addCar(
+            String brand,
+            String model,
+            int year,
+            double price,
+            double kms
+    ) throws SQLException {
+        PreparedStatement stmt = this.dbConn.prepareStatement(
+                "INSERT INTO " + this.schemaName + "." + this.tableName +
+                "(brand, model, year, price, mileage) VALUES (?, ?, ?, ?, ?);"
+        );
+        stmt.setString(1, brand);
+        stmt.setString(2, model);
+        stmt.setInt(3, year);
+        stmt.setBigDecimal(4, BigDecimal.valueOf(price));
+        stmt.setDouble(5, kms);
+
+        // execute and close the above SQL statement
+        stmt.executeUpdate();
+        stmt.close();
+
+        // retrieve the car ID and save it to "car_id"
+        PreparedStatement stmt_lastval = this.dbConn.prepareStatement("SELECT LASTVAL();");
+        ResultSet rs = stmt_lastval.executeQuery();
+        rs.next();
+        int carId = rs.getInt("lastval");
+        stmt.close();
+
+        return carId;
+    }
+
+    @Override
     public boolean checkCarExists(int carId) throws SQLException {
         return checkEntryExists(carId, schemaName, tableName, dbConn, "car");
     }

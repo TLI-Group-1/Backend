@@ -23,9 +23,22 @@ public class ParseChecker {
     /**
      * Return whether a String is parsable to a double.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isParsableToDouble(String input) {
         try {
             Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Return whether a String is parsable to an int.
+     */
+    public static boolean isParsableToInt(String input) {
+        try {
+            Integer.parseInt(input);
             return true;
         } catch (NumberFormatException | NullPointerException e) {
             return false;

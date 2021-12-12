@@ -68,22 +68,6 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public void updateUserBudgetMo(
-            String userId,
-            double budgetMo
-    ) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "budget_mo", budgetMo);
-    }
-
-    @Override
-    public void updateUserDownPayment(
-            String userId,
-            double downPayment
-    ) throws SQLException {
-        updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "down_payment", downPayment);
-    }
-
-    @Override
     public Map<String, Object> getUserById(String userId) throws SQLException, ResponseStatusException {
         return getEntryById(userId, schemaName, tableName, dbConn, "user");
     }
@@ -96,5 +80,14 @@ public class TableUsers extends Table implements TableUsersInterface {
     @Override
     public boolean checkUserExists(String userId) throws SQLException {
         return checkEntryExists(userId, schemaName, tableName, dbConn, "user");
+    }
+
+    @Override
+    public void updateUserColumn(String userId, UserColumns column, Object newValue) throws SQLException {
+        if (column == UserColumns.BUDGET_MO) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "budget_mo", newValue);
+        } else if (column == UserColumns.DOWN_PAYMENT) {
+            updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "down_payment", newValue);
+        }
     }
 }

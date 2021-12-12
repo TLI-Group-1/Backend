@@ -26,6 +26,9 @@ import java.util.Map;
  * setUser() must be called before any other method.
  */
 public interface TableOffersInterface {
+    enum OfferColumns {
+        LOAN_AMOUNT, CAPITAL_SUM, INTEREST_SUM, TOTAL_SUM, INTEREST_RATE, TERM_MO, INSTALLMENTS
+    }
 
     /**
      * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
@@ -146,4 +149,9 @@ public interface TableOffersInterface {
      * Return whether a specific offer exists (by offerId).
      */
     boolean checkOfferExists(int offerId) throws SQLException;
+
+    /**
+     * Update the column's value in the offer corresponding to offerId.
+     */
+    void updateOfferColumn(int userId, OfferColumns column, Object newValue) throws SQLException;
 }

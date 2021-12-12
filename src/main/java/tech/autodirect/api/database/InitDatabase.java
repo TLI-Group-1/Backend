@@ -138,12 +138,16 @@ public class InitDatabase {
      * Populate the cars table with car entries for a csv.
      */
     private static void ingestCarsCsv(Connection conn, String csvPath)
-            throws IOException, CsvValidationException, SQLException {
+            throws IOException, CsvValidationException, SQLException, ClassNotFoundException {
         // read the CSV file
         CSVReader reader = new CSVReader(new FileReader(csvPath));
 
+        // Create tableCars object
+        TableCars tableCars = new TableCars(dbName);
+
         // iterate through the CSV file
-        String[] line = reader.readNext(); // skip header
+        reader.readNext();  // skip header
+        String[] line;
         while ((line = reader.readNext()) != null) {
             System.out.println(
                     line[0] + "\t" +  // id
@@ -154,20 +158,13 @@ public class InitDatabase {
                             line[6] + "\t"    // mileage
             );
 
-            PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO public.cars (brand, model, year, price, mileage)" +
-                            "VALUES (?, ?, ?, ?, ?)"
+            tableCars.addCar(
+                    line[2],
+                    line[3],
+                    Integer.parseInt(line[4]),
+                    Double.parseDouble(line[1]),
+                    Double.parseDouble(line[6])
             );
-
-            // populate values from the CSV into the prepared statement
-            stmt.setString(1, line[2]);
-            stmt.setString(2, line[3]);
-            stmt.setInt(3, Integer.parseInt(line[4]));
-            stmt.setBigDecimal(4, BigDecimal.valueOf(Long.parseLong(line[1])));
-            stmt.setDouble(5, Double.parseDouble(line[6]));
-            stmt.executeUpdate();
-
-            stmt.close();
         }
     }
 }
