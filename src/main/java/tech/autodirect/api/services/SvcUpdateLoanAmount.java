@@ -85,6 +85,7 @@ public class SvcUpdateLoanAmount {
             // and return offer details (including car info) to the frontend.
 
             // Update loan information
+            @SuppressWarnings("unchecked")
             Map<String, Object> queryBody = (Map<String, Object>) queryResult.get("body");
             tableOffers.updateOfferColumn(
                     offerId,

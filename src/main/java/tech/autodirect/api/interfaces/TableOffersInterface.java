@@ -153,5 +153,5 @@ public interface TableOffersInterface {
     /**
      * Update the column's value in the offer corresponding to offerId.
      */
-    void updateOfferColumn(int userId, OfferColumns column, Object newValue) throws SQLException;
+    void updateOfferColumn(int offerId, OfferColumns column, Object newValue) throws SQLException;
 }
