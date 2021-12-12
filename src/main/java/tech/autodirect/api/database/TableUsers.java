@@ -76,10 +76,7 @@ public class TableUsers extends Table implements TableUsersInterface {
     }
 
     @Override
-    public void updateUserDownPayment(
-            String userId,
-            double downPayment
-    ) throws SQLException {
+    public void updateUserDownPayment(String userId, double downPayment) throws SQLException {
         updateEntryColumn(userId, schemaName, tableName, dbConn, "user", "down_payment", downPayment);
     }
 

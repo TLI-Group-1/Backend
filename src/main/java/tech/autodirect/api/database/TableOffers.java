@@ -229,7 +229,43 @@ public class TableOffers extends Table implements TableOffersInterface {
         return checkEntryExists(offerId, schemaName, tableName, dbConn, "offer");
     }
 
-    public String getDbName() {
-        return dbName;
+    @Override
+    public void updateOfferLoanAmount(int userId, double loanAmount) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "loan_amount", loanAmount);
+    }
+
+    @Override
+    public void updateOfferCapitalSum(int userId, double capitalSum) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "capital_sum", capitalSum);
+    }
+
+    @Override
+    public void updateOfferInterestSum(int userId, double interestSum) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "interest_sum", interestSum);
+    }
+
+    @Override
+    public void updateOfferTotalSum(int userId, double totalSum) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "total_sum", totalSum);
+    }
+
+    @Override
+    public void updateOfferInterestRate(int userId, double interestRate) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "interest_rate", interestRate);
+    }
+
+    @Override
+    public void updateOfferTermMo(int userId, double termMo) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "term_mo", termMo);
+    }
+
+    @Override
+    public void updateOfferInstallments(int userId, String installments) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "installments", installments);
+    }
+
+    @Override
+    public void updateOfferClaimed(int userId, boolean claimed) throws SQLException {
+        updateEntryColumn(userId, schemaName, tableName, dbConn, "offer", "claimed", claimed);
     }
 }
