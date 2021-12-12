@@ -26,6 +26,9 @@ import java.util.Map;
  * setUser() must be called before any other method.
  */
 public interface TableOffersInterface {
+    enum OfferColumns {
+        LOAN_AMOUNT, CAPITAL_SUM, INTEREST_SUM, TOTAL_SUM, INTEREST_RATE, TERM_MO, INSTALLMENTS
+    }
 
     /**
      * Sets this object to refer to userId's offers table (creates offers table if it does not exist)
@@ -148,37 +151,7 @@ public interface TableOffersInterface {
     boolean checkOfferExists(int offerId) throws SQLException;
 
     /**
-     * Update the loanAmount column for the offer corresponding to offerId.
+     * Update the column's value in the offer corresponding to offerId.
      */
-    void updateOfferLoanAmount(int offerId, double loanAmount) throws SQLException;
-
-    /**
-     * Update the capitalSum column for the offer corresponding to offerId.
-     */
-    void updateOfferCapitalSum(int offerId, double capitalSum) throws SQLException;
-
-    /**
-     * Update the interestSum column for the offer corresponding to offerId.
-     */
-    void updateOfferInterestSum(int offerId, double interestSum) throws SQLException;
-
-    /**
-     * Update the totalSum column for the offer corresponding to offerId.
-     */
-    void updateOfferTotalSum(int offerId, double totalSum) throws SQLException;
-
-    /**
-     * Update the interestRate column for the offer corresponding to offerId.
-     */
-    void updateOfferInterestRate(int offerId, double interestRate) throws SQLException;
-
-    /**
-     * Update the termMo column for the offer corresponding to offerId.
-     */
-    void updateOfferTermMo(int offerId, double termMo) throws SQLException;
-
-    /**
-     * Update the installments column for the offer corresponding to offerId.
-     */
-    void updateOfferInstallments(int offerId, String installments) throws SQLException;
+    void updateOfferColumn(int userId, OfferColumns column, Object newValue) throws SQLException;
 }
