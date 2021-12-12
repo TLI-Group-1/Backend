@@ -73,7 +73,7 @@ class TableUsersTest {
      * Tests checkUserExists() when it does not exist.
      */
     @Test
-    void testUserExistsWhenNotExists() {
+    void testCheckUserExistsWhenNotExists() {
         try {
             assert !tableUsers.checkUserExists(testUserId);
         } catch (SQLException e) {
@@ -85,12 +85,62 @@ class TableUsersTest {
      * Tests removeUserById().
      */
     @Test
-    void testRemoveUser() {
+    void testRemoveUserByUserId() {
         try {
             tableUsers.addUser(testUserId, 1, 2, 3);
             assert tableUsers.checkUserExists(testUserId);
             tableUsers.removeUserById(testUserId);
             assert !tableUsers.checkUserExists(testUserId);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests updateUserBudgetMo().
+     */
+    @Test
+    void testUpdateUserBudgetMo() {
+        try {
+            tableUsers.addUser(testUserId, 1, 2, 3);
+            tableUsers.updateUserBudgetMo(testUserId, 4);
+
+            // Get user entry and convert to use entity
+            Map<String, Object> userMap = tableUsers.getUserById(testUserId);
+            EntUser user = new EntUser();
+            user.loadFromMap(userMap);
+
+
+            assert user.getUserId().equals(testUserId);
+            assert user.getCreditScore() == 1;
+            assert user.getDownPayment() == 2;
+            assert user.getBudgetMo() == 4;
+            assert user.getOffersTable().equals(TableOffersInterface.createTableName(testUserId));
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests updateUserDownPayment().
+     */
+    @Test
+    void testUpdateUserDownPayment() {
+        try {
+            tableUsers.addUser(testUserId, 1, 2, 3);
+            tableUsers.updateUserDownPayment(testUserId, 4);
+
+            // Get user entry and convert to use entity
+            Map<String, Object> userMap = tableUsers.getUserById(testUserId);
+            EntUser user = new EntUser();
+            user.loadFromMap(userMap);
+
+
+            assert user.getUserId().equals(testUserId);
+            assert user.getCreditScore() == 1;
+            assert user.getDownPayment() == 4;
+            assert user.getBudgetMo() == 3;
+            assert user.getOffersTable().equals(TableOffersInterface.createTableName(testUserId));
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }

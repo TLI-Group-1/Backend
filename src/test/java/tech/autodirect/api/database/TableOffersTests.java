@@ -4,12 +4,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.*;
 import org.springframework.web.server.ResponseStatusException;
 import tech.autodirect.api.entities.EntOffer;
 import tech.autodirect.api.interfaces.TableOffersInterface;
-
-import javax.management.InstanceAlreadyExistsException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -392,6 +389,19 @@ public class TableOffersTests {
             TableOffers table = new TableOffers(dbName);
             assert !table.checkTableExists("fake table");
         } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+/**
+ * Tests getDbName()
+ */
+    @Test
+    void testGetDbName(){
+        try{
+            TableOffers table = new TableOffers(dbName);
+            assert Objects.equals(table.getDbName(), "testing");
+        } catch(SQLException | ClassNotFoundException e){
             e.printStackTrace();
             assert false;
         }
