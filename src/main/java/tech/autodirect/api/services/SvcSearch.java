@@ -161,12 +161,20 @@ public class SvcSearch {
 
         // If user's search params are different to previous search (what's in the database), update user info,
         // reset their offers table according to this information, compute all loan offers,
-        // add to offers table, and return maps that contain car and offers information.
+        // add to offer table, and return maps that contain car and offers information.
+        //
+        // Note that we also need to check that the offers table is non-empty since upon first search for the user,
+        // search params are the same (so !newSearchParams) but offers table is empty. This is bad since
+        // searchCarsWithOfferOldParams() gets existing offers, but none would exist in this case.
+        // So, for the first search for a user, we need to call searchCarsWithOfferNewParams, and so we do this
+        // additional check.
+        //
+        //
         // If user's params are the same as previous search, get all return maps that contain
         // car and offers information, but just get the offers as they exist in the table (do not reset it
         // or re-call senso Api to check whether loan offers are approved).
         boolean newSearchParams = user.getDownPayment() != downPayment || user.getBudgetMo() != budgetMo;
-        if (newSearchParams) {
+        if (newSearchParams && tableOffers.getAllOffers().size() > 0) {
             // New search params, so update user information in users table
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.BUDGET_MO, budgetMo);
             tableUsers.updateUserColumn(userId, TableUsersInterface.UserColumns.DOWN_PAYMENT, downPayment);
@@ -245,6 +253,7 @@ public class SvcSearch {
         tableOffers.setUser(user.getUserId());
 
         // Get list of all offers in offers table
+        // (assumes existence of offers since params have been previously searched)
         List<Map<String, Object>> offerMapsAll = tableOffers.getAllOffers();
 
         // Fill carAndOfferInfoMaps with maps containing car-offer information for offers in the offers table
