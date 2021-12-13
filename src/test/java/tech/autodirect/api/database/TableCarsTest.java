@@ -133,7 +133,7 @@ class TableCarsTest {
     void testCheckCarExitsWhenNotExists() {
         try {
             TableCars cars = new TableCars(DB_NAME);
-            assert !cars.checkCarExists(70);
+            assert !cars.checkCarExists(9999);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
