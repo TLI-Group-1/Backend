@@ -17,12 +17,12 @@ class TableCarsTest {
     void testGetAllCars() {
         try {
             TableCars table = new TableCars(DB_NAME);
-            List<Map<String, Object>> carMapsList = table.getAllCars();
 
+            int carId1 = table.addCar("nissan", "sedan", 2017, 6700, 62280);
             EntCar car1 = new EntCar();
             car1.loadFromMap(new HashMap<>() {
                 {
-                    put("car_id", 1);
+                    put("car_id", carId1);
                     put("brand", "nissan");
                     put("model", "sedan");
                     put("year", 2017);
@@ -31,10 +31,11 @@ class TableCarsTest {
                 }
             });
 
+            int carId2 = table.addCar("ford", "mustang", 2019, 34100, 10167);
             EntCar car2 = new EntCar();
             car2.loadFromMap(new HashMap<>() {
                 {
-                    put("car_id", 7);
+                    put("car_id", carId2);
                     put("brand", "ford");
                     put("model", "mustang");
                     put("year", 2019);
@@ -43,6 +44,7 @@ class TableCarsTest {
                 }
             });
 
+            List<Map<String, Object>> carMapsList = table.getAllCars();
             boolean car1InCarMapsList = false;
             boolean car2InCarMapsList = false;
             for (Map<String, Object> carMap : carMapsList) {
@@ -64,6 +66,7 @@ class TableCarsTest {
             assert false;
         }
     }
+
     /**
      * Tests getCarById().
      */
@@ -95,6 +98,7 @@ class TableCarsTest {
             assert false;
         }
     }
+
     /**
      * Tests addCar().
      */
@@ -126,6 +130,7 @@ class TableCarsTest {
             assert false;
         }
     }
+
     /**
      * Tests checkCarExists() when it exists
      */
@@ -133,9 +138,7 @@ class TableCarsTest {
     void testCheckCarExitsWhenNotExists() {
         try {
             TableCars cars = new TableCars(DB_NAME);
-            cars.addCar("nissan", "sedan", 2017, 6700, 62280);
-
-            assert !cars.checkCarExists(70);
+            assert !cars.checkCarExists(9999);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             assert false;
