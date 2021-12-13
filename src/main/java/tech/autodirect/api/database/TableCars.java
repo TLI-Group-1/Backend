@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("SqlResolve")  // no need to connect to database in IDE
 public class TableCars extends Table implements TableCarsInterface {
     private final Connection dbConn;
     private final String schemaName = "public";
